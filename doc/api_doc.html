@@ -1,0 +1,1163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>BlendELF, Lua API doc</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="description" content="BlendELF, Compact and powerful 3D Game Engine" />
+</head>
+<body>
+
+<div class="images">
+<img src="images/topbanner.jpg" alt="Top Banner" />
+</div>
+
+<div class="links">
+<a href="index.html">Home</a> | 
+<a href="http://forum.blendelf.com">Forums</a> | 
+<a href="http://blendelf.com/index.html#Demos">Demos</a> | 
+<a href="http://blendelf.com/index.html#Features">Features</a> | 
+<a href="http://blendelf.com/index.html#Devkit">Get Development Kit</a> | 
+<a href="http://blendelf.com/index.html#Source">Source</a> | 
+<a href="http://blendelf.com/index.html#Documentation">Documentation</a> | 
+<a href="http://blendelf.com/index.html#License">License</a> | 
+<a href="http://blendelf.com/index.html#IRC">IRC</a> | 
+<a href="http://blendelf.com/index.html#Contact">Contact</a>
+</div>
+
+<div class="topic">BlendELF Lua API doc</div>
+<div class="info">
+This document contains all of the available functions for the BlendELF Lua API.
+</div>
+
+<div class="apitopic">BlendELF TYPES</div>
+<div class="apiinfo">
+<span class="apikeytype">float</span> - a floating point value, like 0.25 or 7.24
+<br /><span class="apikeytype">double</span> - same as a floating poit value but can store more decimals
+<br /><span class="apikeytype">int</span> - a positive or negative integer value, like 40 or -2500
+<br /><span class="apikeytype">unsigned int</span> - a positive integer value, like 21 or 60
+<br /><span class="apikeytype">boolean</span> - a truth value, like true or false
+<br /><span class="apikeytype">string</span> - a string of characters, like "cat" or "MyEntity"
+<br /><span class="apikeytype">elfVec2i</span> - contains the integer attributes [x|y] which can be accessed by vec.x and vec.y
+<br /><span class="apikeytype">elfVec2f</span> - contains the floating point attributes [x|y] which can be accessed by vec.x and vec.y
+<br /><span class="apikeytype">elfVec3f</span> - contains the floating point attributes [x|y|z] which can be accessed by vec.x, vec.y and vec.z
+<br /><span class="apikeytype">elfVec4f</span> - contains the floating point attributes [x|y|z|w] which can be accessed by vec.x, vec.y, vec.z and vec.w
+<br /><span class="apikeytype">elfColor</span> - contains the floating point attributes [r|g|b|a] which can be accessed by col.r, col.g, col.b and col.a
+<br /><span class="apiobjtype">object</span> - any BlendELF object other than the types listed above
+</div>
+
+<div class="apitopic">NONE VALUE</div>
+<div class="apidefine">NONE</div>
+<div class="apitopic">TRUTH VALUES</div>
+<div class="apiinfo">The thruth value flags. Usually you can just use normal Lua true and false but there are some special cases.</div>
+<div class="apidefine">FALSE</div>
+<div class="apidefine">TRUE</div>
+<div class="apitopic">KEY CODES</div>
+<div class="apiinfo">The key codes used by elf.GetKeyState</div>
+<div class="apidefine">KEY_ESC</div>
+<div class="apidefine">KEY_F1</div>
+<div class="apidefine">KEY_F2</div>
+<div class="apidefine">KEY_F3</div>
+<div class="apidefine">KEY_F4</div>
+<div class="apidefine">KEY_F5</div>
+<div class="apidefine">KEY_F6</div>
+<div class="apidefine">KEY_F7</div>
+<div class="apidefine">KEY_F8</div>
+<div class="apidefine">KEY_F9</div>
+<div class="apidefine">KEY_F10</div>
+<div class="apidefine">KEY_F11</div>
+<div class="apidefine">KEY_F12</div>
+<div class="apidefine">KEY_UP</div>
+<div class="apidefine">KEY_DOWN</div>
+<div class="apidefine">KEY_LEFT</div>
+<div class="apidefine">KEY_RIGHT</div>
+<div class="apidefine">KEY_LSHIFT</div>
+<div class="apidefine">KEY_RSHIFT</div>
+<div class="apidefine">KEY_LCTRL</div>
+<div class="apidefine">KEY_RCTRL</div>
+<div class="apidefine">KEY_LALT</div>
+<div class="apidefine">KEY_RALT</div>
+<div class="apidefine">KEY_TAB</div>
+<div class="apidefine">KEY_ENTER</div>
+<div class="apidefine">KEY_BACKSPACE</div>
+<div class="apidefine">KEY_INSERT</div>
+<div class="apidefine">KEY_DEL</div>
+<div class="apidefine">KEY_PAGEUP</div>
+<div class="apidefine">KEY_PAGEDOWN</div>
+<div class="apidefine">KEY_HOME</div>
+<div class="apidefine">KEY_END</div>
+<div class="apidefine">KEY_KP_0</div>
+<div class="apidefine">KEY_KP_1</div>
+<div class="apidefine">KEY_KP_2</div>
+<div class="apidefine">KEY_KP_3</div>
+<div class="apidefine">KEY_KP_4</div>
+<div class="apidefine">KEY_KP_5</div>
+<div class="apidefine">KEY_KP_6</div>
+<div class="apidefine">KEY_KP_7</div>
+<div class="apidefine">KEY_KP_8</div>
+<div class="apidefine">KEY_KP_9</div>
+<div class="apidefine">KEY_KP_DIVIDE</div>
+<div class="apidefine">KEY_KP_MULTIPLY</div>
+<div class="apidefine">KEY_KP_SUBTRACT</div>
+<div class="apidefine">KEY_KP_ADD</div>
+<div class="apidefine">KEY_KP_DECIMAL</div>
+<div class="apidefine">KEY_KP_EQUAL</div>
+<div class="apidefine">KEY_KP_ENTER</div>
+<div class="apidefine">KEY_SPACE</div>
+<div class="apidefine">KEY_0</div>
+<div class="apidefine">KEY_1</div>
+<div class="apidefine">KEY_2</div>
+<div class="apidefine">KEY_3</div>
+<div class="apidefine">KEY_4</div>
+<div class="apidefine">KEY_5</div>
+<div class="apidefine">KEY_6</div>
+<div class="apidefine">KEY_7</div>
+<div class="apidefine">KEY_8</div>
+<div class="apidefine">KEY_9</div>
+<div class="apidefine">KEY_A</div>
+<div class="apidefine">KEY_B</div>
+<div class="apidefine">KEY_C</div>
+<div class="apidefine">KEY_D</div>
+<div class="apidefine">KEY_E</div>
+<div class="apidefine">KEY_F</div>
+<div class="apidefine">KEY_G</div>
+<div class="apidefine">KEY_H</div>
+<div class="apidefine">KEY_I</div>
+<div class="apidefine">KEY_J</div>
+<div class="apidefine">KEY_K</div>
+<div class="apidefine">KEY_L</div>
+<div class="apidefine">KEY_M</div>
+<div class="apidefine">KEY_N</div>
+<div class="apidefine">KEY_O</div>
+<div class="apidefine">KEY_P</div>
+<div class="apidefine">KEY_Q</div>
+<div class="apidefine">KEY_R</div>
+<div class="apidefine">KEY_S</div>
+<div class="apidefine">KEY_T</div>
+<div class="apidefine">KEY_U</div>
+<div class="apidefine">KEY_V</div>
+<div class="apidefine">KEY_W</div>
+<div class="apidefine">KEY_X</div>
+<div class="apidefine">KEY_Y</div>
+<div class="apidefine">KEY_Z</div>
+<div class="apitopic">KEY AND MOUSE STATES</div>
+<div class="apiinfo">The state codes returned by elf.GetKeyState and elf.GetMouseButtonState</div>
+<div class="apidefine">UP</div>
+<div class="apidefine">PRESSED</div>
+<div class="apidefine">DOWN</div>
+<div class="apidefine">RELEASED</div>
+<div class="apitopic">GUI BUTTON STATE</div>
+<div class="apiinfo">The gui button states returned by elf.GetButtonState</div>
+<div class="apidefine">OFF</div>
+<div class="apidefine">ON</div>
+<div class="apidefine">OVER</div>
+<div class="apitopic">MOUSE BUTTON CODES</div>
+<div class="apiinfo">The mouse button codes used by elf.GetMouseButtonState</div>
+<div class="apidefine">BUTTON_LEFT</div>
+<div class="apidefine">BUTTON_MIDDLE</div>
+<div class="apidefine">BUTTON_RIGHT</div>
+<div class="apitopic">ELF OBJECT TYPES</div>
+<div class="apiinfo">The object types returned by elf.GetObjectType</div>
+<div class="apidefine">TEXTURE</div>
+<div class="apidefine">MATERIAL</div>
+<div class="apidefine">MODEL</div>
+<div class="apidefine">CAMERA</div>
+<div class="apidefine">ENTITY</div>
+<div class="apidefine">LIGHT</div>
+<div class="apidefine">SCENE</div>
+<div class="apidefine">LIST</div>
+<div class="apidefine">PAK</div>
+<div class="apidefine">PAK_INDEX</div>
+<div class="apidefine">KEY_EVENT</div>
+<div class="apidefine">CHAR_EVENT</div>
+<div class="apidefine">CONTEXT</div>
+<div class="apidefine">ENGINE</div>
+<div class="apidefine">TIMER</div>
+<div class="apidefine">IMAGE</div>
+<div class="apidefine">POST_PROCESS</div>
+<div class="apidefine">SCRIPT</div>
+<div class="apidefine">AUDIO_DEVICE</div>
+<div class="apidefine">AUDIO_SOURCE</div>
+<div class="apidefine">SOUND</div>
+<div class="apidefine">BONE</div>
+<div class="apidefine">ARMATURE</div>
+<div class="apidefine">STRING</div>
+<div class="apidefine">FONT</div>
+<div class="apidefine">LABEL</div>
+<div class="apidefine">BUTTON</div>
+<div class="apidefine">PICTURE</div>
+<div class="apidefine">TEXT_FIELD</div>
+<div class="apidefine">SLIDER</div>
+<div class="apidefine">SCREEN</div>
+<div class="apidefine">TEXT_LIST</div>
+<div class="apidefine">CHECK_BOX</div>
+<div class="apidefine">GUI</div>
+<div class="apidefine">DIRECTORY_ITEM</div>
+<div class="apidefine">DIRECTORY</div>
+<div class="apidefine">COLLISION</div>
+<div class="apidefine">PHYSICS_OBJECT</div>
+<div class="apidefine">PHYSICS_WORLD</div>
+<div class="apidefine">JOINT</div>
+<div class="apidefine">PARTICLE</div>
+<div class="apidefine">PARTICLES</div>
+<div class="apidefine">CONFIG</div>
+<div class="apidefine">BEZIER_POINT</div>
+<div class="apidefine">BEZIER_CURVE</div>
+<div class="apidefine">IPO</div>
+<div class="apidefine">FRAME_PLAYER</div>
+<div class="apidefine">PROPERTY</div>
+<div class="apidefine">SCRIPTING</div>
+<div class="apidefine">PHYSICS_TRI_MESH</div>
+<div class="apidefine">SPRITE</div>
+<div class="apidefine">VIDEO_MODE</div>
+<div class="apidefine">GENERAL</div>
+<div class="apidefine">VERTEX</div>
+<div class="apidefine">FACE</div>
+<div class="apidefine">MESH_DATA</div>
+<div class="apidefine">LIST_PTR</div>
+<div class="apidefine">RESOURCES</div>
+<div class="apidefine">RENDER_STATION</div>
+<div class="apidefine">REQUEST</div>
+<div class="apitopic">NUMBER OF OBJECT TYPES</div>
+<div class="apidefine">OBJECT_TYPE_COUNT</div>
+<div class="apitopic">CAMERA MODE</div>
+<div class="apiinfo">The camera modes used by camera internal functions</div>
+<div class="apidefine">PERSPECTIVE</div>
+<div class="apidefine">ORTHOGRAPHIC</div>
+<div class="apitopic">PHYSICS SHAPES</div>
+<div class="apiinfo">The physics shapes used by elf.SetEntityPhysics</div>
+<div class="apidefine">BOX</div>
+<div class="apidefine">SPHERE</div>
+<div class="apidefine">MESH</div>
+<div class="apidefine">CAPSULE_X</div>
+<div class="apidefine">CAPSULE_Y</div>
+<div class="apidefine">CAPSULE_Z</div>
+<div class="apidefine">CONE_X</div>
+<div class="apidefine">CONE_Y</div>
+<div class="apidefine">CONE_Z</div>
+<div class="apitopic">JOINT TYPES</div>
+<div class="apiinfo">The joint types returned by elf.GetJointType</div>
+<div class="apidefine">HINGE</div>
+<div class="apidefine">BALL</div>
+<div class="apidefine">CONE_TWIST</div>
+<div class="apitopic">LIGHT TYPES</div>
+<div class="apiinfo">The light types used by elf.SetLightType</div>
+<div class="apidefine">POINT_LIGHT</div>
+<div class="apidefine">SUN_LIGHT</div>
+<div class="apidefine">SPOT_LIGHT</div>
+<div class="apitopic">TEXTURE FORMATS</div>
+<div class="apiinfo">The texture formats returned by elf.GetTextureFormat</div>
+<div class="apidefine">LUMINANCE</div>
+<div class="apidefine">LUMINANCE_ALPHA</div>
+<div class="apidefine">RGB</div>
+<div class="apidefine">RGBA</div>
+<div class="apidefine">BGR</div>
+<div class="apidefine">BGRA</div>
+<div class="apidefine">RGB16F</div>
+<div class="apidefine">RGB32F</div>
+<div class="apidefine">RGBA16F</div>
+<div class="apidefine">RGBA32F</div>
+<div class="apidefine">ALPHA32F</div>
+<div class="apidefine">DEPTH_COMPONENT</div>
+<div class="apidefine">COMPRESSED_RGB</div>
+<div class="apidefine">COMPRESSED_RGBA</div>
+<div class="apitopic">TEXTURE DATA FORMATS</div>
+<div class="apiinfo">The texture formats returned by elf.GetTextureDataFormat</div>
+<div class="apidefine">FLOAT</div>
+<div class="apidefine">INT</div>
+<div class="apidefine">UINT</div>
+<div class="apidefine">SHORT</div>
+<div class="apidefine">USHORT</div>
+<div class="apidefine">BYTE</div>
+<div class="apidefine">UBYTE</div>
+<div class="apitopic">PROPERTY TYPES</div>
+<div class="apiinfo">The property types returned by elf.GetPropertyType</div>
+<div class="apidefine">PROPERTY_INT</div>
+<div class="apidefine">PROPERTY_FLOAT</div>
+<div class="apidefine">PROPERTY_STRING</div>
+<div class="apidefine">PROPERTY_BOOL</div>
+<div class="apitopic">TEXTURE TYPES</div>
+<div class="apiinfo">The textures types</div>
+<div class="apidefine">COLOR_MAP</div>
+<div class="apidefine">NORMAL_MAP</div>
+<div class="apidefine">HEIGHT_MAP</div>
+<div class="apidefine">SPECULAR_MAP</div>
+<div class="apidefine">DETAIL_MAP</div>
+<div class="apidefine">SHADOW_MAP</div>
+<div class="apidefine">COLOR_RAMP_MAP</div>
+<div class="apidefine">LIGHT_MAP</div>
+<div class="apidefine">CUBE_MAP</div>
+<div class="apitopic">PARTICLE DRAW MODES</div>
+<div class="apiinfo">The draw modes used by elf.SetParticlesDrawMode</div>
+<div class="apidefine">TRANSPARENT</div>
+<div class="apidefine">ADD</div>
+<div class="apitopic">DIRECTORY ITEM TYPES</div>
+<div class="apiinfo">The directory item types used by elf.GetDirectoryItemType</div>
+<div class="apidefine">DIR</div>
+<div class="apidefine">FILE</div>
+<div class="apitopic">GUI EVENTS</div>
+<div class="apiinfo">The gui events triggered by gui objects. The gui events are automatically set to the "event" variable when in a gui action.</div>
+<div class="apidefine">CLICKED</div>
+<div class="apidefine">VALUE_CHANGED</div>
+<div class="apidefine">GAIN_FOCUS</div>
+<div class="apidefine">LOSE_FOCUS</div>
+<div class="apidefine">CHAR_INPUT</div>
+<div class="apidefine">SELECTION_CHANGED</div>
+<div class="apidefine">STATE_CHANGED</div>
+<div class="apidefine">DROP</div>
+<div class="apitopic">JOYSTICK BUTTONS</div>
+<div class="apiinfo">The joystick buttons used by elf.GetJoystickButtonState</div>
+<div class="apidefine">JOYSTICK_BUTTON_1</div>
+<div class="apidefine">JOYSTICK_BUTTON_2</div>
+<div class="apidefine">JOYSTICK_BUTTON_3</div>
+<div class="apidefine">JOYSTICK_BUTTON_4</div>
+<div class="apidefine">JOYSTICK_BUTTON_5</div>
+<div class="apidefine">JOYSTICK_BUTTON_6</div>
+<div class="apidefine">JOYSTICK_BUTTON_7</div>
+<div class="apidefine">JOYSTICK_BUTTON_8</div>
+<div class="apidefine">JOYSTICK_BUTTON_9</div>
+<div class="apidefine">JOYSTICK_BUTTON_10</div>
+<div class="apidefine">JOYSTICK_BUTTON_11</div>
+<div class="apidefine">JOYSTICK_BUTTON_12</div>
+<div class="apidefine">JOYSTICK_BUTTON_13</div>
+<div class="apidefine">JOYSTICK_BUTTON_14</div>
+<div class="apidefine">JOYSTICK_BUTTON_15</div>
+<div class="apidefine">JOYSTICK_BUTTON_16</div>
+<div class="apitopic">BEZIER CURVE TYPES</div>
+<div class="apidefine">LOC_X</div>
+<div class="apidefine">LOC_Y</div>
+<div class="apidefine">LOC_Z</div>
+<div class="apidefine">ROT_X</div>
+<div class="apidefine">ROT_Y</div>
+<div class="apidefine">ROT_Z</div>
+<div class="apidefine">SCALE_X</div>
+<div class="apidefine">SCALE_Y</div>
+<div class="apidefine">SCALE_Z</div>
+<div class="apidefine">QUA_X</div>
+<div class="apidefine">QUA_Y</div>
+<div class="apidefine">QUA_Z</div>
+<div class="apidefine">QUA_W</div>
+<div class="apitopic">SOUND FILE TYPES</div>
+<div class="apiinfo">The sound file types returned by elf.GetSoundFileType</div>
+<div class="apidefine">OGG</div>
+<div class="apidefine">WAV</div>
+<div class="apitopic">ERROR CODES</div>
+<div class="apiinfo">error codes returned by elf.GetError</div>
+<div class="apidefine">NO_ERROR</div>
+<div class="apidefine">INVALID_FILE</div>
+<div class="apidefine">CANT_OPEN_FILE</div>
+<div class="apidefine">CANT_OPEN_DIRECTORY</div>
+<div class="apidefine">CANT_INITIALIZE</div>
+<div class="apidefine">CANT_RUN_STRING</div>
+<div class="apidefine">CANT_RUN_SCRIPT</div>
+<div class="apidefine">CANT_CREATE</div>
+<div class="apidefine">CANT_RESIZE</div>
+<div class="apidefine">INVALID_SIZE</div>
+<div class="apidefine">UNKNOWN_FORMAT</div>
+<div class="apidefine">UNKNOWN_TYPE</div>
+<div class="apidefine">INVALID_HANDLE</div>
+<div class="apidefine">MISSING_FEATURE</div>
+<div class="apidefine">INVALID_MESH</div>
+<div class="apitopic">OBJECT FUNCTIONS</div>
+<div class="apiinfo">The object functions can be performed on any generic ELF objects.</div>
+<div class="apifunc">IncRef( <span class="apiobjtype">elfObject</span> obj )</div>
+<div class="apifunc">DecRef( <span class="apiobjtype">elfObject</span> obj )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetObjectType( <span class="apiobjtype">elfObject</span> obj )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetObjectRefCount( <span class="apiobjtype">elfObject</span> obj )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetGlobalRefCount(  )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetGlobalObjCount(  )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsActor( <span class="apiobjtype">elfObject</span> obj )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsGuiObject( <span class="apiobjtype">elfObject</span> obj )</div>
+<div class="apitopic">LIST FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfList</span> CreateList(  )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetListLength( <span class="apiobjtype">elfList</span> list )</div>
+<div class="apifunc">InsertListObject( <span class="apiobjtype">elfList</span> list, <span class="apikeytype">int</span> idx, <span class="apiobjtype">elfObject</span> obj )</div>
+<div class="apifunc">AppendListObject( <span class="apiobjtype">elfList</span> list, <span class="apiobjtype">elfObject</span> obj )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveListObject( <span class="apiobjtype">elfList</span> list, <span class="apiobjtype">elfObject</span> obj )</div>
+<div class="apifunc"><span class="apiobjtype">elfObject</span> GetListObject( <span class="apiobjtype">elfList</span> list, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apiobjtype">elfObject</span> BeginList( <span class="apiobjtype">elfList</span> list )</div>
+<div class="apifunc"><span class="apiobjtype">elfObject</span> GetListNext( <span class="apiobjtype">elfList</span> list )</div>
+<div class="apifunc"><span class="apiobjtype">elfObject</span> RBeginList( <span class="apiobjtype">elfList</span> list )</div>
+<div class="apifunc"><span class="apiobjtype">elfObject</span> GetListRNext( <span class="apiobjtype">elfList</span> list )</div>
+<div class="apifunc">SeekList( <span class="apiobjtype">elfList</span> list, <span class="apiobjtype">elfObject</span> ptr )</div>
+<div class="apifunc">RSeekList( <span class="apiobjtype">elfList</span> list, <span class="apiobjtype">elfObject</span> ptr )</div>
+<div class="apitopic">CONFIG FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfConfig</span> ReadConfig( <span class="apikeytype">string</span> filePath )</div>
+<div class="apifunc">SetConfigWindowSize( <span class="apiobjtype">elfConfig</span> config, <span class="apikeytype">int</span> width, <span class="apikeytype">int</span> height )</div>
+<div class="apifunc">SetConfigMultisamples( <span class="apiobjtype">elfConfig</span> config, <span class="apikeytype">int</span> multisamples )</div>
+<div class="apifunc">SetConfigFullscreen( <span class="apiobjtype">elfConfig</span> config, <span class="apikeytype">unsigned char</span> fullscreen )</div>
+<div class="apifunc">SetConfigTextureCompress( <span class="apiobjtype">elfConfig</span> config, <span class="apikeytype">unsigned char</span> textureCompress )</div>
+<div class="apifunc">SetConfigTextureAnisotropy( <span class="apiobjtype">elfConfig</span> config, <span class="apikeytype">float</span> textureAnisotropy )</div>
+<div class="apifunc">SetConfigShadowMapSize( <span class="apiobjtype">elfConfig</span> config, <span class="apikeytype">int</span> shadowMapSize )</div>
+<div class="apifunc">SetConfigStart( <span class="apiobjtype">elfConfig</span> config, <span class="apikeytype">string</span> start )</div>
+<div class="apifunc">SetConfigLogPath( <span class="apiobjtype">elfConfig</span> config, <span class="apikeytype">string</span> logPath )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2i</span> GetConfigWindowSize( <span class="apiobjtype">elfConfig</span> config )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetConfigMultisamples( <span class="apiobjtype">elfConfig</span> config )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetConfigFullscreen( <span class="apiobjtype">elfConfig</span> config )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetConfigTextureCompress( <span class="apiobjtype">elfConfig</span> config )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetConfigTextureAnisotropy( <span class="apiobjtype">elfConfig</span> config )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetConfigShadowMapSize( <span class="apiobjtype">elfConfig</span> config )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetConfigStart( <span class="apiobjtype">elfConfig</span> config )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetConfigLogPath( <span class="apiobjtype">elfConfig</span> config )</div>
+<div class="apitopic">LOG FUNCTIONS</div>
+<div class="apifunc">WriteLogLine( <span class="apikeytype">string</span> str )</div>
+<div class="apitopic">CONTEXT FUNCTIONS</div>
+<div class="apifunc">SetTitle( <span class="apikeytype">string</span> title )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetWindowWidth(  )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetWindowHeight(  )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetVideoModeCount(  )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2i</span> GetVideoMode( <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetMultisamples(  )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsFullscreen(  )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetTitle(  )</div>
+<div class="apifunc"><span class="apikeytype">double</span> GetTime(  )</div>
+<div class="apifunc">Sleep( <span class="apikeytype">float</span> time )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsWindowOpened(  )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2i</span> GetMousePosition(  )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2i</span> GetMouseForce(  )</div>
+<div class="apifunc">SetMousePosition( <span class="apikeytype">int</span> x, <span class="apikeytype">int</span> y )</div>
+<div class="apifunc">HideMouse( <span class="apikeytype">unsigned char</span> hide )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsMouseHidden(  )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetMouseWheel(  )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetMouseButtonState( <span class="apikeytype">int</span> button )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetKeyState( <span class="apikeytype">int</span> key )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetJoystickPresent( <span class="apikeytype">int</span> joy )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2f</span> GetJoystickAxis( <span class="apikeytype">int</span> joy )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetJoystickButtonState( <span class="apikeytype">int</span> joy, <span class="apikeytype">int</span> but )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetEventCount(  )</div>
+<div class="apifunc"><span class="apiobjtype">elfObject</span> GetEvent( <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetKeyEventKey( <span class="apiobjtype">elfKeyEvent</span> keyEvent )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetKeyEventState( <span class="apiobjtype">elfKeyEvent</span> keyEvent )</div>
+<div class="apitopic">ENGINE FUNCTIONS</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> Init( <span class="apiobjtype">elfConfig</span> config )</div>
+<div class="apifunc">Deinit(  )</div>
+<div class="apifunc">ResizeWindow( <span class="apikeytype">int</span> width, <span class="apikeytype">int</span> height )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetPlatform(  )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetVersionMajor(  )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetVersionMinor(  )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetVersionRelease(  )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetVersion(  )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetCurrentDirectory(  )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetErrorString(  )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetError(  )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> Run(  )</div>
+<div class="apifunc">Quit(  )</div>
+<div class="apifunc">SetF10Exit( <span class="apikeytype">unsigned char</span> exit )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetF10Exit(  )</div>
+<div class="apifunc"><span class="apiobjtype">elfScene</span> LoadScene( <span class="apikeytype">string</span> filePath )</div>
+<div class="apifunc">SetScene( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apiobjtype">elfScene</span> GetScene(  )</div>
+<div class="apifunc">SetGui( <span class="apiobjtype">elfGui</span> gui )</div>
+<div class="apifunc"><span class="apiobjtype">elfGui</span> GetGui(  )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetSync(  )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetFps(  )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> SaveScreenShot( <span class="apikeytype">string</span> filePath )</div>
+<div class="apifunc">SetFpsLimit( <span class="apikeytype">float</span> fpsLimit )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetFpsLimit(  )</div>
+<div class="apifunc">SetTickRate( <span class="apikeytype">float</span> tickRate )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetTickRate(  )</div>
+<div class="apifunc">SetSpeed( <span class="apikeytype">float</span> speed )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetSpeed(  )</div>
+<div class="apifunc">SetTextureCompress( <span class="apikeytype">unsigned char</span> compress )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetTextureCompress(  )</div>
+<div class="apifunc">SetTextureAnisotropy( <span class="apikeytype">float</span> anisotropy )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetTextureAnisotropy(  )</div>
+<div class="apifunc">SetShadowMapSize( <span class="apikeytype">int</span> size )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetShadowMapSize(  )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetPolygonsRendered(  )</div>
+<div class="apifunc">SetBloom( <span class="apikeytype">float</span> threshold )</div>
+<div class="apifunc">DisableBloom(  )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetBloomThreshold(  )</div>
+<div class="apifunc">SetDof( <span class="apikeytype">float</span> focalRange, <span class="apikeytype">float</span> focalDistance )</div>
+<div class="apifunc">DisableDof(  )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetDofFocalRange(  )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetDofFocalDistance(  )</div>
+<div class="apifunc">SetSsao( <span class="apikeytype">float</span> amount )</div>
+<div class="apifunc">DisableSsao(  )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetSsaoAmount(  )</div>
+<div class="apifunc">SetLightShafts( <span class="apikeytype">float</span> intensity )</div>
+<div class="apifunc">DisableLightShafts(  )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetLightShaftsIntensity(  )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsBloom(  )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsSsao(  )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsDof(  )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsLightShafts(  )</div>
+<div class="apifunc"><span class="apiobjtype">elfObject</span> GetActor(  )</div>
+<div class="apifunc"><span class="apiobjtype">elfDirectory</span> ReadDirectory( <span class="apikeytype">string</span> path )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetDirectoryPath( <span class="apiobjtype">elfDirectory</span> directory )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetDirectoryItemCount( <span class="apiobjtype">elfDirectory</span> directory )</div>
+<div class="apifunc"><span class="apiobjtype">elfDirectoryItem</span> GetDirectoryItem( <span class="apiobjtype">elfDirectory</span> directory, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetDirectoryItemName( <span class="apiobjtype">elfDirectoryItem</span> dirItem )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetDirectoryItemType( <span class="apiobjtype">elfDirectoryItem</span> dirItem )</div>
+<div class="apifunc"><span class="apikeytype">elfColor</span> CreateColor( <span class="apikeytype">float</span> r, <span class="apikeytype">float</span> g, <span class="apikeytype">float</span> b, <span class="apikeytype">float</span> a )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2f</span> CreateVec2f( <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> CreateVec3f( <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc"><span class="apikeytype">elfVec4f</span> CreateQua( <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z, <span class="apikeytype">float</span> w )</div>
+<div class="apifunc"><span class="apikeytype">elfVec4f</span> CreateQuaFromEuler( <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc"><span class="apikeytype">elfVec4f</span> CreateQuaFromAngleAxis( <span class="apikeytype">float</span> angle, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2f</span> AddVec2fVec2f( <span class="apikeytype">elfVec2f</span> vec1, <span class="apikeytype">elfVec2f</span> vec2 )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2f</span> SubVec2fVec2f( <span class="apikeytype">elfVec2f</span> vec1, <span class="apikeytype">elfVec2f</span> vec2 )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2f</span> MulVec2fVec2f( <span class="apikeytype">elfVec2f</span> vec1, <span class="apikeytype">elfVec2f</span> vec2 )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetVec2fLength( <span class="apikeytype">elfVec2f</span> vec )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> AddVec3fVec3f( <span class="apikeytype">elfVec3f</span> vec1, <span class="apikeytype">elfVec3f</span> vec2 )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> SubVec3fVec3f( <span class="apikeytype">elfVec3f</span> vec1, <span class="apikeytype">elfVec3f</span> vec2 )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> MulVec3fVec3f( <span class="apikeytype">elfVec3f</span> vec1, <span class="apikeytype">elfVec3f</span> vec2 )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetVec3fLength( <span class="apikeytype">elfVec3f</span> vec )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> RotateVec3f( <span class="apikeytype">elfVec3f</span> vec, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> MulQuaVec3f( <span class="apikeytype">elfVec4f</span> qua, <span class="apikeytype">elfVec3f</span> vec )</div>
+<div class="apifunc"><span class="apikeytype">elfVec4f</span> MulQuaQua( <span class="apikeytype">elfVec4f</span> qua1, <span class="apikeytype">elfVec4f</span> qua2 )</div>
+<div class="apifunc"><span class="apikeytype">elfVec4f</span> GetQuaInverted( <span class="apikeytype">elfVec4f</span> qua )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> AboutSame( <span class="apikeytype">float</span> v1, <span class="apikeytype">float</span> v2 )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> AboutZero( <span class="apikeytype">float</span> val )</div>
+<div class="apifunc"><span class="apikeytype">float</span> FloatAbs( <span class="apikeytype">float</span> val )</div>
+<div class="apifunc"><span class="apikeytype">float</span> FloatMin( <span class="apikeytype">float</span> a, <span class="apikeytype">float</span> b )</div>
+<div class="apifunc"><span class="apikeytype">float</span> FloatMax( <span class="apikeytype">float</span> a, <span class="apikeytype">float</span> b )</div>
+<div class="apifunc"><span class="apikeytype">float</span> RandomFloat(  )</div>
+<div class="apifunc"><span class="apikeytype">float</span> RandomFloatRange( <span class="apikeytype">float</span> min, <span class="apikeytype">float</span> max )</div>
+<div class="apifunc"><span class="apikeytype">int</span> RandomInt(  )</div>
+<div class="apifunc"><span class="apikeytype">int</span> RandomIntRange( <span class="apikeytype">int</span> min, <span class="apikeytype">int</span> max )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetResourcesTexture( <span class="apikeytype">string</span> filePath, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetOrLoadResourcesTexture( <span class="apikeytype">string</span> filePath, <span class="apikeytype">string</span> name )</div>
+<div class="apitopic">FRAME PLAYER FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfFramePlayer</span> CreateFramePlayer(  )</div>
+<div class="apifunc">UpdateFramePlayer( <span class="apiobjtype">elfFramePlayer</span> player )</div>
+<div class="apifunc">SetFramePlayerFrame( <span class="apiobjtype">elfFramePlayer</span> player, <span class="apikeytype">float</span> frame )</div>
+<div class="apifunc">PlayFramePlayer( <span class="apiobjtype">elfFramePlayer</span> player, <span class="apikeytype">float</span> start, <span class="apikeytype">float</span> end, <span class="apikeytype">float</span> speed )</div>
+<div class="apifunc">LoopFramePlayer( <span class="apiobjtype">elfFramePlayer</span> player, <span class="apikeytype">float</span> start, <span class="apikeytype">float</span> end, <span class="apikeytype">float</span> speed )</div>
+<div class="apifunc">StopFramePlayer( <span class="apiobjtype">elfFramePlayer</span> player )</div>
+<div class="apifunc">PauseFramePlayer( <span class="apiobjtype">elfFramePlayer</span> player )</div>
+<div class="apifunc">ResumeFramePlayer( <span class="apiobjtype">elfFramePlayer</span> player )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetFramePlayerStart( <span class="apiobjtype">elfFramePlayer</span> player )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetFramePlayerEnd( <span class="apiobjtype">elfFramePlayer</span> player )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetFramePlayerSpeed( <span class="apiobjtype">elfFramePlayer</span> player )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetFramePlayerFrame( <span class="apiobjtype">elfFramePlayer</span> player )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsFramePlayerPlaying( <span class="apiobjtype">elfFramePlayer</span> player )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsFramePlayerPaused( <span class="apiobjtype">elfFramePlayer</span> player )</div>
+<div class="apitopic">TIMER FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfTimer</span> CreateTimer(  )</div>
+<div class="apifunc">StartTimer( <span class="apiobjtype">elfTimer</span> timer )</div>
+<div class="apifunc"><span class="apikeytype">double</span> GetElapsedTime( <span class="apiobjtype">elfTimer</span> timer )</div>
+<div class="apifunc"><span class="apiobjtype">elfImage</span> CreateEmptyImage( <span class="apikeytype">int</span> width, <span class="apikeytype">int</span> height, <span class="apikeytype">int</span> bpp )</div>
+<div class="apifunc"><span class="apiobjtype">elfImage</span> CreateImageFromFile( <span class="apikeytype">string</span> filePath )</div>
+<div class="apifunc">SetImagePixel( <span class="apiobjtype">elfImage</span> image, <span class="apikeytype">int</span> x, <span class="apikeytype">int</span> y, <span class="apikeytype">float</span> r, <span class="apikeytype">float</span> g, <span class="apikeytype">float</span> b, <span class="apikeytype">float</span> a )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetImageWidth( <span class="apiobjtype">elfImage</span> image )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetImageHeight( <span class="apiobjtype">elfImage</span> image )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetImageBitsPerPixel( <span class="apiobjtype">elfImage</span> image )</div>
+<div class="apifunc"><span class="apikeytype">elfColor</span> GetImagePixel( <span class="apiobjtype">elfImage</span> image, <span class="apikeytype">int</span> x, <span class="apikeytype">int</span> y )</div>
+<div class="apitopic">TEXTURE FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> CreateTextureFromFile( <span class="apikeytype">string</span> name, <span class="apikeytype">string</span> filePath )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> CreateTextureFromImage( <span class="apikeytype">string</span> name, <span class="apiobjtype">elfImage</span> image )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> CreateCubeMapFromFiles( <span class="apikeytype">string</span> name, <span class="apikeytype">string</span> xpos, <span class="apikeytype">string</span> xneg, <span class="apikeytype">string</span> ypos, <span class="apikeytype">string</span> yneg, <span class="apikeytype">string</span> zpos, <span class="apikeytype">string</span> zneg )</div>
+<div class="apifunc">SetTextureName( <span class="apiobjtype">elfTexture</span> texture, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetTextureName( <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetTextureFilePath( <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetTextureWidth( <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetTextureHeight( <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetTextureFormat( <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetTextureDataFormat( <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apitopic">MATERIAL FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfMaterial</span> CreateMaterial( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc">SetMaterialDiffuseColor( <span class="apiobjtype">elfMaterial</span> material, <span class="apikeytype">float</span> r, <span class="apikeytype">float</span> g, <span class="apikeytype">float</span> b, <span class="apikeytype">float</span> a )</div>
+<div class="apifunc">SetMaterialSpecularColor( <span class="apiobjtype">elfMaterial</span> material, <span class="apikeytype">float</span> r, <span class="apikeytype">float</span> g, <span class="apikeytype">float</span> b, <span class="apikeytype">float</span> a )</div>
+<div class="apifunc">SetMaterialAmbientColor( <span class="apiobjtype">elfMaterial</span> material, <span class="apikeytype">float</span> r, <span class="apikeytype">float</span> g, <span class="apikeytype">float</span> b, <span class="apikeytype">float</span> a )</div>
+<div class="apifunc">SetMaterialSpecularPower( <span class="apiobjtype">elfMaterial</span> material, <span class="apikeytype">float</span> power )</div>
+<div class="apifunc">SetMaterialLighting( <span class="apiobjtype">elfMaterial</span> material, <span class="apikeytype">unsigned char</span> lighting )</div>
+<div class="apifunc">SetMaterialName( <span class="apiobjtype">elfMaterial</span> material, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetMaterialName( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetMaterialFilePath( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apikeytype">elfColor</span> GetMaterialDiffuseColor( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apikeytype">elfColor</span> GetMaterialSpecularColor( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apikeytype">elfColor</span> GetMaterialAmbientColor( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetMaterialSpecularPower( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetMaterialLighting( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc">SetMaterialDiffuseMap( <span class="apiobjtype">elfMaterial</span> material, <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc">SetMaterialNormalMap( <span class="apiobjtype">elfMaterial</span> material, <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc">SetMaterialHeightMap( <span class="apiobjtype">elfMaterial</span> material, <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc">SetMaterialSpecularMap( <span class="apiobjtype">elfMaterial</span> material, <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc">SetMaterialLightMap( <span class="apiobjtype">elfMaterial</span> material, <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc">SetMaterialCubeMap( <span class="apiobjtype">elfMaterial</span> material, <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc">ClearMaterialDiffuseMap( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc">ClearMaterialNormalMap( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc">ClearMaterialHeightMap( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc">ClearMaterialSpecularMap( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc">ClearMaterialLightMap( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc">ClearMaterialCubeMap( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetMaterialDiffuseMap( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetMaterialNormalMap( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetMaterialHeightMap( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetMaterialSpecularMap( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetMaterialLightMap( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetMaterialCubeMap( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc">SetMaterialParallaxScale( <span class="apiobjtype">elfMaterial</span> material, <span class="apikeytype">float</span> scale )</div>
+<div class="apifunc">SetMaterialAlphaTest( <span class="apiobjtype">elfMaterial</span> material, <span class="apikeytype">unsigned char</span> alphaTest )</div>
+<div class="apifunc">SetMaterialAlphaThreshold( <span class="apiobjtype">elfMaterial</span> material, <span class="apikeytype">float</span> threshold )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetMaterialParallaxScale( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetMaterialAlphaTest( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetMaterialAlphaThreshold( <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apitopic">IPO FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfBezierPoint</span> CreateBezierPoint(  )</div>
+<div class="apifunc">SetBezierPointPosition( <span class="apiobjtype">elfBezierPoint</span> point, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y )</div>
+<div class="apifunc">SetBezierPointControl1( <span class="apiobjtype">elfBezierPoint</span> point, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y )</div>
+<div class="apifunc">SetBezierPointControl2( <span class="apiobjtype">elfBezierPoint</span> point, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2f</span> GetBezierPointPosition( <span class="apiobjtype">elfBezierPoint</span> point )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2f</span> GetBezierPointControl1( <span class="apiobjtype">elfBezierPoint</span> point )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2f</span> GetBezierPointControl2( <span class="apiobjtype">elfBezierPoint</span> point )</div>
+<div class="apifunc"><span class="apiobjtype">elfBezierCurve</span> CreateBezierCurve(  )</div>
+<div class="apifunc">SetBezierCurveType( <span class="apiobjtype">elfBezierCurve</span> curve, <span class="apikeytype">int</span> type )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetBezierCurveType( <span class="apiobjtype">elfBezierCurve</span> curve )</div>
+<div class="apifunc">AddBezierCurvePoint( <span class="apiobjtype">elfBezierCurve</span> curve, <span class="apiobjtype">elfBezierPoint</span> point )</div>
+<div class="apifunc"><span class="apiobjtype">elfBezierPoint</span> GetPointFromBezierCurve( <span class="apiobjtype">elfBezierCurve</span> curve, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetBezierCurveValue( <span class="apiobjtype">elfBezierCurve</span> curve, <span class="apikeytype">float</span> x )</div>
+<div class="apifunc"><span class="apiobjtype">elfIpo</span> CreateIpo(  )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> AddIpoCurve( <span class="apiobjtype">elfIpo</span> ipo, <span class="apiobjtype">elfBezierCurve</span> curve )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetIpoCurveCount( <span class="apiobjtype">elfIpo</span> ipo )</div>
+<div class="apifunc"><span class="apiobjtype">elfBezierCurve</span> GetCurveFromIpo( <span class="apiobjtype">elfIpo</span> ipo, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetIpoLoc( <span class="apiobjtype">elfIpo</span> ipo, <span class="apikeytype">float</span> x )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetIpoRot( <span class="apiobjtype">elfIpo</span> ipo, <span class="apikeytype">float</span> x )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetIpoScale( <span class="apiobjtype">elfIpo</span> ipo, <span class="apikeytype">float</span> x )</div>
+<div class="apifunc"><span class="apikeytype">elfVec4f</span> GetIpoQua( <span class="apiobjtype">elfIpo</span> ipo, <span class="apikeytype">float</span> x )</div>
+<div class="apitopic">PROPERTY FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfProperty</span> CreateProperty( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetPropertyType( <span class="apiobjtype">elfProperty</span> property )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetPropertyInt( <span class="apiobjtype">elfProperty</span> property )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetPropertyFloat( <span class="apiobjtype">elfProperty</span> property )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetPropertyString( <span class="apiobjtype">elfProperty</span> property )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetPropertyBool( <span class="apiobjtype">elfProperty</span> property )</div>
+<div class="apifunc">SetPropertyInt( <span class="apiobjtype">elfProperty</span> property, <span class="apikeytype">int</span> ival )</div>
+<div class="apifunc">SetPropertyFloat( <span class="apiobjtype">elfProperty</span> property, <span class="apikeytype">float</span> fval )</div>
+<div class="apifunc">SetPropertyString( <span class="apiobjtype">elfProperty</span> property, <span class="apikeytype">string</span> sval )</div>
+<div class="apifunc">SetPropertyBool( <span class="apiobjtype">elfProperty</span> property, <span class="apikeytype">unsigned char</span> bval )</div>
+<div class="apitopic">ACTOR FUNCTIONS</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetActorName( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetActorFilePath( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apiobjtype">elfScript</span> GetActorScript( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc">SetActorName( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc">SetActorScript( <span class="apiobjtype">elfActor</span> actor, <span class="apiobjtype">elfScript</span> script )</div>
+<div class="apifunc">ClearActorScript( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc">SetActorPosition( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetActorRotation( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetActorOrientation( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z, <span class="apikeytype">float</span> w )</div>
+<div class="apifunc">RotateActor( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">RotateActorLocal( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">MoveActor( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">MoveActorLocal( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetActorPositionRelativeTo( <span class="apiobjtype">elfActor</span> actor, <span class="apiobjtype">elfActor</span> to, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetActorRotationRelativeTo( <span class="apiobjtype">elfActor</span> actor, <span class="apiobjtype">elfActor</span> to, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetActorOrientationRelativeTo( <span class="apiobjtype">elfActor</span> actor, <span class="apiobjtype">elfActor</span> to, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z, <span class="apikeytype">float</span> w )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetActorPosition( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetActorRotation( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">elfVec4f</span> GetActorOrientation( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc">SetActorPhysics( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">unsigned char</span> physics )</div>
+<div class="apifunc">SetActorShape( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">int</span> shape )</div>
+<div class="apifunc">SetActorBoundingLengths( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetActorBoundingOffset( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetActorMass( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> mass )</div>
+<div class="apifunc">SetActorDamping( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> linDamp, <span class="apikeytype">float</span> angDamp )</div>
+<div class="apifunc">SetActorSleep( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> linThrs, <span class="apikeytype">float</span> angThrs )</div>
+<div class="apifunc">SetActorRestitution( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> restitution )</div>
+<div class="apifunc">SetActorAnisotropicFriction( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetActorLinearFactor( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetActorAngularFactor( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">AddActorForce( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">AddActorForceLocal( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">AddActorTorque( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetActorLinearVelocity( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetActorLinearVelocityLocal( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetActorAngularVelocity( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetActorPhysics( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetActorBoundingLengths( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetActorBoundingOffset( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetActorShape( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetActorMass( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetActorLinearDamping( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetActorAngularDamping( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetActorLinearSleep( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetActorAngularSleep( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetActorRestitution( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetActorAnisotropicFriction( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetActorLinearFactor( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetActorAngularFactor( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetActorLinearVelocity( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetActorAngularVelocity( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apiobjtype">elfJoint</span> AddActorHingeJoint( <span class="apiobjtype">elfActor</span> actor, <span class="apiobjtype">elfActor</span> actor2, <span class="apikeytype">string</span> name, <span class="apikeytype">float</span> px, <span class="apikeytype">float</span> py, <span class="apikeytype">float</span> pz, <span class="apikeytype">float</span> ax, <span class="apikeytype">float</span> ay, <span class="apikeytype">float</span> az )</div>
+<div class="apifunc"><span class="apiobjtype">elfJoint</span> AddActorBallJoint( <span class="apiobjtype">elfActor</span> actor, <span class="apiobjtype">elfActor</span> actor2, <span class="apikeytype">string</span> name, <span class="apikeytype">float</span> px, <span class="apikeytype">float</span> py, <span class="apikeytype">float</span> pz )</div>
+<div class="apifunc"><span class="apiobjtype">elfJoint</span> AddActorConeTwistJoint( <span class="apiobjtype">elfActor</span> actor, <span class="apiobjtype">elfActor</span> actor2, <span class="apikeytype">string</span> name, <span class="apikeytype">float</span> px, <span class="apikeytype">float</span> py, <span class="apikeytype">float</span> pz, <span class="apikeytype">float</span> ax, <span class="apikeytype">float</span> ay, <span class="apikeytype">float</span> az )</div>
+<div class="apifunc"><span class="apiobjtype">elfJoint</span> GetActorJoint( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfJoint</span> GetActorJointByIndex( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveActorJoint( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveActorJointByIndex( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveActorJointByObject( <span class="apiobjtype">elfActor</span> actor, <span class="apiobjtype">elfJoint</span> joint )</div>
+<div class="apifunc">SetActorIpo( <span class="apiobjtype">elfActor</span> actor, <span class="apiobjtype">elfIpo</span> ipo )</div>
+<div class="apifunc"><span class="apiobjtype">elfIpo</span> GetActorIpo( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc">SetActorIpoFrame( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> frame )</div>
+<div class="apifunc">PlayActorIpo( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> start, <span class="apikeytype">float</span> end, <span class="apikeytype">float</span> speed )</div>
+<div class="apifunc">LoopActorIpo( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">float</span> start, <span class="apikeytype">float</span> end, <span class="apikeytype">float</span> speed )</div>
+<div class="apifunc">StopActorIpo( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc">PauseActorIpo( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc">ResumeActorIpo( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetActorIpoStart( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetActorIpoEnd( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetActorIpoSpeed( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetActorIpoFrame( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsActorIpoPlaying( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsActorIpoPaused( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetActorCollisionCount( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apiobjtype">elfCollision</span> GetActorCollision( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetActorPropertyCount( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc">AddPropertyToActor( <span class="apiobjtype">elfActor</span> actor, <span class="apiobjtype">elfProperty</span> property )</div>
+<div class="apifunc"><span class="apiobjtype">elfProperty</span> GetActorPropertyByName( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfProperty</span> GetActorPropertyByIndex( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveActorPropertyByName( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveActorPropertyByIndex( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveActorPropertyByObject( <span class="apiobjtype">elfActor</span> actor, <span class="apiobjtype">elfProperty</span> property )</div>
+<div class="apifunc">RemoveActorProperties( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc">SetActorSelected( <span class="apiobjtype">elfActor</span> actor, <span class="apikeytype">unsigned char</span> selected )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetActorSelected( <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apitopic">CAMERA FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfCamera</span> CreateCamera( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc">SetCameraViewport( <span class="apiobjtype">elfCamera</span> camera, <span class="apikeytype">int</span> x, <span class="apikeytype">int</span> y, <span class="apikeytype">int</span> width, <span class="apikeytype">int</span> height )</div>
+<div class="apifunc">SetCameraOrthoViewport( <span class="apiobjtype">elfCamera</span> camera, <span class="apikeytype">int</span> x, <span class="apikeytype">int</span> y, <span class="apikeytype">int</span> width, <span class="apikeytype">int</span> height )</div>
+<div class="apifunc">SetCameraMode( <span class="apiobjtype">elfCamera</span> camera, <span class="apikeytype">int</span> mode )</div>
+<div class="apifunc">SetCameraFov( <span class="apiobjtype">elfCamera</span> camera, <span class="apikeytype">float</span> fov )</div>
+<div class="apifunc">SetCameraAspect( <span class="apiobjtype">elfCamera</span> camera, <span class="apikeytype">float</span> aspect )</div>
+<div class="apifunc">SetCameraClip( <span class="apiobjtype">elfCamera</span> camera, <span class="apikeytype">float</span> clipNear, <span class="apikeytype">float</span> clipFar )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2i</span> GetCameraViewportSize( <span class="apiobjtype">elfCamera</span> camera )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2i</span> GetCameraViewportOffset( <span class="apiobjtype">elfCamera</span> camera )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2i</span> GetCameraOrthoViewportSize( <span class="apiobjtype">elfCamera</span> camera )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2i</span> GetCameraOrthoViewportOffset( <span class="apiobjtype">elfCamera</span> camera )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetCameraMode( <span class="apiobjtype">elfCamera</span> camera )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetCameraFov( <span class="apiobjtype">elfCamera</span> camera )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetCameraAspect( <span class="apiobjtype">elfCamera</span> camera )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2f</span> GetCameraClip( <span class="apiobjtype">elfCamera</span> camera )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2f</span> GetCameraFarPlaneSize( <span class="apiobjtype">elfCamera</span> camera )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> ProjectCameraPoint( <span class="apiobjtype">elfCamera</span> camera, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> UnProjectCameraPoint( <span class="apiobjtype">elfCamera</span> camera, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apitopic">MESH DATA FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfVertex</span> CreateVertex(  )</div>
+<div class="apifunc">SetVertexPosition( <span class="apiobjtype">elfVertex</span> vertice, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetVertexNormal( <span class="apiobjtype">elfVertex</span> vertice, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetVertexTexCoord( <span class="apiobjtype">elfVertex</span> vertice, <span class="apikeytype">float</span> u, <span class="apikeytype">float</span> v )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetVertexPosition( <span class="apiobjtype">elfVertex</span> vertice )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetVertexNormal( <span class="apiobjtype">elfVertex</span> vertice )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2f</span> GetVertexTexCoord( <span class="apiobjtype">elfVertex</span> vertice )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetFaceV1( <span class="apiobjtype">elfFace</span> face )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetFaceV2( <span class="apiobjtype">elfFace</span> face )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetFaceV3( <span class="apiobjtype">elfFace</span> face )</div>
+<div class="apifunc"><span class="apiobjtype">elfMeshData</span> CreateMeshData(  )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetMeshDataVertexCount( <span class="apiobjtype">elfMeshData</span> meshData )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetMeshDataFaceCount( <span class="apiobjtype">elfMeshData</span> meshData )</div>
+<div class="apifunc">AddMeshDataVertex( <span class="apiobjtype">elfMeshData</span> meshData, <span class="apiobjtype">elfVertex</span> vertice )</div>
+<div class="apifunc">AddMeshDataFace( <span class="apiobjtype">elfMeshData</span> meshData, <span class="apikeytype">int</span> v1, <span class="apikeytype">int</span> v2, <span class="apikeytype">int</span> v3 )</div>
+<div class="apifunc"><span class="apiobjtype">elfVertex</span> GetVertexFromMeshData( <span class="apiobjtype">elfMeshData</span> meshData, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apiobjtype">elfFace</span> GetFaceFromMeshData( <span class="apiobjtype">elfMeshData</span> meshData, <span class="apikeytype">int</span> idx )</div>
+<div class="apitopic">MODEL FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfModel</span> CreateModelFromMeshData( <span class="apiobjtype">elfMeshData</span> data )</div>
+<div class="apifunc">SetModelName( <span class="apiobjtype">elfModel</span> model, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetModelName( <span class="apiobjtype">elfModel</span> model )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetModelFilePath( <span class="apiobjtype">elfModel</span> model )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetModelVertexCount( <span class="apiobjtype">elfModel</span> model )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetModelIndiceCount( <span class="apiobjtype">elfModel</span> model )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetModelBoundingBoxMin( <span class="apiobjtype">elfModel</span> model )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetModelBoundingBoxMax( <span class="apiobjtype">elfModel</span> model )</div>
+<div class="apitopic">ENTITY FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfEntity</span> CreateEntity( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc">GenerateEntityTangents( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc">SetEntityScale( <span class="apiobjtype">elfEntity</span> entity, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetEntityScale( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc">SetEntityModel( <span class="apiobjtype">elfEntity</span> entity, <span class="apiobjtype">elfModel</span> model )</div>
+<div class="apifunc">ClearEntityModel( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc"><span class="apiobjtype">elfModel</span> GetEntityModel( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetEntityMaterialCount( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc">AddEntityMaterial( <span class="apiobjtype">elfEntity</span> entity, <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc">SetEntityMaterial( <span class="apiobjtype">elfEntity</span> entity, <span class="apikeytype">int</span> idx, <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc">RemoveEntityMaterial( <span class="apiobjtype">elfEntity</span> entity, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apiobjtype">elfMaterial</span> GetEntityMaterial( <span class="apiobjtype">elfEntity</span> entity, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc">SetEntityVisible( <span class="apiobjtype">elfEntity</span> entity, <span class="apikeytype">unsigned char</span> visible )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetEntityVisible( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc">SetEntityOccluder( <span class="apiobjtype">elfEntity</span> entity, <span class="apikeytype">unsigned char</span> occluder )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetEntityOccluder( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc">SetEntityArmature( <span class="apiobjtype">elfEntity</span> entity, <span class="apiobjtype">elfArmature</span> armature )</div>
+<div class="apifunc">SetEntityArmatureFrame( <span class="apiobjtype">elfEntity</span> entity, <span class="apikeytype">float</span> frame )</div>
+<div class="apifunc">PlayEntityArmature( <span class="apiobjtype">elfEntity</span> entity, <span class="apikeytype">float</span> start, <span class="apikeytype">float</span> end, <span class="apikeytype">float</span> speed )</div>
+<div class="apifunc">LoopEntityArmature( <span class="apiobjtype">elfEntity</span> entity, <span class="apikeytype">float</span> start, <span class="apikeytype">float</span> end, <span class="apikeytype">float</span> speed )</div>
+<div class="apifunc">StopEntityArmature( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc">PauseEntityArmature( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc">ResumeEntityArmature( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetEntityArmatureStart( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetEntityArmatureEnd( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetEntityArmatureSpeed( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetEntityArmatureFrame( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsEntityArmaturePlaying( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsEntityArmaturePaused( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc"><span class="apiobjtype">elfArmature</span> GetEntityArmature( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetEntityChanged( <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apitopic">LIGHT FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfLight</span> CreateLight( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc">SetLightType( <span class="apiobjtype">elfLight</span> light, <span class="apikeytype">int</span> type )</div>
+<div class="apifunc">SetLightColor( <span class="apiobjtype">elfLight</span> light, <span class="apikeytype">float</span> r, <span class="apikeytype">float</span> g, <span class="apikeytype">float</span> b, <span class="apikeytype">float</span> a )</div>
+<div class="apifunc">SetLightRange( <span class="apiobjtype">elfLight</span> light, <span class="apikeytype">float</span> range, <span class="apikeytype">float</span> fadeRange )</div>
+<div class="apifunc">SetLightShadows( <span class="apiobjtype">elfLight</span> light, <span class="apikeytype">unsigned char</span> shadows )</div>
+<div class="apifunc">SetLightVisible( <span class="apiobjtype">elfLight</span> light, <span class="apikeytype">unsigned char</span> visible )</div>
+<div class="apifunc">SetLightCone( <span class="apiobjtype">elfLight</span> light, <span class="apikeytype">float</span> innerCone, <span class="apikeytype">float</span> outerCone )</div>
+<div class="apifunc">SetLightShaft( <span class="apiobjtype">elfLight</span> light, <span class="apikeytype">unsigned char</span> shaft )</div>
+<div class="apifunc">SetLightShaftSize( <span class="apiobjtype">elfLight</span> light, <span class="apikeytype">float</span> size )</div>
+<div class="apifunc">SetLightShaftIntensity( <span class="apiobjtype">elfLight</span> light, <span class="apikeytype">float</span> intensity )</div>
+<div class="apifunc">SetLightShaftFadeOff( <span class="apiobjtype">elfLight</span> light, <span class="apikeytype">float</span> fadeOff )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetLightType( <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apifunc"><span class="apikeytype">elfColor</span> GetLightColor( <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetLightRange( <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetLightFadeRange( <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetLightShadows( <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetLightVisible( <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetLightInnerCone( <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetLightOuterCone( <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetLightShaft( <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetLightShaftSize( <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetLightShaftIntensity( <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetLightShaftFadeOff( <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apitopic">ARMATURE FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfArmature</span> GetBoneArmature( <span class="apiobjtype">elfBone</span> bone )</div>
+<div class="apifunc"><span class="apiobjtype">elfBone</span> GetBoneParent( <span class="apiobjtype">elfBone</span> bone )</div>
+<div class="apifunc"><span class="apiobjtype">elfBone</span> GetBoneChildByName( <span class="apiobjtype">elfBone</span> bone, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfBone</span> GetBoneChildById( <span class="apiobjtype">elfBone</span> bone, <span class="apikeytype">int</span> id )</div>
+<div class="apifunc"><span class="apiobjtype">elfBone</span> GetBoneChildByIndex( <span class="apiobjtype">elfBone</span> bone, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetBonePosition( <span class="apiobjtype">elfBone</span> bone )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetBoneRotation( <span class="apiobjtype">elfBone</span> bone )</div>
+<div class="apifunc"><span class="apikeytype">elfVec4f</span> GetBoneOrientation( <span class="apiobjtype">elfBone</span> bone )</div>
+<div class="apifunc"><span class="apiobjtype">elfArmature</span> CreateArmature( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfBone</span> GetBoneFromArmatureByName( <span class="apikeytype">string</span> name, <span class="apiobjtype">elfArmature</span> armature )</div>
+<div class="apifunc"><span class="apiobjtype">elfBone</span> GetBoneFromArmatureById( <span class="apikeytype">int</span> id, <span class="apiobjtype">elfArmature</span> armature )</div>
+<div class="apitopic">PARTICLE FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfParticles</span> CreateParticles( <span class="apikeytype">string</span> name, <span class="apikeytype">int</span> maxCount )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetParticlesName( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetParticlesFilePath( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc">SetParticlesMaxCount( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">int</span> maxCount )</div>
+<div class="apifunc">SetParticlesDrawMode( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">int</span> mode )</div>
+<div class="apifunc">SetParticlesTexture( <span class="apiobjtype">elfParticles</span> particles, <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc">ClearParticlesTexture( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc">SetParticlesModel( <span class="apiobjtype">elfParticles</span> particles, <span class="apiobjtype">elfModel</span> model )</div>
+<div class="apifunc">ClearParticlesModel( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc">SetParticlesEntity( <span class="apiobjtype">elfParticles</span> particles, <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc">ClearParticlesEntity( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc">SetParticlesGravity( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetParticlesSpawnCount( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">int</span> perSecond )</div>
+<div class="apifunc">SetParticlesSpawn( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">unsigned char</span> spawn )</div>
+<div class="apifunc">SetParticlesSize( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">float</span> min, <span class="apikeytype">float</span> max )</div>
+<div class="apifunc">SetParticlesSizeGrowth( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">float</span> min, <span class="apikeytype">float</span> max )</div>
+<div class="apifunc">SetParticlesRotation( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">float</span> min, <span class="apikeytype">float</span> max )</div>
+<div class="apifunc">SetParticlesRotationGrowth( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">float</span> min, <span class="apikeytype">float</span> max )</div>
+<div class="apifunc">SetParticlesLifeSpan( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">float</span> min, <span class="apikeytype">float</span> max )</div>
+<div class="apifunc">SetParticlesFadeSpeed( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">float</span> min, <span class="apikeytype">float</span> max )</div>
+<div class="apifunc">SetParticlesPositionMin( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetParticlesPositionMax( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetParticlesVelocityMin( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetParticlesVelocityMax( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc">SetParticlesColorMin( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">float</span> r, <span class="apikeytype">float</span> g, <span class="apikeytype">float</span> b, <span class="apikeytype">float</span> a )</div>
+<div class="apifunc">SetParticlesColorMax( <span class="apiobjtype">elfParticles</span> particles, <span class="apikeytype">float</span> r, <span class="apikeytype">float</span> g, <span class="apikeytype">float</span> b, <span class="apikeytype">float</span> a )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetParticlesMaxCount( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetParticlesCount( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetParticlesDrawMode( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetParticlesTexture( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apiobjtype">elfModel</span> GetParticlesModel( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apiobjtype">elfEntity</span> GetParticlesEntity( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetParticlesGravity( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetParticlesSpawnCount( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetParticlesSpawn( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetParticlesSizeMin( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetParticlesSizeMax( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetParticlesSizeGrowthMin( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetParticlesSizeGrowthMax( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetParticlesRotationMin( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetParticlesRotationMax( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetParticlesRotationGrowthMin( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetParticlesRotationGrowthMax( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetParticlesLifeSpanMin( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetParticlesLifeSpanMax( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetParticlesFadeSpeedMin( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetParticlesFadeSpeedMax( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetParticlesPositionMin( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetParticlesPositionMax( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetParticlesVelocityMin( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetParticlesVelocityMax( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">elfColor</span> GetParticlesColorMin( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">elfColor</span> GetParticlesColorMax( <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apitopic">SPRITE FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfSprite</span> CreateSprite( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc">SetSpriteMaterial( <span class="apiobjtype">elfSprite</span> sprite, <span class="apiobjtype">elfMaterial</span> material )</div>
+<div class="apifunc">SetSpriteScale( <span class="apiobjtype">elfSprite</span> sprite, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y )</div>
+<div class="apifunc">SetSpriteFaceCamera( <span class="apiobjtype">elfSprite</span> sprite, <span class="apikeytype">unsigned char</span> faceCamera )</div>
+<div class="apifunc"><span class="apiobjtype">elfMaterial</span> GetSpriteMaterial( <span class="apiobjtype">elfSprite</span> sprite )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2f</span> GetSpriteScale( <span class="apiobjtype">elfSprite</span> sprite )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetSpriteFaceCamera( <span class="apiobjtype">elfSprite</span> sprite )</div>
+<div class="apifunc">SetSpriteVisible( <span class="apiobjtype">elfSprite</span> sprite, <span class="apikeytype">unsigned char</span> visible )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetSpriteVisible( <span class="apiobjtype">elfSprite</span> sprite )</div>
+<div class="apifunc">SetSpriteOccluder( <span class="apiobjtype">elfSprite</span> sprite, <span class="apikeytype">unsigned char</span> occluder )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetSpriteOccluder( <span class="apiobjtype">elfSprite</span> sprite )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetSceneName( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetSceneFilePath( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apitopic">SCENE FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfScene</span> CreateScene( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfScene</span> CreateSceneFromFile( <span class="apikeytype">string</span> name, <span class="apikeytype">string</span> filePath )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> SaveScene( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> filePath )</div>
+<div class="apifunc">SetScenePhysics( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">unsigned char</span> physics )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetScenePhysics( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc">SetSceneRunScripts( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">unsigned char</span> runScripts )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetSceneRunScripts( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc">SetSceneDebugDraw( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">unsigned char</span> debugDraw )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetSceneDebugDraw( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc">SetSceneOcclusionCulling( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">unsigned char</span> occlusionCulling )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetSceneOcclusionCulling( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc">SetSceneGravity( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetSceneGravity( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc">SetSceneAmbientColor( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">float</span> r, <span class="apikeytype">float</span> g, <span class="apikeytype">float</span> b, <span class="apikeytype">float</span> a )</div>
+<div class="apifunc"><span class="apikeytype">elfColor</span> GetSceneAmbientColor( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc">SetSceneFog( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">unsigned char</span> fog )</div>
+<div class="apifunc">SetSceneFogStart( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">float</span> start )</div>
+<div class="apifunc">SetSceneFogEnd( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">float</span> end )</div>
+<div class="apifunc">SetSceneFogColor( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">float</span> r, <span class="apikeytype">float</span> g, <span class="apikeytype">float</span> b, <span class="apikeytype">float</span> a )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetSceneFog( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetSceneFogStart( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetFogEnd( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apikeytype">elfColor</span> GetFogColor( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetSceneCameraCount( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetSceneEntityCount( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetSceneLightCount( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetSceneArmatureCount( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetSceneParticlesCount( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetSceneSpriteCount( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc">AddSceneCamera( <span class="apiobjtype">elfScene</span> scene, <span class="apiobjtype">elfCamera</span> camera )</div>
+<div class="apifunc">AddSceneEntity( <span class="apiobjtype">elfScene</span> scene, <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc">AddSceneLight( <span class="apiobjtype">elfScene</span> scene, <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apifunc">AddSceneParticles( <span class="apiobjtype">elfScene</span> scene, <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc">AddSceneSprite( <span class="apiobjtype">elfScene</span> scene, <span class="apiobjtype">elfSprite</span> sprite )</div>
+<div class="apifunc">SetSceneActiveCamera( <span class="apiobjtype">elfScene</span> scene, <span class="apiobjtype">elfCamera</span> camera )</div>
+<div class="apifunc"><span class="apiobjtype">elfCamera</span> GetSceneActiveCamera( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apiobjtype">elfCollision</span> GetSceneRayCastResult( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z, <span class="apikeytype">float</span> dx, <span class="apikeytype">float</span> dy, <span class="apikeytype">float</span> dz )</div>
+<div class="apifunc"><span class="apiobjtype">elfList</span> GetSceneRayCastResults( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z, <span class="apikeytype">float</span> dx, <span class="apikeytype">float</span> dy, <span class="apikeytype">float</span> dz )</div>
+<div class="apifunc"><span class="apiobjtype">elfCollision</span> GetDebugSceneRayCastResult( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z, <span class="apikeytype">float</span> dx, <span class="apikeytype">float</span> dy, <span class="apikeytype">float</span> dz )</div>
+<div class="apifunc"><span class="apiobjtype">elfList</span> GetDebugSceneRayCastResults( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y, <span class="apikeytype">float</span> z, <span class="apikeytype">float</span> dx, <span class="apikeytype">float</span> dy, <span class="apikeytype">float</span> dz )</div>
+<div class="apifunc"><span class="apiobjtype">elfCamera</span> GetSceneCameraByIndex( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apiobjtype">elfEntity</span> GetSceneEntityByIndex( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apiobjtype">elfLight</span> GetSceneLightByIndex( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apiobjtype">elfArmature</span> GetSceneArmatureByIndex( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apiobjtype">elfParticles</span> GetSceneParticlesByIndex( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apiobjtype">elfSprite</span> GetSceneSpriteByIndex( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetSceneTexture( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfMaterial</span> GetSceneMaterial( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfModel</span> GetSceneModel( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfScript</span> GetSceneScript( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfCamera</span> GetSceneCamera( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfEntity</span> GetSceneEntity( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfLight</span> GetSceneLight( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfArmature</span> GetSceneArmature( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfParticles</span> GetSceneParticles( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfSprite</span> GetSceneSprite( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfActor</span> GetSceneActor( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneCamera( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneEntity( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneLight( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneParticles( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneSprite( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneCameraByIndex( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneEntityByIndex( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneLightByIndex( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneParticlesByIndex( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneSpriteByIndex( <span class="apiobjtype">elfScene</span> scene, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneCameraByObject( <span class="apiobjtype">elfScene</span> scene, <span class="apiobjtype">elfCamera</span> camera )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneEntityByObject( <span class="apiobjtype">elfScene</span> scene, <span class="apiobjtype">elfEntity</span> entity )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneLightByObject( <span class="apiobjtype">elfScene</span> scene, <span class="apiobjtype">elfLight</span> light )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneParticlesByObject( <span class="apiobjtype">elfScene</span> scene, <span class="apiobjtype">elfParticles</span> particles )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneSpriteByObject( <span class="apiobjtype">elfScene</span> scene, <span class="apiobjtype">elfSprite</span> sprite )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveSceneActorByObject( <span class="apiobjtype">elfScene</span> scene, <span class="apiobjtype">elfActor</span> actor )</div>
+<div class="apifunc"><span class="apiobjtype">elfList</span> GetSceneScripts( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apiobjtype">elfList</span> GetSceneTextures( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apiobjtype">elfList</span> GetSceneMaterials( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apifunc"><span class="apiobjtype">elfList</span> GetSceneModels( <span class="apiobjtype">elfScene</span> scene )</div>
+<div class="apitopic">SCRIPT FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfScript</span> CreateScript( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfScript</span> CreateScriptFromFile( <span class="apikeytype">string</span> name, <span class="apikeytype">string</span> filePath )</div>
+<div class="apifunc">SetScriptName( <span class="apiobjtype">elfScript</span> script, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetScriptName( <span class="apiobjtype">elfScript</span> script )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetScriptFilePath( <span class="apiobjtype">elfScript</span> script )</div>
+<div class="apifunc">SetScriptText( <span class="apiobjtype">elfScript</span> script, <span class="apikeytype">string</span> text )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsScriptError( <span class="apiobjtype">elfScript</span> script )</div>
+<div class="apitopic">SCRIPTING FUNCTIONS</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RunString( <span class="apikeytype">string</span> str )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RunScript( <span class="apiobjtype">elfScript</span> script )</div>
+<div class="apitopic">AUDIO FUNCTIONS</div>
+<div class="apifunc">SetAudioVolume( <span class="apikeytype">float</span> volume )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetAudioVolume(  )</div>
+<div class="apifunc">SetAudioRolloff( <span class="apikeytype">float</span> rolloff )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetAudioRolloff(  )</div>
+<div class="apifunc"><span class="apiobjtype">elfSound</span> LoadSound( <span class="apikeytype">string</span> filePath )</div>
+<div class="apifunc"><span class="apiobjtype">elfSound</span> LoadStreamedSound( <span class="apikeytype">string</span> filePath )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetSoundFileType( <span class="apiobjtype">elfSound</span> sound )</div>
+<div class="apifunc"><span class="apiobjtype">elfAudioSource</span> PlaySound( <span class="apiobjtype">elfSound</span> sound, <span class="apikeytype">float</span> volume )</div>
+<div class="apifunc"><span class="apiobjtype">elfAudioSource</span> PlayEntitySound( <span class="apiobjtype">elfEntity</span> entity, <span class="apiobjtype">elfSound</span> sound, <span class="apikeytype">float</span> volume )</div>
+<div class="apifunc"><span class="apiobjtype">elfAudioSource</span> LoopSound( <span class="apiobjtype">elfSound</span> sound, <span class="apikeytype">float</span> volume )</div>
+<div class="apifunc"><span class="apiobjtype">elfAudioSource</span> LoopEntitySound( <span class="apiobjtype">elfEntity</span> entity, <span class="apiobjtype">elfSound</span> sound, <span class="apikeytype">float</span> volume )</div>
+<div class="apifunc">SetSoundVolume( <span class="apiobjtype">elfAudioSource</span> source, <span class="apikeytype">float</span> volume )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetSoundVolume( <span class="apiobjtype">elfAudioSource</span> source )</div>
+<div class="apifunc">PauseSound( <span class="apiobjtype">elfAudioSource</span> source )</div>
+<div class="apifunc">ResumeSound( <span class="apiobjtype">elfAudioSource</span> source )</div>
+<div class="apifunc">StopSound( <span class="apiobjtype">elfAudioSource</span> source )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsSoundPlaying( <span class="apiobjtype">elfAudioSource</span> source )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> IsSoundPaused( <span class="apiobjtype">elfAudioSource</span> source )</div>
+<div class="apitopic">COLLISION FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfActor</span> GetCollisionActor( <span class="apiobjtype">elfCollision</span> collision )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetCollisionPosition( <span class="apiobjtype">elfCollision</span> collision )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetCollisionNormal( <span class="apiobjtype">elfCollision</span> collision )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetCollisionDepth( <span class="apiobjtype">elfCollision</span> collision )</div>
+<div class="apitopic">JOINT FUNCTIONS</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetJointName( <span class="apiobjtype">elfJoint</span> joint )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetJointType( <span class="apiobjtype">elfJoint</span> joint )</div>
+<div class="apifunc"><span class="apiobjtype">elfActor</span> GetJointActorA( <span class="apiobjtype">elfJoint</span> joint )</div>
+<div class="apifunc"><span class="apiobjtype">elfActor</span> GetJointActorB( <span class="apiobjtype">elfJoint</span> joint )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetJointPivot( <span class="apiobjtype">elfJoint</span> joint )</div>
+<div class="apifunc"><span class="apikeytype">elfVec3f</span> GetJointAxis( <span class="apiobjtype">elfJoint</span> joint )</div>
+<div class="apitopic">FONT FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfFont</span> CreateFontFromFile( <span class="apikeytype">string</span> filePath, <span class="apikeytype">int</span> size )</div>
+<div class="apifunc"><span class="apiobjtype">elfFont</span> GetDefaultFont(  )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetFontName( <span class="apiobjtype">elfFont</span> font )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetFontFilePath( <span class="apiobjtype">elfFont</span> font )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetFontSize( <span class="apiobjtype">elfFont</span> font )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetStringWidth( <span class="apiobjtype">elfFont</span> font, <span class="apikeytype">string</span> str )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetStringHeight( <span class="apiobjtype">elfFont</span> font, <span class="apikeytype">string</span> str )</div>
+<div class="apitopic">GUI OBJECT FUNCTIONS</div>
+<div class="apiinfo">Gui object functions can be performed on any gui object.</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetGuiObjectName( <span class="apiobjtype">elfGuiObject</span> object )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2i</span> GetGuiObjectPosition( <span class="apiobjtype">elfGuiObject</span> object )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2i</span> GetGuiObjectSize( <span class="apiobjtype">elfGuiObject</span> object )</div>
+<div class="apifunc"><span class="apikeytype">elfColor</span> GetGuiObjectColor( <span class="apiobjtype">elfGuiObject</span> object )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetGuiObjectVisible( <span class="apiobjtype">elfGuiObject</span> object )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetGuiObjectActive( <span class="apiobjtype">elfGuiObject</span> object )</div>
+<div class="apifunc"><span class="apiobjtype">elfScript</span> GetGuiObjectScript( <span class="apiobjtype">elfGuiObject</span> object )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetGuiObjectEvent( <span class="apiobjtype">elfGuiObject</span> object )</div>
+<div class="apifunc">SetGuiObjectPosition( <span class="apiobjtype">elfGuiObject</span> object, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y )</div>
+<div class="apifunc">SetGuiObjectColor( <span class="apiobjtype">elfGuiObject</span> object, <span class="apikeytype">float</span> r, <span class="apikeytype">float</span> g, <span class="apikeytype">float</span> b, <span class="apikeytype">float</span> a )</div>
+<div class="apifunc">SetGuiObjectVisible( <span class="apiobjtype">elfGuiObject</span> object, <span class="apikeytype">unsigned char</span> visible )</div>
+<div class="apifunc">SetGuiObjectActive( <span class="apiobjtype">elfGuiObject</span> object, <span class="apikeytype">unsigned char</span> active )</div>
+<div class="apifunc">SetGuiObjectScript( <span class="apiobjtype">elfGuiObject</span> object, <span class="apiobjtype">elfScript</span> script )</div>
+<div class="apitopic">LABEL FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfLabel</span> CreateLabel( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfFont</span> GetLabelFont( <span class="apiobjtype">elfLabel</span> label )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetLabelText( <span class="apiobjtype">elfLabel</span> label )</div>
+<div class="apifunc">SetLabelFont( <span class="apiobjtype">elfLabel</span> label, <span class="apiobjtype">elfFont</span> font )</div>
+<div class="apifunc">SetLabelText( <span class="apiobjtype">elfLabel</span> label, <span class="apikeytype">string</span> text )</div>
+<div class="apitopic">BUTTON FUNCTION</div>
+<div class="apifunc"><span class="apiobjtype">elfButton</span> CreateButton( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetButtonState( <span class="apiobjtype">elfButton</span> button )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetButtonText( <span class="apiobjtype">elfButton</span> button )</div>
+<div class="apifunc"><span class="apiobjtype">elfFont</span> GetButtonFont( <span class="apiobjtype">elfButton</span> button )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetButtonOffTexture( <span class="apiobjtype">elfButton</span> button )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetButtonOverTexture( <span class="apiobjtype">elfButton</span> button )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetButtonOnTexture( <span class="apiobjtype">elfButton</span> button )</div>
+<div class="apifunc"><span class="apikeytype">elfColor</span> GetButtonTextColor( <span class="apiobjtype">elfTextField</span> textField )</div>
+<div class="apifunc">SetButtonTextColor( <span class="apiobjtype">elfButton</span> button, <span class="apikeytype">float</span> r, <span class="apikeytype">float</span> g, <span class="apikeytype">float</span> b, <span class="apikeytype">float</span> a )</div>
+<div class="apifunc">SetButtonText( <span class="apiobjtype">elfButton</span> button, <span class="apikeytype">string</span> text )</div>
+<div class="apifunc">SetButtonFont( <span class="apiobjtype">elfButton</span> button, <span class="apiobjtype">elfFont</span> font )</div>
+<div class="apifunc">SetButtonSize( <span class="apiobjtype">elfButton</span> button, <span class="apikeytype">int</span> width, <span class="apikeytype">int</span> height )</div>
+<div class="apifunc">SetButtonOffTexture( <span class="apiobjtype">elfButton</span> button, <span class="apiobjtype">elfTexture</span> off )</div>
+<div class="apifunc">SetButtonOverTexture( <span class="apiobjtype">elfButton</span> button, <span class="apiobjtype">elfTexture</span> over )</div>
+<div class="apifunc">SetButtonOnTexture( <span class="apiobjtype">elfButton</span> button, <span class="apiobjtype">elfTexture</span> on )</div>
+<div class="apitopic">PICTURE FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfPicture</span> CreatePicture( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetPictureTexture( <span class="apiobjtype">elfPicture</span> picture )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2f</span> GetPictureScale( <span class="apiobjtype">elfPicture</span> picture )</div>
+<div class="apifunc">SetPictureTexture( <span class="apiobjtype">elfPicture</span> picture, <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc">SetPictureScale( <span class="apiobjtype">elfPicture</span> picture, <span class="apikeytype">float</span> x, <span class="apikeytype">float</span> y )</div>
+<div class="apitopic">TEXT FIELD FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfTextField</span> CreateTextField( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetTextFieldTexture( <span class="apiobjtype">elfTextField</span> textField )</div>
+<div class="apifunc"><span class="apiobjtype">elfFont</span> GetTextFieldFont( <span class="apiobjtype">elfTextField</span> textField )</div>
+<div class="apifunc"><span class="apikeytype">elfColor</span> GetTextFieldTextColor( <span class="apiobjtype">elfTextField</span> textField )</div>
+<div class="apifunc"><span class="apikeytype">elfVec2i</span> GetTextFieldOffset( <span class="apiobjtype">elfTextField</span> textField )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetTextFieldText( <span class="apiobjtype">elfTextField</span> textField )</div>
+<div class="apifunc">SetTextFieldFont( <span class="apiobjtype">elfTextField</span> textField, <span class="apiobjtype">elfFont</span> font )</div>
+<div class="apifunc">SetTextFieldWidth( <span class="apiobjtype">elfTextField</span> textField, <span class="apikeytype">int</span> width )</div>
+<div class="apifunc">SetTextFieldTexture( <span class="apiobjtype">elfTextField</span> textField, <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc">SetTextFieldTextColor( <span class="apiobjtype">elfTextField</span> textField, <span class="apikeytype">float</span> r, <span class="apikeytype">float</span> g, <span class="apikeytype">float</span> b, <span class="apikeytype">float</span> a )</div>
+<div class="apifunc">SetTextFieldOffset( <span class="apiobjtype">elfTextField</span> textField, <span class="apikeytype">int</span> offsetX, <span class="apikeytype">int</span> offsetY )</div>
+<div class="apifunc">SetTextFieldCursorPosition( <span class="apiobjtype">elfTextField</span> textField, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc">SetTextFieldText( <span class="apiobjtype">elfTextField</span> textField, <span class="apikeytype">string</span> text )</div>
+<div class="apitopic">SLIDER FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfSlider</span> CreateSlider( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetSliderBackgroundTexture( <span class="apiobjtype">elfSlider</span> slider )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetSliderSliderTexture( <span class="apiobjtype">elfSlider</span> slider )</div>
+<div class="apifunc"><span class="apikeytype">float</span> GetSliderValue( <span class="apiobjtype">elfSlider</span> slider )</div>
+<div class="apifunc">SetSliderSize( <span class="apiobjtype">elfSlider</span> slider, <span class="apikeytype">int</span> width, <span class="apikeytype">int</span> height )</div>
+<div class="apifunc">SetSliderBackgroundTexture( <span class="apiobjtype">elfSlider</span> slider, <span class="apiobjtype">elfTexture</span> background )</div>
+<div class="apifunc">SetSliderSliderTexture( <span class="apiobjtype">elfSlider</span> slider, <span class="apiobjtype">elfTexture</span> sliderTexture )</div>
+<div class="apifunc">SetSliderValue( <span class="apiobjtype">elfSlider</span> slider, <span class="apikeytype">float</span> value )</div>
+<div class="apitopic">SCREEN FUCNTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfScreen</span> CreateScreen( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc">SetScreenSize( <span class="apiobjtype">elfScreen</span> screen, <span class="apikeytype">int</span> width, <span class="apikeytype">int</span> height )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetScreenTexture( <span class="apiobjtype">elfScreen</span> screen )</div>
+<div class="apifunc">SetScreenTexture( <span class="apiobjtype">elfScreen</span> screen, <span class="apiobjtype">elfTexture</span> texture )</div>
+<div class="apifunc">SetScreenToTop( <span class="apiobjtype">elfScreen</span> screen )</div>
+<div class="apifunc">ForceScreenFocus( <span class="apiobjtype">elfScreen</span> screen )</div>
+<div class="apifunc">ReleaseScreenFocus( <span class="apiobjtype">elfScreen</span> screen )</div>
+<div class="apitopic">TEXT LIST FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfTextList</span> CreateTextList( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfFont</span> GetTextListFont( <span class="apiobjtype">elfTextList</span> textList )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetTextListRowCount( <span class="apiobjtype">elfTextList</span> textList )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetTextListItemCount( <span class="apiobjtype">elfTextList</span> textList )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetTextListSelectionIndex( <span class="apiobjtype">elfTextList</span> textList )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetTextListOffset( <span class="apiobjtype">elfTextList</span> textList )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetTextListItem( <span class="apiobjtype">elfTextList</span> textList, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetTextListSelectedItem( <span class="apiobjtype">elfTextList</span> textList )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetTextListItemDrag( <span class="apiobjtype">elfTextList</span> textList )</div>
+<div class="apifunc">SetTextListFont( <span class="apiobjtype">elfTextList</span> textList, <span class="apiobjtype">elfFont</span> font )</div>
+<div class="apifunc">SetTextListSize( <span class="apiobjtype">elfTextList</span> textList, <span class="apikeytype">int</span> rows, <span class="apikeytype">int</span> width )</div>
+<div class="apifunc">AddTextListItem( <span class="apiobjtype">elfTextList</span> textList, <span class="apikeytype">string</span> text )</div>
+<div class="apifunc">SetTextListItem( <span class="apiobjtype">elfTextList</span> textList, <span class="apikeytype">int</span> idx, <span class="apikeytype">string</span> text )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveTextListItem( <span class="apiobjtype">elfTextList</span> textList, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc">RemoveTextListItems( <span class="apiobjtype">elfTextList</span> textList )</div>
+<div class="apifunc">SetTextListOffset( <span class="apiobjtype">elfTextList</span> textList, <span class="apikeytype">int</span> offset )</div>
+<div class="apifunc">SetTextListSelection( <span class="apiobjtype">elfTextList</span> textList, <span class="apikeytype">int</span> selection )</div>
+<div class="apifunc">SetTextListItemDrag( <span class="apiobjtype">elfTextList</span> textList, <span class="apikeytype">unsigned char</span> itemDrag )</div>
+<div class="apitopic">CHECK BOX FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfCheckBox</span> CreateCheckBox( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetCheckBoxState( <span class="apiobjtype">elfCheckBox</span> checkBox )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetCheckBoxOffTexture( <span class="apiobjtype">elfCheckBox</span> checkBox )</div>
+<div class="apifunc"><span class="apiobjtype">elfTexture</span> GetCheckBoxOnTexture( <span class="apiobjtype">elfCheckBox</span> checkBox )</div>
+<div class="apifunc">SetCheckBoxOffTexture( <span class="apiobjtype">elfCheckBox</span> checkBox, <span class="apiobjtype">elfTexture</span> off )</div>
+<div class="apifunc">SetCheckBoxOnTexture( <span class="apiobjtype">elfCheckBox</span> checkBox, <span class="apiobjtype">elfTexture</span> on )</div>
+<div class="apifunc">SetCheckBoxState( <span class="apiobjtype">elfCheckBox</span> checkBox, <span class="apikeytype">unsigned char</span> state )</div>
+<div class="apitopic">GUI FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfGui</span> CreateGui(  )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> AddGuiObject( <span class="apiobjtype">elfGuiObject</span> parent, <span class="apiobjtype">elfGuiObject</span> object )</div>
+<div class="apifunc"><span class="apiobjtype">elfGuiObject</span> GetGuiObjectByName( <span class="apiobjtype">elfGuiObject</span> parent, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apiobjtype">elfGuiObject</span> GetGuiObjectByIndex( <span class="apiobjtype">elfGuiObject</span> parent, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveGuiObjectByName( <span class="apiobjtype">elfGuiObject</span> parent, <span class="apikeytype">string</span> name )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveGuiObjectByIndex( <span class="apiobjtype">elfGuiObject</span> parent, <span class="apikeytype">int</span> idx )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> RemoveGuiObjectByObject( <span class="apiobjtype">elfGuiObject</span> parent, <span class="apiobjtype">elfGuiObject</span> object )</div>
+<div class="apifunc"><span class="apiobjtype">elfGuiObject</span> GetGuiTrace( <span class="apiobjtype">elfGui</span> gui )</div>
+<div class="apifunc"><span class="apiobjtype">elfGuiObject</span> GetGuiFocus( <span class="apiobjtype">elfGui</span> gui )</div>
+<div class="apifunc"><span class="apiobjtype">elfGuiObject</span> GetGuiActiveTextField( <span class="apiobjtype">elfGui</span> gui )</div>
+<div class="apifunc"><span class="apikeytype">boolean</span> GetGuiDragging( <span class="apiobjtype">elfGui</span> gui )</div>
+<div class="apifunc"><span class="apiobjtype">elfGuiObject</span> GetGuiDragObject( <span class="apiobjtype">elfGui</span> gui )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetGuiDragContent( <span class="apiobjtype">elfGui</span> gui )</div>
+<div class="apifunc">EmptyGui( <span class="apiobjtype">elfGui</span> gui )</div>
+<div class="apitopic">NETWORKING FUNCTIONS</div>
+<div class="apifunc"><span class="apiobjtype">elfRequest</span> CreateRequest( <span class="apikeytype">string</span> name )</div>
+<div class="apifunc">SendRequest( <span class="apiobjtype">elfRequest</span> req )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetRequestUrl( <span class="apiobjtype">elfRequest</span> request )</div>
+<div class="apifunc">SetRequestUrl( <span class="apiobjtype">elfRequest</span> request, <span class="apikeytype">string</span> url )</div>
+<div class="apifunc"><span class="apikeytype">string</span> GetRequestMethod( <span class="apiobjtype">elfRequest</span> request )</div>
+<div class="apifunc">SetRequestMethod( <span class="apiobjtype">elfRequest</span> request, <span class="apikeytype">string</span> method )</div>
+<div class="apifunc"><span class="apikeytype">int</span> GetRequestState(  )</div>
+<div class="copyright">Copyright &copy; 2009-2010 Samuel Anjam</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4880379-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>

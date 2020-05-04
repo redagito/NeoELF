@@ -8,39 +8,27 @@
 struct elfProperty
 {
     ELF_OBJECT_HEADER;
-    char* name;
+    char* name = nullptr;
     unsigned char propertyType;
     // TODO Union?
-    int ival;
-    float fval;
-    char* sval;
-    bool bval;
+    int ival = 0;
+    float fval = 0;
+    char* sval = nullptr;
+    bool bval = false;
 };
 
 elfProperty* elfCreateProperty(const char* name);
-
 void elfDestroyProperty(void* data);
 
-/**
- * Getter
- */
+// Getter
 int elfGetPropertyType(elfProperty* property);
-
 int elfGetPropertyInt(elfProperty* property);
-
 float elfGetPropertyFloat(elfProperty* property);
-
 const char* elfGetPropertyString(elfProperty* property);
-
 bool elfGetPropertyBool(elfProperty* property);
 
-/**
- * Setter
- */
+// Setter
 void elfSetPropertyInt(elfProperty* property, int ival);
-
 void elfSetPropertyFloat(elfProperty* property, float fval);
-
 void elfSetPropertyString(elfProperty* property, const char* sval);
-
 void elfSetPropertyBool(elfProperty* property, bool bval);

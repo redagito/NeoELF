@@ -30,22 +30,18 @@ struct elfGeneral
 };
 
 // Globally accessible
-elfGeneral* gen;
+extern elfGeneral* gen;
 
 void elfInitGeneral();
-
 void elfDeinitGeneral();
 
 void elfIncObj(int type);
-
 void elfDecObj(int type);
 
 void elfDumpRefTable();
-
 void elfDumpObjTable();
 
 int elfGetGlobalRefCount();
-
 int elfGetGlobalObjCount();
 
 // Why is this here?

@@ -8,6 +8,8 @@
 #include "nelf/Ipo.h"
 #include "nelf/List.h"
 #include "nelf/Object.h"
+#include "nelf/String.h"
+#include "nelf/audio/AudioSource.h"
 #include "nelf/objectType.h"
 #include "nelf/shapeType.h"
 

@@ -33,6 +33,8 @@ conan_cmake_run(REQUIRES
 	glfw/3.3@bincrafters/stable 
 	glad/0.1.29@bincrafters/stable
 	openal/1.19.0@bincrafters/stable
+	vorbis/1.3.6@bincrafters/stable
+	lua/5.3.4@zimmerk/stable
 	
 	jsonformoderncpp/3.7.0@vthiery/stable
 	lodepng/1.0@int010h/stable
@@ -57,6 +59,8 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE CONAN_PKG::jsonformoderncpp
 	PRIVATE CONAN_PKG::lodepng
 	PRIVATE CONAN_PKG::openal
+	PRIVATE CONAN_PKG::vorbis
+	PRIVATE CONAN_PKG::lua
 )
 
 target_include_directories(${PROJECT_NAME} 

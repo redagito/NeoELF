@@ -1,9 +1,9 @@
 #pragma once
 
+#include <AL/alc.h>
+
 #include "nelf/objectHeader.h"
 
-struct ALCdevice;
-struct ALCcontext;
 struct elfList;
 
 struct elfAudioDevice
@@ -17,7 +17,7 @@ struct elfAudioDevice
 };
 
 // Global audio device
-elfAudioDevice* audioDevice;
+extern elfAudioDevice* audioDevice;
 
 elfAudioDevice* elfCreateAudioDevice();
 

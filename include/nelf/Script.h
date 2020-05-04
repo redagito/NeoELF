@@ -11,7 +11,6 @@ struct elfScript
 };
 
 elfScript* elfCreateScript(const char* name);
-
 elfScript* elfCreateScriptFromFile(const char* name, const char* filePath);
 
 void elfDestroyScript(void* data);
@@ -19,7 +18,6 @@ void elfDestroyScript(void* data);
 void elfSetScriptName(elfScript* script, const char* name);
 
 const char* elfGetScriptName(elfScript* script);
-
 const char* elfGetScriptFilePath(elfScript* script);
 
 void elfSetScriptText(elfScript* script, const char* text);

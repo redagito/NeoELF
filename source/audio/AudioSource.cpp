@@ -1,10 +1,22 @@
 #include "nelf/audio/AudioSource.h"
 
+#include <vorbis/vorbisfile.h>
+
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/Actor.h"
+#include "nelf/Entity.h"
+#include "nelf/General.h"
 #include "nelf/List.h"
 #include "nelf/Object.h"
+#include "nelf/audio/soundFileType.h"
+#include "nelf/audio/streamChunkSize.h"
+#include "nelf/objectType.h"
+
+// TODO Cyclic dependency due to global AudioDevice, fix this
+#include "nelf/audio/AudioDevice.h"
+#include "nelf/audio/Sound.h"
 
 elfAudioSource* elfPlaySound(elfSound* sound, float volume)
 {
@@ -39,7 +51,7 @@ elfAudioSource* elfPlaySound(elfSound* sound, float volume)
     if (source->sound->streamed)
     {
         elfStreamAudioSource(source);
-        source->sound->streaming = ELF_TRUE;
+        source->sound->streaming = true;
     }
     alSourcePlay(source->source);
 
@@ -85,7 +97,7 @@ elfAudioSource* elfPlayEntitySound(elfEntity* entity, elfSound* sound, float vol
     if (source->sound->streamed)
     {
         elfStreamAudioSource(source);
-        source->sound->streaming = ELF_TRUE;
+        source->sound->streaming = true;
     }
     alSourcePlay(source->source);
 
@@ -107,7 +119,7 @@ elfAudioSource* elfLoopSound(elfSound* sound, float volume)
     // clear errors
     alGetError();
 
-    source->loop = ELF_TRUE;
+    source->loop = true;
     source->sound = sound;
     elfIncRef((elfObject*)sound);
 
@@ -132,7 +144,7 @@ elfAudioSource* elfLoopSound(elfSound* sound, float volume)
     if (source->sound->streamed)
     {
         elfStreamAudioSource(source);
-        source->sound->streaming = ELF_TRUE;
+        source->sound->streaming = true;
     }
     alSourcePlay(source->source);
 
@@ -154,7 +166,7 @@ elfAudioSource* elfLoopEntitySound(elfEntity* entity, elfSound* sound, float vol
     // clear errors
     alGetError();
 
-    source->loop = ELF_TRUE;
+    source->loop = true;
     source->sound = sound;
     elfIncRef((elfObject*)sound);
 
@@ -182,7 +194,7 @@ elfAudioSource* elfLoopEntitySound(elfEntity* entity, elfSound* sound, float vol
     if (source->sound->streamed)
     {
         elfStreamAudioSource(source);
-        source->sound->streaming = ELF_TRUE;
+        source->sound->streaming = true;
     }
     alSourcePlay(source->source);
 
@@ -208,14 +220,17 @@ elfAudioSource* elfCreateAudioSource()
 
 void elfStreamAudioSource(elfAudioSource* source)
 {
-    int queued;
-    int processed;
-    unsigned int buffer;
+    int queued = 0;
+    int processed = 0;
+    unsigned int buffer = 0;
 
-    char buf[ELF_AUDIO_STREAM_CHUNK_SIZE];
-    int read;
-    int bytesRead;
-    int bytesToRead;
+    // Moved to heap, exceeded max stack size
+    // TODO RAII
+    char* buf = (char*)malloc(sizeof(char) * ELF_AUDIO_STREAM_CHUNK_SIZE);
+
+    int read = 0;
+    int bytesRead = 0;
+    int bytesToRead = 0;
 
     int endian = 0;
     int bitStream = 0;
@@ -231,6 +246,7 @@ void elfStreamAudioSource(elfAudioSource* source)
     {
         if (!source->loop)
         {
+            free(buf);
             return;
         }
     }
@@ -256,7 +272,7 @@ void elfStreamAudioSource(elfAudioSource* source)
                     if (source->loop)
                         elfInitSoundWithOgg(source->sound, source->sound->filePath);
                     else
-                        source->sound->eof = ELF_TRUE;
+                        source->sound->eof = true;
                     break;
                 }
                 bytesRead += read;
@@ -279,7 +295,7 @@ void elfStreamAudioSource(elfAudioSource* source)
                 if (source->loop)
                     elfInitSoundWithWav(source->sound, source->sound->filePath);
                 else
-                    source->sound->eof = ELF_TRUE;
+                    source->sound->eof = true;
             }
 
             bytesRead = bytesToRead;
@@ -296,6 +312,9 @@ void elfStreamAudioSource(elfAudioSource* source)
                 source->sound->oldestBuffer = 0;
         }
     }
+
+    // Moved to heap, exceeded max stack size
+    free(buf);
 }
 
 void elfDestroyAudioSource(void* data)
@@ -304,7 +323,7 @@ void elfDestroyAudioSource(void* data)
 
     if (source->sound)
     {
-        source->sound->streaming = ELF_FALSE;
+        source->sound->streaming = false;
         elfDecRef((elfObject*)source->sound);
     }
     if (source->source)
@@ -327,7 +346,7 @@ float elfGetSoundVolume(elfAudioSource* source)
 void elfPauseSound(elfAudioSource* source)
 {
     alSourcePause(source->source);
-    source->paused = ELF_TRUE;
+    source->paused = true;
 }
 
 void elfResumeSound(elfAudioSource* source)
@@ -353,7 +372,7 @@ void elfResumeSound(elfAudioSource* source)
     {
         alSourcePlay(source->source);
     }
-    source->paused = ELF_FALSE;
+    source->paused = false;
 }
 
 void elfStopSound(elfAudioSource* source)
@@ -366,12 +385,12 @@ void elfStopSound(elfAudioSource* source)
         alSourceStop(source->source);
         alGetSourcei(source->source, AL_BUFFERS_QUEUED, &queued);
         while (queued--) alSourceUnqueueBuffers(source->source, 1, &buffer);
-        source->sound->eof = ELF_TRUE;
+        source->sound->eof = true;
     }
     else
     {
         alSourceStop(source->source);
-        source->paused = ELF_FALSE;
+        source->paused = false;
     }
 }
 
@@ -380,8 +399,8 @@ unsigned char elfIsSoundPlaying(elfAudioSource* source)
     int state = 0;
     alGetSourcei(source->source, AL_SOURCE_STATE, &state);
     if (state == AL_PLAYING)
-        return ELF_TRUE;
-    return ELF_FALSE;
+        return true;
+    return false;
 }
 
 unsigned char elfIsSoundPaused(elfAudioSource* source) { return source->paused; }

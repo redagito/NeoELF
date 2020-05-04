@@ -16,11 +16,6 @@
     elfScript* script;        \
     int event
 
-struct elfResource
-{
-    ELF_RESOURCE_HEADER;
-};
-
 struct elfKeyEvent
 {
     ELF_OBJECT_HEADER;
@@ -151,27 +146,6 @@ struct elfTexture
 
     void* data;
     int dataSize;
-};
-
-struct elfVertex
-{
-    ELF_OBJECT_HEADER;
-    elfVec3f position;
-    elfVec3f normal;
-    elfVec2f texCoord;
-};
-
-struct elfFace
-{
-    ELF_OBJECT_HEADER;
-    int v1, v2, v3;
-};
-
-struct elfMeshData
-{
-    ELF_OBJECT_HEADER;
-    elfList* vertices;
-    elfList* faces;
 };
 
 typedef struct elfModelArea

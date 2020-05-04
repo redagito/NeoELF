@@ -1,14 +1,14 @@
+#include "nelf/Scripting.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
+#include <lua.hpp>
 
-#include "blendelf.h"
-#include "gfx.h"
-#include "lauxlib.h"
-#include "lua.h"
-#include "lualib.h"
-#include "types.h"
+#include "nelf/General.h"
+#include "nelf/Log.h"
+#include "nelf/Object.h"
+#include "nelf/errorCode.h"
+#include "nelf/objectType.h"
 
 int luaopen_elf(lua_State* L);
 
@@ -29,7 +29,9 @@ elfScripting* elfCreateScripting()
     scripting->objType = ELF_SCRIPTING;
     scripting->objDestr = elfDestroyScripting;
 
-    scripting->L = lua_open();
+    // scripting->L = lua_open();
+    scripting->L = lua_newstate(nullptr, nullptr);
+
     if (!scripting->L)
     {
         elfSetError(ELF_CANT_INITIALIZE, "error: failed to initialize lua\n");
@@ -56,21 +58,21 @@ void elfDestroyScripting(void* data)
     elfDecObj(ELF_SCRIPTING);
 }
 
-unsigned char elfInitScripting()
+bool elfInitScripting()
 {
     if (scr)
     {
         elfLogWrite("warning: cannot initialize scripting twice\n");
-        return ELF_TRUE;
+        return true;
     }
 
     scr = elfCreateScripting();
     if (!scr)
-        return ELF_FALSE;
+        return false;
 
     elfIncRef((elfObject*)scr);
 
-    return ELF_TRUE;
+    return true;
 }
 
 void elfUpdateScripting()
@@ -88,29 +90,29 @@ void elfDeinitScripting()
     scr = NULL;
 }
 
-unsigned char elfRunString(const char* str)
+bool elfRunString(const char* str)
 {
     int err;
 
     if (!scr || !str)
-        return ELF_FALSE;
+        return false;
 
     err = luaL_dostring(scr->L, str);
     if (err)
     {
         elfSetError(ELF_CANT_RUN_STRING, "error: can't run string \"%s\"\n%s\n", str, lua_tostring(scr->L, -1));
-        return ELF_FALSE;
+        return false;
     }
 
-    return ELF_TRUE;
+    return true;
 }
 
-unsigned char elfRunScript(elfScript* script)
+bool elfRunScript(elfScript* script)
 {
     int err;
 
     if (!scr || !script->text || script->error)
-        return ELF_FALSE;
+        return false;
 
     err = luaL_dostring(scr->L, script->text);
     if (err)
@@ -118,9 +120,9 @@ unsigned char elfRunScript(elfScript* script)
         elfSetError(ELF_CANT_RUN_SCRIPT, "error: can't run script \"%s\"\n%s\n", script->name,
                     lua_tostring(scr->L, -1));
 
-        script->error = ELF_TRUE;
-        return ELF_FALSE;
+        script->error = true;
+        return false;
     }
 
-    return ELF_TRUE;
+    return true;
 }

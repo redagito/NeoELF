@@ -3,10 +3,15 @@
 #include <cstdlib>
 #include <cstring>
 
+// OpenAL
+#include <AL/al.h>
+
 #include "nelf/General.h"
 #include "nelf/List.h"
 #include "nelf/Log.h"
 #include "nelf/Object.h"
+#include "nelf/audio/AudioSource.h"
+#include "nelf/audio/Sound.h"
 
 elfAudioDevice* audioDevice = nullptr;
 

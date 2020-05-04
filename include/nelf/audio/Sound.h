@@ -1,5 +1,8 @@
 #pragma once
 
+#include <AL/al.h>
+#include <vorbis/vorbisfile.h>
+
 #include <cstdio>
 
 #include "nelf/objectHeader.h"

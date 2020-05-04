@@ -1,5 +1,7 @@
 #pragma once
 
+#include <AL/al.h>
+
 #include "nelf/objectHeader.h"
 
 struct elfSound;
@@ -8,10 +10,10 @@ struct elfEntity;
 struct elfAudioSource
 {
     ELF_OBJECT_HEADER;
-    elfSound* sound;
+    elfSound* sound = nullptr;
     ALuint source;
-    unsigned char loop;
-    unsigned char paused;
+    bool loop = false;
+    bool paused = false;
 };
 
 elfAudioSource* elfPlaySound(elfSound* sound, float volume);

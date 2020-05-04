@@ -1,5 +1,8 @@
 #include "nelf/audio/Sound.h"
 
+#include <AL/al.h>
+#include <vorbis/vorbisfile.h>
+
 #include <cstdlib>
 #include <cstring>
 
@@ -8,7 +11,9 @@
 #include "nelf/Object.h"
 #include "nelf/String.h"
 #include "nelf/audio/AudioDevice.h"
+#include "nelf/audio/DataDump.h"
 #include "nelf/audio/soundFileType.h"
+#include "nelf/audio/streamChunkSize.h"
 #include "nelf/errorCode.h"
 #include "nelf/objectType.h"
 
@@ -296,7 +301,7 @@ elfSound* elfLoadStreamedSound(const char* filePath)
     snd = elfCreateSound();
 
     snd->filePath = elfCreateString(filePath);
-    snd->streamed = ELF_TRUE;
+    snd->streamed = true;
 
     type = strrchr((char*)filePath, '.');
 

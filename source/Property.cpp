@@ -4,6 +4,7 @@
 #include <cstring>
 
 #include "nelf/General.h"
+#include "nelf/String.h"
 #include "nelf/objectType.h"
 #include "nelf/propertyType.h"
 

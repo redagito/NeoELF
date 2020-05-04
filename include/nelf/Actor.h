@@ -31,13 +31,10 @@ void elfActorPostDraw(elfActor* actor);
 void elfCleanActor(elfActor* actor);
 
 const char* elfGetActorName(elfActor* actor);
-
 const char* elfGetActorFilePath(elfActor* actor);
-
 elfScript* elfGetActorScript(elfActor* actor);
 
 void elfSetActorName(elfActor* actor, const char* name);
-
 void elfSetActorScript(elfActor* actor, elfScript* script);
 
 void elfClearActorScript(elfActor* actor);
@@ -46,35 +43,25 @@ void elfClearActorScript(elfActor* actor);
  * Transformation
  */
 void elfSetActorPosition(elfActor* actor, float x, float y, float z);
-
 void elfSetActorRotation(elfActor* actor, float x, float y, float z);
-
 void elfSetActorOrientation(elfActor* actor, float x, float y, float z, float w);
 
 void elfRotateActor(elfActor* actor, float x, float y, float z);
-
 void elfRotateActorLocal(elfActor* actor, float x, float y, float z);
 
 void elfMoveActor(elfActor* actor, float x, float y, float z);
-
 void elfMoveActorLocal(elfActor* actor, float x, float y, float z);
 
 void elfSetActorPositionRelativeTo(elfActor* actor, elfActor* to, float x, float y, float z);
-
 void elfSetActorRotationRelativeTo(elfActor* actor, elfActor* to, float x, float y, float z);
-
 void elfSetActorOrientationRelativeTo(elfActor* actor, elfActor* to, float x, float y, float z, float w);
 
 elfVec3f elfGetActorPosition(elfActor* actor);
-
 elfVec3f elfGetActorRotation(elfActor* actor);
-
 elfVec4f elfGetActorOrientation(elfActor* actor);
 
 void elfGetActorPosition_(elfActor* actor, float* params);
-
 void elfGetActorRotation_(elfActor* actor, float* params);
-
 void elfGetActorOrientation_(elfActor* actor, float* params);
 
 /**
