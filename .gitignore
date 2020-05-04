@@ -30,3 +30,34 @@
 *.exe
 *.out
 *.app
+
+# CMake
+CMakeFiles/
+cmake_install.cmake
+CMakeCache.txt
+
+# Conan
+conanbuildinfo_debug.cmake
+conanbuildinfo_multi.cmake
+conanbuildinfo_release.cmake
+conanbuildinfo.cmake
+conan.cmake
+conanbuildinfo.txt
+conanfile.txt
+conaninfo.txt
+graph_info.json
+conan.lock
+
+# Visual Studio
+.vs/
+.vscode/
+Debug/
+x64/
+*.dir/
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
+*.sln
+
+# Runtime logs
+usage.txt
