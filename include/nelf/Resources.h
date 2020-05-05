@@ -8,8 +8,10 @@ struct elfTexture;
 struct elfResources
 {
     ELF_OBJECT_HEADER;
+    // List of all textures
     elfList* textures = nullptr;
 
+    // Separate counters for each resource type
     int sceneIdCounter = 0;
     int scriptIdCounter = 0;
     int textureIdCounter = 0;
@@ -24,16 +26,13 @@ struct elfResources
 };
 
 // Globally accessible
-elfResources* res;
+extern elfResources* res;
 
 elfResources* elfCreateResources();
-
 void elfDestroyResources(void* data);
 
 bool elfInitResources();
-
 void elfDeinitResources();
 
 elfTexture* elfGetResourcesTexture(const char* filePath, const char* name);
-
 elfTexture* elfGetOrLoadResourcesTexture(const char* filePath, const char* name);

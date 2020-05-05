@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/StringStream.h"
 #include "nelf/objectType.h"
 
 elfConfig* elfCreateConfig()
@@ -68,7 +69,7 @@ elfConfig* elfReadConfig(const char* filePath)
 
     file = fopen(filePath, "r");
     if (!file)
-        return NULL;
+        return nullptr;
 
     fseek(file, 0, SEEK_END);
     length = ftell(file);
@@ -83,7 +84,7 @@ elfConfig* elfReadConfig(const char* filePath)
     else
     {
         fclose(file);
-        return NULL;
+        return nullptr;
     }
 
     config = elfCreateConfig();
