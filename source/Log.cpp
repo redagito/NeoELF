@@ -3,35 +3,91 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
-// TODO Move stuff from general to here
-#include "nelf/General.h"
+// Path to log file
+static char* log = nullptr;
 
-// TODO This should either receive a file name for logging
-//      or just provide an additional set for the log file name
-//      but it should be managed here instead of general
+// Last error that happened
+static char* errStr = nullptr;
+
+// Last error code
+static int errCode = 0;
+
+// Keep file open for appending
+static FILE* file = nullptr;
+
+void elfSetLogFilePath(const char* filePath)
+{
+    FILE* file = fopen(filePath, "a");
+    if (!file)
+    {
+        file = fopen(filePath, "w");
+        if (!file)
+        {
+            printf("error: can't open log file \"%s\", reverting to default\n", filePath);
+            return;
+        }
+    }
+
+    if (log)
+        free(log);
+
+    log = (char*)malloc(sizeof(char) * (strlen(filePath) + 1));
+    memcpy(log, filePath, sizeof(char) * strlen(filePath));
+    log[strlen(filePath)] = '\0';
+}
+
+void elfInitLog()
+{
+    if (log != nullptr)
+    {
+        printf("error: log system already initialized");
+        return;
+    }
+
+    log = (char*)malloc(sizeof(char) * 8);
+    memcpy(log, "elf.log", sizeof(char) * 7);
+    log[7] = '\0';
+}
+
+void elfDeinitLog()
+{
+    if (log != nullptr)
+        free(log);
+    if (errStr != nullptr)
+        free(errStr);
+    if (file != nullptr)
+        fclose(file);
+    log = nullptr;
+    errStr = nullptr;
+    errCode = 0;
+}
+
 void elfStartLog()
 {
-    FILE* file;
-
-    file = fopen(gen->log, "w");
     if (file)
         fclose(file);
+
+    // Make sure log exists
+    file = fopen(log, "w");
+
+    if (file)
+    {
+        // Reopen for appending
+        fclose(file);
+        file = fopen(log, "a");
+    }
 }
 
 void elfLogWrite(const char* fmt, ...)
 {
     va_list args;
-    FILE* file;
-
-    file = fopen(gen->log, "a");
     if (file)
     {
         va_start(args, fmt);
         vfprintf(file, fmt, args);
         va_end(args);
-
-        fclose(file);
     }
 
     va_start(args, fmt);
@@ -42,47 +98,40 @@ void elfLogWrite(const char* fmt, ...)
 void elfSetError(int code, const char* fmt, ...)
 {
     va_list args;
-    FILE* file;
     int len = -1;
 
-    file = fopen(gen->log, "a");
     if (file)
     {
         va_start(args, fmt);
         len = vfprintf(file, fmt, args);
         va_end(args);
-
-        fclose(file);
     }
 
     if (len > 0)
     {
-        if (gen->errStr)
-            free(gen->errStr);
-        gen->errStr = (char*)malloc(sizeof(char) * (len + 1));
+        if (errStr)
+            free(errStr);
+        errStr = (char*)malloc(sizeof(char) * (len + 1));
 
         va_start(args, fmt);
-        vsprintf(gen->errStr, fmt, args);
+        vsprintf(errStr, fmt, args);
         va_end(args);
 
-        gen->errStr[len] = '\0';
+        errStr[len] = '\0';
     }
 
     va_start(args, fmt);
     vprintf(fmt, args);
     va_end(args);
 
-    gen->errCode = code;
+    errCode = code;
 }
 
 void elfWriteLogLine(const char* str)
 {
-    FILE* file;
-
-    file = fopen(gen->log, "a");
     if (file)
     {
-        fprintf(file, "%s\n", (char*)str);
-        fclose(file);
+        fprintf(file, "%s\n", str);
     }
+    printf("%s\n", str);
 }

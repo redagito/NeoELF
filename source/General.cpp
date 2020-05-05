@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/Log.h"
+
 elfGeneral* gen = NULL;
 
 void elfInitGeneral()
@@ -13,10 +15,6 @@ void elfInitGeneral()
     gen = (elfGeneral*)malloc(sizeof(elfGeneral));
     memset(gen, 0x0, sizeof(elfGeneral));
     gen->objType = ELF_GENERAL;
-
-    gen->log = (char*)malloc(sizeof(char) * 8);
-    memcpy(gen->log, "elf.log", sizeof(char) * 7);
-    gen->log[7] = '\0';
 }
 
 void elfDeinitGeneral()
@@ -47,11 +45,6 @@ void elfDeinitGeneral()
         elfLogWrite("error: possible double free in ELF, [%d] negative object count\n", elfGetGlobalObjCount());
         elfDumpObjTable();
     }
-
-    if (gen->errStr)
-        free(gen->errStr);
-    if (gen->log)
-        free(gen->log);
 
     free(gen);
 }
@@ -99,25 +92,3 @@ void elfDumpObjTable()
 int elfGetGlobalRefCount() { return gen->refCount; }
 
 int elfGetGlobalObjCount() { return gen->objCount; }
-
-void elfSetLogFilePath(const char* filePath)
-{
-    FILE* file;
-
-    file = fopen(filePath, "a");
-    if (!file)
-    {
-        file = fopen(filePath, "w");
-        if (!file)
-        {
-            printf("error: can't open log file \"%s\", reverting to default\n", filePath);
-            return;
-        }
-    }
-
-    if (gen->log)
-        free(gen->log);
-    gen->log = (char*)malloc(sizeof(char) * (strlen(filePath) + 1));
-    memcpy(gen->log, filePath, sizeof(char) * strlen(filePath));
-    gen->log[strlen(filePath)] = '\0';
-}

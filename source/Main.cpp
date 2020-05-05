@@ -1,6 +1,8 @@
 #include "nelf/Config.h"
 #include "nelf/Log.h"
+#include "nelf/Object.h"
 #include "nelf/Script.h"
+#include "nelf/Scripting.h"
 #include "nelf/errorCode.h"
 
 int main(int argc, char** argv)
@@ -14,7 +16,7 @@ int main(int argc, char** argv)
         config = elfCreateConfig();
     }
 
-    // Init engine
+    // Runtime init, creates globals and engine
     if (!elfInit(config))
     {
         elfSetError(ELF_CANT_INITIALIZE, "error: can't initialize engine\n");

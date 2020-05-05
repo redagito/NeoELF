@@ -45,5 +45,4 @@
 #endif
 
 elfContext* ctx = NULL;
-elfEngine* eng = NULL;
 elfRenderStation* rnd = NULL;

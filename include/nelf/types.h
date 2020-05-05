@@ -1,21 +1,5 @@
 
 
-#define ELF_GUI_OBJECT_HEADER \
-    ELF_OBJECT_HEADER;        \
-    char* name;               \
-    elfVec2i pos;             \
-    elfVec2i relPos;          \
-    int width, height;        \
-    elfColor color;           \
-    unsigned char visible;    \
-    unsigned char active;     \
-    elfGui* root;             \
-    elfGuiObject* parent;     \
-    elfList* children;        \
-    elfList* screens;         \
-    elfScript* script;        \
-    int event
-
 struct elfKeyEvent
 {
     ELF_OBJECT_HEADER;
@@ -65,33 +49,6 @@ struct elfContext
     elfList* events;
 };
 
-struct elfEngine
-{
-    ELF_OBJECT_HEADER;
-
-    elfConfig* config;
-
-    char cwd[256];
-
-    int fps;
-    unsigned int frames;
-    float sync;
-    elfTimer* fpsTimer;
-    elfTimer* fpsLimitTimer;
-    elfTimer* timeSyncTimer;
-
-    unsigned char freeRun;
-    unsigned char quit;
-
-    elfPostProcess* postProcess;
-
-    elfFont* guiFont;
-
-    elfScene* scene;
-    elfGui* gui;
-    elfObject* actor;
-};
-
 struct elfRenderStation
 {
     ELF_OBJECT_HEADER;
@@ -136,46 +93,6 @@ struct elfDirectoryItem
     ELF_OBJECT_HEADER;
     char* name;
     unsigned char itemType;
-};
-
-struct elfTexture
-{
-    ELF_RESOURCE_HEADER;
-    char* filePath;
-    gfxTexture* texture;
-
-    void* data;
-    int dataSize;
-};
-
-typedef struct elfModelArea
-{
-    int indiceCount;
-    gfxVertexData* index;
-    gfxVertexIndex* vertexIndex;
-    unsigned int materialNumber;
-} elfModelArea;
-
-struct elfModel
-{
-    ELF_RESOURCE_HEADER;
-    char* filePath;
-    int verticeCount;
-    int frameCount;
-    int areaCount;
-    int indiceCount;
-    gfxVertexArray* vertexArray;
-    gfxVertexData* vertices;
-    gfxVertexData* normals;
-    gfxVertexData* texCoords;
-    gfxVertexData* tangents;
-    unsigned int* index;
-    float* weights;
-    int* boneids;
-    elfPhysicsTriMesh* triMesh;
-    elfModelArea* areas;
-    elfVec3f bbMin;
-    elfVec3f bbMax;
 };
 
 struct elfLight
@@ -398,115 +315,6 @@ struct elfPostProcess
     int bufferHeight;
 
     gfxShaderParams shaderParams;
-};
-
-struct elfArea
-{
-    elfVec2i pos;
-    elfVec2i size;
-};
-
-struct elfGuiObject
-{
-    ELF_GUI_OBJECT_HEADER;
-};
-
-struct elfLabel
-{
-    ELF_GUI_OBJECT_HEADER;
-    elfFont* font;
-    char* text;
-};
-
-struct elfButton
-{
-    ELF_GUI_OBJECT_HEADER;
-    char* text;
-    elfFont* font;
-    unsigned char state;
-    elfTexture* off;
-    elfTexture* over;
-    elfTexture* on;
-    elfColor textColor;
-};
-
-struct elfPicture
-{
-    ELF_GUI_OBJECT_HEADER;
-    elfTexture* texture;
-    elfVec2f scale;
-};
-
-struct elfTextField
-{
-    ELF_GUI_OBJECT_HEADER;
-    elfTexture* texture;
-    elfFont* font;
-    int offsetX, offsetY;
-    elfColor textColor;
-    int cursorPos;
-    int drawPos;
-    int drawOffset;
-    char* text;
-};
-
-struct elfSlider
-{
-    ELF_GUI_OBJECT_HEADER;
-    elfTexture* background;
-    elfTexture* slider;
-    float value;
-};
-
-struct elfScreen
-{
-    ELF_GUI_OBJECT_HEADER;
-    elfTexture* texture;
-    int hack;
-};
-
-struct elfTextList
-{
-    ELF_GUI_OBJECT_HEADER;
-    elfFont* font;
-    elfList* items;
-    int rows;
-    int listWidth;
-    int selection;
-    int offset;
-    unsigned char itemDrag;
-};
-
-struct elfCheckBox
-{
-    ELF_GUI_OBJECT_HEADER;
-    unsigned char state;
-    elfTexture* off;
-    elfTexture* on;
-};
-
-struct elfGui
-{
-    ELF_GUI_OBJECT_HEADER;
-    elfFont* defFont;
-    gfxShaderParams shaderParams;
-    elfGuiObject* trace;
-    elfGuiObject* target;
-    elfTextField* activeTextField;
-    elfScreen* focusScreen;
-    unsigned char dragging;
-    char* dragContent;
-    elfGuiObject* dragObject;
-
-    unsigned char updateSize;
-
-    int curKey;
-    float keyStep;
-    unsigned char keyRepeat;
-
-    char curChar;
-    float charStep;
-    unsigned char charRepeat;
 };
 
 struct elfRequest

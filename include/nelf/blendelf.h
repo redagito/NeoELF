@@ -8,123 +8,30 @@ extern "C"
 #endif
     // !!>
 
-#define ELF_FALSE \
-    0x0000  // <mdoc> TRUTH VALUES <mdocc> The thruth value flags. Usually you can just use normal Lua true and false
-            // but there are some special cases.
-#define ELF_TRUE 0x0001
-
-#define ELF_KEY_ESC 135  // <mdoc> KEY CODES <mdocc> The key codes used by elf.GetKeyState
-#define ELF_KEY_F1 136
-#define ELF_KEY_F2 137
-#define ELF_KEY_F3 138
-#define ELF_KEY_F4 139
-#define ELF_KEY_F5 140
-#define ELF_KEY_F6 141
-#define ELF_KEY_F7 142
-#define ELF_KEY_F8 143
-#define ELF_KEY_F9 144
-#define ELF_KEY_F10 145
-#define ELF_KEY_F11 146
-#define ELF_KEY_F12 147
-#define ELF_KEY_UP 148
-#define ELF_KEY_DOWN 149
-#define ELF_KEY_LEFT 150
-#define ELF_KEY_RIGHT 151
-#define ELF_KEY_LSHIFT 152
-#define ELF_KEY_RSHIFT 153
-#define ELF_KEY_LCTRL 154
-#define ELF_KEY_RCTRL 155
-#define ELF_KEY_LALT 156
-#define ELF_KEY_RALT 157
-#define ELF_KEY_TAB 158
-#define ELF_KEY_ENTER 159
-#define ELF_KEY_BACKSPACE 160
-#define ELF_KEY_INSERT 161
-#define ELF_KEY_DEL 162
-#define ELF_KEY_PAGEUP 163
-#define ELF_KEY_PAGEDOWN 164
-#define ELF_KEY_HOME 165
-#define ELF_KEY_END 166
-#define ELF_KEY_KP_0 167
-#define ELF_KEY_KP_1 168
-#define ELF_KEY_KP_2 169
-#define ELF_KEY_KP_3 170
-#define ELF_KEY_KP_4 171
-#define ELF_KEY_KP_5 172
-#define ELF_KEY_KP_6 173
-#define ELF_KEY_KP_7 174
-#define ELF_KEY_KP_8 175
-#define ELF_KEY_KP_9 176
-#define ELF_KEY_KP_DIVIDE 177
-#define ELF_KEY_KP_MULTIPLY 178
-#define ELF_KEY_KP_SUBTRACT 179
-#define ELF_KEY_KP_ADD 180
-#define ELF_KEY_KP_DECIMAL 181
-#define ELF_KEY_KP_EQUAL 182
-#define ELF_KEY_KP_ENTER 183
-#define ELF_KEY_SPACE 32
-#define ELF_KEY_0 48
-#define ELF_KEY_1 49
-#define ELF_KEY_2 50
-#define ELF_KEY_3 51
-#define ELF_KEY_4 52
-#define ELF_KEY_5 53
-#define ELF_KEY_6 54
-#define ELF_KEY_7 55
-#define ELF_KEY_8 56
-#define ELF_KEY_9 57
-#define ELF_KEY_A 65
-#define ELF_KEY_B 66
-#define ELF_KEY_C 67
-#define ELF_KEY_D 68
-#define ELF_KEY_E 69
-#define ELF_KEY_F 70
-#define ELF_KEY_G 71
-#define ELF_KEY_H 72
-#define ELF_KEY_I 73
-#define ELF_KEY_J 74
-#define ELF_KEY_K 75
-#define ELF_KEY_L 76
-#define ELF_KEY_M 77
-#define ELF_KEY_N 78
-#define ELF_KEY_O 79
-#define ELF_KEY_P 80
-#define ELF_KEY_Q 81
-#define ELF_KEY_R 82
-#define ELF_KEY_S 83
-#define ELF_KEY_T 84
-#define ELF_KEY_U 85
-#define ELF_KEY_V 86
-#define ELF_KEY_W 87
-#define ELF_KEY_X 88
-#define ELF_KEY_Y 89
-#define ELF_KEY_Z 90
-
-#define ELF_UP \
-    0x0000  // <mdoc> KEY AND MOUSE STATES <mdocc> The state codes returned by elf.GetKeyState and
-            // elf.GetMouseButtonState
+// <mdoc> KEY AND MOUSE STATES <mdocc> The state codes returned by elf.GetKeyState and
+// elf.GetMouseButtonState
+#define ELF_UP 0x0000
 #define ELF_PRESSED 0x0001
 #define ELF_DOWN 0x0002
 #define ELF_RELEASED 0x0003
 
-#define ELF_OFF 0x0000  // <mdoc> GUI BUTTON STATE <mdocc> The gui button states returned by elf.GetButtonState
-#define ELF_ON 0x0001
-#define ELF_OVER 0x0002
-
-#define ELF_BUTTON_LEFT \
-    0x0000  // <mdoc> MOUSE BUTTON CODES <mdocc> The mouse button codes used by elf.GetMouseButtonState
+// <mdoc> MOUSE BUTTON CODES <mdocc> The mouse button codes used by elf.GetMouseButtonState
+#define ELF_BUTTON_LEFT 0x0000
 #define ELF_BUTTON_MIDDLE 0x0001
 #define ELF_BUTTON_RIGHT 0x0002
 
-#define ELF_HINGE 0x0001  // <mdoc> JOINT TYPES <mdocc> The joint types returned by elf.GetJointType
+// <mdoc> JOINT TYPES <mdocc> The joint types returned by elf.GetJointType
+#define ELF_HINGE 0x0001
 #define ELF_BALL 0x0002
 #define ELF_CONE_TWIST 0x0003
 
-#define ELF_POINT_LIGHT 0x0001  // <mdoc> LIGHT TYPES <mdocc> The light types used by elf.SetLightType
+// <mdoc> LIGHT TYPES <mdocc> The light types used by elf.SetLightType
+#define ELF_POINT_LIGHT 0x0001
 #define ELF_SUN_LIGHT 0x0002
 #define ELF_SPOT_LIGHT 0x0003
 
-#define ELF_LUMINANCE 0x0000  // <mdoc> TEXTURE FORMATS <mdocc> The texture formats returned by elf.GetTextureFormat
+// <mdoc> TEXTURE FORMATS <mdocc> The texture formats returned by elf.GetTextureFormat
+#define ELF_LUMINANCE 0x0000
 #define ELF_LUMINANCE_ALPHA 0x0001
 #define ELF_RGB 0x0002
 #define ELF_RGBA 0x0003
@@ -139,8 +46,8 @@ extern "C"
 #define ELF_COMPRESSED_RGB 0x000C
 #define ELF_COMPRESSED_RGBA 0x000D
 
-#define ELF_FLOAT \
-    0x0000  // <mdoc> TEXTURE DATA FORMATS <mdocc> The texture formats returned by elf.GetTextureDataFormat
+// <mdoc> TEXTURE DATA FORMATS <mdocc> The texture formats returned by elf.GetTextureDataFormat
+#define ELF_FLOAT 0x0000
 #define ELF_INT 0x0001
 #define ELF_UINT 0x0002
 #define ELF_SHORT 0x0003
@@ -164,19 +71,8 @@ extern "C"
 #define ELF_DIR 0x0001  // <mdoc> DIRECTORY ITEM TYPES <mdocc> The directory item types used by elf.GetDirectoryItemType
 #define ELF_FILE 0x0002
 
-#define ELF_CLICKED \
-    0x0001  // <mdoc> GUI EVENTS <mdocc> The gui events triggered by gui objects. The gui events are automatically set
-            // to the "event" variable when in a gui action.
-#define ELF_VALUE_CHANGED 0x0002
-#define ELF_GAIN_FOCUS 0x0003
-#define ELF_LOSE_FOCUS 0x0004
-#define ELF_CHAR_INPUT 0x0005
-#define ELF_SELECTION_CHANGED 0x0006
-#define ELF_STATE_CHANGED 0x0007
-#define ELF_DROP 0x0008
-
-#define ELF_JOYSTICK_BUTTON_1 \
-    0x0000  // <mdoc> JOYSTICK BUTTONS <mdocc> The joystick buttons used by elf.GetJoystickButtonState
+// <mdoc> JOYSTICK BUTTONS <mdocc> The joystick buttons used by elf.GetJoystickButtonState
+#define ELF_JOYSTICK_BUTTON_1 0x0000
 #define ELF_JOYSTICK_BUTTON_2 0x0001
 #define ELF_JOYSTICK_BUTTON_3 0x0002
 #define ELF_JOYSTICK_BUTTON_4 0x0003
@@ -210,78 +106,6 @@ extern "C"
 
 #define ELF_PAK_VERSION 104
     // !!>
-
-    typedef struct elfVec2i elfVec2i;
-    typedef struct elfVec2f elfVec2f;
-    typedef struct elfVec3f elfVec3f;
-    typedef struct elfVec4f elfVec4f;
-    typedef struct elfColor elfColor;
-
-    typedef struct elfGeneral elfGeneral;
-    typedef struct elfConfig elfConfig;
-    typedef struct elfObject elfObject;
-    typedef struct elfResource elfResource;
-    typedef struct elfGuiObject elfGuiObject;
-    typedef struct elfList elfList;
-    typedef struct elfKeyEvent elfKeyEvent;
-    typedef struct elfCharEvent elfCharEvent;
-    typedef struct elfContext elfContext;
-    typedef struct elfEngine elfEngine;
-    typedef struct elfTimer elfTimer;
-
-    typedef struct elfImage elfImage;
-    typedef struct elfTexture elfTexture;
-    typedef struct elfMaterial elfMaterial;
-    typedef struct elfBezierPoint elfBezierPoint;
-    typedef struct elfBezierCurve elfBezierCurve;
-    typedef struct elfIpo elfIpo;
-    typedef struct elfActor elfActor;
-    typedef struct elfCamera elfCamera;
-    typedef struct elfModel elfModel;
-    typedef struct elfEntity elfEntity;
-    typedef struct elfLight elfLight;
-    typedef struct elfScene elfScene;
-    typedef struct elfPakIndex elfPakIndex;
-    typedef struct elfPak elfPak;
-    typedef struct elfPostProcess elfPostProcess;
-    typedef struct elfScript elfScript;
-    typedef struct elfAudioDevice elfAudioDevice;
-    typedef struct elfAudioSource elfAudioSource;
-    typedef struct elfSound elfSound;
-    typedef struct elfBone elfBone;
-    typedef struct elfArmature elfArmature;
-    typedef struct elfString elfString;
-    typedef struct elfFont elfFont;
-    typedef struct elfArea elfArea;
-    typedef struct elfLabel elfLabel;
-    typedef struct elfButton elfButton;
-    typedef struct elfPicture elfPicture;
-    typedef struct elfTextField elfTextField;
-    typedef struct elfSlider elfSlider;
-    typedef struct elfScreen elfScreen;
-    typedef struct elfTextList elfTextList;
-    typedef struct elfCheckBox elfCheckBox;
-    typedef struct elfGui elfGui;
-    typedef struct elfDirectoryItem elfDirectoryItem;
-    typedef struct elfDirectory elfDirectory;
-    typedef struct elfCollision elfCollision;
-    typedef struct elfPhysicsTriMesh elfPhysicsTriMesh;
-    typedef struct elfPhysicsObject elfPhysicsObject;
-    typedef struct elfPhysicsWorld elfPhysicsWorld;
-    typedef struct elfJoint elfJoint;
-    typedef struct elfResources elfResources;
-    typedef struct elfParticle elfParticle;
-    typedef struct elfParticles elfParticles;
-    typedef struct elfFramePlayer elfFramePlayer;
-    typedef struct elfProperty elfProperty;
-    typedef struct elfScripting elfScripting;
-    typedef struct elfSprite elfSprite;
-    typedef struct elfVideoMode elfVideoMode;
-    typedef struct elfVertex elfVertex;
-    typedef struct elfFace elfFace;
-    typedef struct elfMeshData elfMeshData;
-    typedef struct elfRenderStation elfRenderStation;
-    typedef struct elfRequest elfRequest;
 
     // <!!
     // !!>
