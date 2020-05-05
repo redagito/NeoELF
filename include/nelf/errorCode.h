@@ -1,5 +1,7 @@
 #pragma once
 
+using ErrorCode = int;
+
 // <mdoc> ERROR CODES <mdocc> error codes returned by elf.GetError
 #define ELF_NO_ERROR 0x0000
 #define ELF_INVALID_FILE 0x0001

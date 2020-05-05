@@ -1,25 +1,30 @@
-#pragma once
+#include "nelf/Particles.h"
 
-#include "nelf/Color.h"
-#include "nelf/Vector.h"
-#include "nelf/objectHeader.h"
+#include <cstdlib>
+#include <cstring>
 
-struct elfParticle
+elfParticle* elfCreateParticle()
 {
-    ELF_OBJECT_HEADER;
-    float size = 0.f;
-    float sizeGrowth = 0.f;
-    float rotation = 0.f;
-    float rotationGrowth = 0.f;
-    elfColor color;
-    float lifeSpan = 0.f;
-    float fadeSpeed = 0.f;
-    elfVec3f position;
-    elfVec3f velocity;
-};
+    elfParticle* particle;
 
-elfParticle* elfCreateParticle();
-void elfDestroyParticle(void* data);
+    particle = (elfParticle*)malloc(sizeof(elfParticle));
+    memset(particle, 0x0, sizeof(elfParticle));
+    particle->objType = ELF_PARTICLE;
+    particle->objDestr = elfDestroyParticle;
+
+    elfIncObj(ELF_PARTICLE);
+
+    return particle;
+}
+
+void elfDestroyParticle(void* data)
+{
+    elfParticle* particle = (elfParticle*)data;
+
+    free(particle);
+
+    elfDecObj(ELF_PARTICLE);
+}
 
 elfParticles* elfCreateParticles(const char* name, int maxCount)
 {

@@ -43,6 +43,3 @@
 
 #include "serf.h"
 #endif
-
-elfContext* ctx = NULL;
-elfRenderStation* rnd = NULL;

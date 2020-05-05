@@ -8,6 +8,8 @@ const elfColor colorRed = {1.f, 0.f, 0.f, 1.f};
 const elfColor colorGreen = {0.f, 1.f, 0.f, 1.f};
 const elfColor colorBlue = {0.f, 0.f, 1.f, 1.f};
 
+const elfColor colorHotPink = {1.f, 0.41f, 0.71f, 1.f};
+
 elfColor elfCreateColor(float r, float g, float b, float a)
 {
     elfColor col;
