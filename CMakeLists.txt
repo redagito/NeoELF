@@ -36,6 +36,8 @@ conan_cmake_run(REQUIRES
 	vorbis/1.3.6@bincrafters/stable
 	lua/5.3.4@zimmerk/stable
 	bullet3/2.89
+	freetype/2.10.1
+	assimp/5.0.1
 	
 	jsonformoderncpp/3.7.0@vthiery/stable
 	lodepng/1.0@int010h/stable
@@ -63,6 +65,8 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE CONAN_PKG::vorbis
 	PRIVATE CONAN_PKG::lua
 	PRIVATE CONAN_PKG::bullet3
+	PRIVATE CONAN_PKG::freetype
+	PRIVATE CONAN_PKG::assimp
 )
 
 target_include_directories(${PROJECT_NAME} 
