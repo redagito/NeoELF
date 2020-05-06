@@ -1,5 +1,7 @@
 #pragma once
 
+using TextureFormat = int;
+
 // <mdoc> TEXTURE FORMATS <mdocc> The texture formats returned by elf.GetTextureFormat
 #define ELF_LUMINANCE 0x0000
 #define ELF_LUMINANCE_ALPHA 0x0001

@@ -1,5 +1,7 @@
 #pragma once
 
+using ShapeType = int;
+
 // <mdoc> PHYSICS SHAPES <mdocc> The physics shapes used by elf.SetEntityPhysics
 #define ELF_BOX 0x0000
 #define ELF_SPHERE 0x0001

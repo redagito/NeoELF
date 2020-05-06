@@ -4,6 +4,7 @@
 #include <cstring>
 
 #include "nelf/Actor.h"
+#include "nelf/Camera.h"
 #include "nelf/Entity.h"
 #include "nelf/General.h"
 #include "nelf/List.h"

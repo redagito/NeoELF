@@ -13,26 +13,6 @@ struct elfDirectoryItem
     unsigned char itemType;
 };
 
-struct elfSprite
-{
-    ELF_ACTOR_HEADER;
-
-    elfMaterial* material;
-    elfFramePlayer* framePlayer;
-
-    unsigned char faceCamera;
-
-    elfVec3f position;
-    elfVec2f scale;
-    elfVec2f size;
-    float cullRadius;
-
-    gfxQuery* query;
-    unsigned char visible;
-    unsigned char occluder;
-    unsigned char culled;
-};
-
 struct elfScene
 {
     ELF_RESOURCE_HEADER;

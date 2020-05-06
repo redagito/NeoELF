@@ -15,9 +15,6 @@ struct elfActor
     ELF_ACTOR_HEADER;
 };
 
-/**
- * General
- */
 void elfActorIpoCallback(elfFramePlayer* player);
 
 void elfInitActor(elfActor* actor, bool camera);
@@ -25,7 +22,6 @@ void elfInitActor(elfActor* actor, bool camera);
 void elfUpdateActor(elfActor* actor);
 
 void elfActorPreDraw(elfActor* actor);
-
 void elfActorPostDraw(elfActor* actor);
 
 void elfCleanActor(elfActor* actor);
@@ -39,9 +35,7 @@ void elfSetActorScript(elfActor* actor, elfScript* script);
 
 void elfClearActorScript(elfActor* actor);
 
-/**
- * Transformation
- */
+// Transformations
 void elfSetActorPosition(elfActor* actor, float x, float y, float z);
 void elfSetActorRotation(elfActor* actor, float x, float y, float z);
 void elfSetActorOrientation(elfActor* actor, float x, float y, float z, float w);
@@ -64,73 +58,48 @@ void elfGetActorPosition_(elfActor* actor, float* params);
 void elfGetActorRotation_(elfActor* actor, float* params);
 void elfGetActorOrientation_(elfActor* actor, float* params);
 
-/**
- * Physics
- */
-void elfSetActorPhysics(elfActor* actor, bool physics);
+// Physics
 
+void elfSetActorPhysics(elfActor* actor, bool physics);
 void elfSetActorShape(elfActor* actor, int shape);
 
 void elfSetActorBoundingLengths(elfActor* actor, float x, float y, float z);
-
 void elfSetActorBoundingOffset(elfActor* actor, float x, float y, float z);
-
 void elfResetActorBoundingOffsetSetFlag(elfActor* actor);
 
 void elfSetActorMass(elfActor* actor, float mass);
-
 void elfSetActorDamping(elfActor* actor, float linDamp, float angDamp);
-
 void elfSetActorSleep(elfActor* actor, float linThrs, float angThrs);
-
 void elfSetActorRestitution(elfActor* actor, float restitution);
-
 void elfSetActorAnisotropicFriction(elfActor* actor, float x, float y, float z);
-
 void elfSetActorLinearFactor(elfActor* actor, float x, float y, float z);
-
 void elfSetActorAngularFactor(elfActor* actor, float x, float y, float z);
 
 void elfAddActorForce(elfActor* actor, float x, float y, float z);
-
 void elfAddActorForceLocal(elfActor* actor, float x, float y, float z);
-
 void elfAddActorTorque(elfActor* actor, float x, float y, float z);
 
 void elfSetActorLinearVelocity(elfActor* actor, float x, float y, float z);
-
 void elfSetActorLinearVelocityLocal(elfActor* actor, float x, float y, float z);
-
 void elfSetActorAngularVelocity(elfActor* actor, float x, float y, float z);
 
 unsigned char elfGetActorPhysics(elfActor* actor);
-
 int elfGetActorShape(elfActor* actor);
 
 elfVec3f elfGetActorBoundingLengths(elfActor* actor);
-
 elfVec3f elfGetActorBoundingOffset(elfActor* actor);
 
 float elfGetActorMass(elfActor* actor);
-
 float elfGetActorLinearDamping(elfActor* actor);
-
 float elfGetActorAngularDamping(elfActor* actor);
-
 float elfGetActorLinearSleep(elfActor* actor);
-
 float elfGetActorAngularSleep(elfActor* actor);
-
 float elfGetActorRestitution(elfActor* actor);
 
 elfVec3f elfGetActorAnisotropicFriction(elfActor* actor);
-
 elfVec3f elfGetActorLinearFactor(elfActor* actor);
-
 elfVec3f elfGetActorAngularFactor(elfActor* actor);
-
 elfVec3f elfGetActorLinearVelocity(elfActor* actor);
-
 elfVec3f elfGetActorAngularVelocity(elfActor* actor);
 
 /**
@@ -154,68 +123,46 @@ unsigned char elfRemoveActorJointByIndex(elfActor* actor, int idx);
 
 unsigned char elfRemoveActorJointByObject(elfActor* actor, elfJoint* joint);
 
-/**
- * IPO
- */
-void elfSetActorIpo(elfActor* actor, elfIpo* ipo);
+// IPO
 
+void elfSetActorIpo(elfActor* actor, elfIpo* ipo);
 elfIpo* elfGetActorIpo(elfActor* actor);
 
 void elfSetActorIpoFrame(elfActor* actor, float frame);
 
 void elfPlayActorIpo(elfActor* actor, float start, float end, float speed);
-
 void elfLoopActorIpo(elfActor* actor, float start, float end, float speed);
-
 void elfStopActorIpo(elfActor* actor);
-
 void elfPauseActorIpo(elfActor* actor);
-
 void elfResumeActorIpo(elfActor* actor);
 
 float elfGetActorIpoStart(elfActor* actor);
-
 float elfGetActorIpoEnd(elfActor* actor);
-
 float elfGetActorIpoSpeed(elfActor* actor);
-
 float elfGetActorIpoFrame(elfActor* actor);
 
-unsigned char elfIsActorIpoPlaying(elfActor* actor);
-
-unsigned char elfIsActorIpoPaused(elfActor* actor);
+bool elfIsActorIpoPlaying(elfActor* actor);
+bool elfIsActorIpoPaused(elfActor* actor);
 
 int elfGetActorCollisionCount(elfActor* actor);
-
 elfCollision* elfGetActorCollision(elfActor* actor, int idx);
 
-/**
- * Property
- */
-int elfGetActorPropertyCount(elfActor* actor);
+// Property
 
+int elfGetActorPropertyCount(elfActor* actor);
 void elfAddPropertyToActor(elfActor* actor, elfProperty* property);
 
 elfProperty* elfGetActorPropertyByName(elfActor* actor, const char* name);
-
 elfProperty* elfGetActorPropertyByIndex(elfActor* actor, int idx);
 
 bool elfRemoveActorPropertyByName(elfActor* actor, const char* name);
-
 bool elfRemoveActorPropertyByIndex(elfActor* actor, int idx);
-
 bool elfRemoveActorPropertyByObject(elfActor* actor, elfProperty* property);
-
 void elfRemoveActorProperties(elfActor* actor);
 
-/**
- * Select
- */
-void elfSetActorSelected(elfActor* actor, unsigned char selected);
+// Select
+void elfSetActorSelected(elfActor* actor, bool selected);
+bool elfGetActorSelected(elfActor* actor);
 
-unsigned char elfGetActorSelected(elfActor* actor);
-
-/**
- * Debug draw
- */
+// Debug draw
 void elfDrawActorDebug(elfActor* actor, gfxShaderParams* shaderParams);

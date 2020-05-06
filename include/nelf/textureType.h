@@ -1,5 +1,7 @@
 #pragma once
 
+using TextureType = int;
+
 // <mdoc> TEXTURE TYPES <mdocc> The textures types
 #define ELF_COLOR_MAP 0x0001
 #define ELF_NORMAL_MAP 0x0002

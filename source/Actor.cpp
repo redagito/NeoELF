@@ -8,8 +8,12 @@
 #include "nelf/Ipo.h"
 #include "nelf/List.h"
 #include "nelf/Object.h"
+#include "nelf/Property.h"
+#include "nelf/Scripting.h"
 #include "nelf/String.h"
 #include "nelf/audio/AudioSource.h"
+#include "nelf/engine.h"
+#include "nelf/light.h"
 #include "nelf/objectType.h"
 #include "nelf/shapeType.h"
 
@@ -988,7 +992,7 @@ bool elfRemoveActorPropertyByName(elfActor* actor, const char* name)
     elfProperty* prop;
 
     if (!name || strlen(name) < 1)
-        return ELF_FALSE;
+        return false;
 
     for (prop = (elfProperty*)elfBeginList(actor->properties); prop;
          prop = (elfProperty*)elfGetListNext(actor->properties))
@@ -996,11 +1000,11 @@ bool elfRemoveActorPropertyByName(elfActor* actor, const char* name)
         if (!strcmp(prop->name, name))
         {
             elfRemoveListObject(actor->properties, (elfObject*)prop);
-            return ELF_TRUE;
+            return true;
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
 bool elfRemoveActorPropertyByIndex(elfActor* actor, int idx)
@@ -1009,7 +1013,7 @@ bool elfRemoveActorPropertyByIndex(elfActor* actor, int idx)
     int i;
 
     if (idx < 0 && idx >= elfGetListLength(actor->properties))
-        return ELF_FALSE;
+        return false;
 
     for (i = 0, prop = (elfProperty*)elfBeginList(actor->properties); prop;
          prop = (elfProperty*)elfGetListNext(actor->properties), i++)
@@ -1017,11 +1021,11 @@ bool elfRemoveActorPropertyByIndex(elfActor* actor, int idx)
         if (i == idx)
         {
             elfRemoveListObject(actor->properties, (elfObject*)prop);
-            return ELF_TRUE;
+            return true;
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
 bool elfRemoveActorPropertyByObject(elfActor* actor, elfProperty* property)
@@ -1036,9 +1040,9 @@ void elfRemoveActorProperties(elfActor* actor)
     elfIncRef((elfObject*)actor->properties);
 }
 
-void elfSetActorSelected(elfActor* actor, unsigned char selected) { actor->selected = !selected == ELF_FALSE; }
+void elfSetActorSelected(elfActor* actor, bool selected) { actor->selected = selected; }
 
-unsigned char elfGetActorSelected(elfActor* actor) { return actor->selected; }
+bool elfGetActorSelected(elfActor* actor) { return actor->selected; }
 
 void elfDrawActorDebug(elfActor* actor, gfxShaderParams* shaderParams)
 {

@@ -1,5 +1,7 @@
 #pragma once
 
+using TextureDataFormat = int;
+
 // <mdoc> TEXTURE DATA FORMATS <mdocc> The texture formats returned by elf.GetTextureDataFormat
 #define ELF_FLOAT 0x0000
 #define ELF_INT 0x0001
