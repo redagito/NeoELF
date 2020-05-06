@@ -44,3 +44,7 @@ elfGuiObject* elfGetGuiObjectByIndex(elfGuiObject* parent, int idx);
 bool elfRemoveGuiObjectByName(elfGuiObject* parent, const char* name);
 bool elfRemoveGuiObjectByIndex(elfGuiObject* parent, int idx);
 bool elfRemoveGuiObjectByObject(elfGuiObject* parent, elfGuiObject* object);
+
+// TODO This should not be here
+// Required for GUI drawing
+void elfSetOrtho(int x, int y, int width, int height, gfxShaderParams* shaderParams);
