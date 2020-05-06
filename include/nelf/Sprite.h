@@ -22,9 +22,9 @@ struct elfSprite
     float cullRadius = 0.f;
 
     gfxQuery* query = nullptr;
-    bool visible = false;
+    bool visible = true;
     bool occluder = false;
-    bool culled = false;
+    bool culled = true;
 };
 
 elfSprite* elfCreateSprite(const char* name);

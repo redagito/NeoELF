@@ -3,17 +3,17 @@
 #include <cmath>
 #include <cstring>
 
+#include "nelf/Engine.h"
 #include "nelf/Entity.h"
 #include "nelf/FramePlayer.h"
 #include "nelf/Ipo.h"
+#include "nelf/Light.h"
 #include "nelf/List.h"
 #include "nelf/Object.h"
 #include "nelf/Property.h"
 #include "nelf/Scripting.h"
 #include "nelf/String.h"
 #include "nelf/audio/AudioSource.h"
-#include "nelf/engine.h"
-#include "nelf/light.h"
 #include "nelf/objectType.h"
 #include "nelf/shapeType.h"
 

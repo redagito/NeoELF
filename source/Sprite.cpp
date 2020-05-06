@@ -1,5 +1,21 @@
 #include "nelf/Sprite.h"
 
+#include <cstdlib>
+#include <cstring>
+
+#include "nelf/Actor.h"
+#include "nelf/Camera.h"
+#include "nelf/FramePlayer.h"
+#include "nelf/General.h"
+#include "nelf/Material.h"
+#include "nelf/Object.h"
+#include "nelf/RenderStation.h"
+#include "nelf/Resources.h"
+#include "nelf/String.h"
+#include "nelf/Texture.h"
+#include "nelf/drawMode.h"
+#include "nelf/objectType.h"
+
 elfSprite* elfCreateSprite(const char* name)
 {
     elfSprite* sprite;
@@ -9,13 +25,13 @@ elfSprite* elfCreateSprite(const char* name)
     sprite->objType = ELF_SPRITE;
     sprite->objDestr = elfDestroySprite;
 
-    elfInitActor((elfActor*)sprite, ELF_FALSE);
+    elfInitActor((elfActor*)sprite, false);
 
     sprite->scale.x = sprite->scale.y = 1.0f;
     sprite->size.x = sprite->size.y = 0.6f;
     sprite->query = gfxCreateQuery();
-    sprite->visible = ELF_TRUE;
-    sprite->culled = ELF_TRUE;
+    sprite->visible = true;
+    sprite->culled = true;
 
     sprite->dobject = elfCreatePhysicsObjectBox(0.3f, 0.3f, 0.01f, 0.0f, 0.0f, 0.0f, 0.0f);
     elfSetPhysicsObjectActor(sprite->dobject, (elfActor*)sprite);
@@ -163,37 +179,34 @@ void elfSetSpriteScale(elfSprite* sprite, float x, float y)
         elfSetPhysicsObjectScale(sprite->dobject, sprite->scale.x, sprite->scale.y, 1.0f);
 }
 
-void elfSetSpriteFaceCamera(elfSprite* sprite, unsigned char faceCamera)
-{
-    sprite->faceCamera = !faceCamera == ELF_FALSE;
-}
+void elfSetSpriteFaceCamera(elfSprite* sprite, bool faceCamera) { sprite->faceCamera = faceCamera; }
 
 elfMaterial* elfGetSpriteMaterial(elfSprite* sprite) { return sprite->material; }
 
 elfVec2f elfGetSpriteScale(elfSprite* sprite) { return sprite->scale; }
 
-unsigned char elfGetSpriteFaceCamera(elfSprite* sprite) { return sprite->faceCamera; }
+bool elfGetSpriteFaceCamera(elfSprite* sprite) { return sprite->faceCamera; }
 
-void elfSetSpriteVisible(elfSprite* sprite, unsigned char visible)
+void elfSetSpriteVisible(elfSprite* sprite, bool visible)
 {
+    // No change
     if (sprite->visible == visible)
         return;
 
-    sprite->visible = !visible == ELF_FALSE;
-
-    sprite->moved = ELF_TRUE;
+    sprite->visible = visible;
+    sprite->moved = true;
 }
 
-unsigned char elfGetSpriteVisible(elfSprite* sprite) { return sprite->visible; }
+bool elfGetSpriteVisible(elfSprite* sprite) { return sprite->visible; }
 
-void elfSetSpriteOccluder(elfSprite* sprite, unsigned char occluder) { sprite->occluder = !occluder == ELF_FALSE; }
+void elfSetSpriteOccluder(elfSprite* sprite, bool occluder) { sprite->occluder = occluder; }
 
-unsigned char elfGetSpriteOccluder(elfSprite* sprite) { return sprite->occluder; }
+bool elfGetSpriteOccluder(elfSprite* sprite) { return sprite->occluder; }
 
-unsigned char elfCullSprite(elfSprite* sprite, elfCamera* camera)
+bool elfCullSprite(elfSprite* sprite, elfCamera* camera)
 {
     if (!sprite->material || !sprite->visible)
-        return ELF_TRUE;
+        return true;
 
     return !elfSphereInsideFrustum(camera, &sprite->position.x, sprite->cullRadius);
 }

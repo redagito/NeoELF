@@ -269,24 +269,24 @@ void elfSetCamera(elfCamera* camera, gfxShaderParams* shaderParams)
     shaderParams->viewportHeight = viewpHeight;
 }
 
-unsigned char elfAabbInsideFrustum(elfCamera* camera, float* min, float* max)
+bool elfAabbInsideFrustum(elfCamera* camera, float* min, float* max)
 {
     return gfxAabbInsideFrustum(camera->frustum, min, max);
 }
 
-unsigned char elfSphereInsideFrustum(elfCamera* camera, float* pos, float radius)
+bool elfSphereInsideFrustum(elfCamera* camera, float* pos, float radius)
 {
     return gfxSphereInsideFrustum(camera->frustum, pos, radius);
 }
 
-unsigned char elfCameraInsideAabb(elfCamera* camera, float* min, float* max)
+bool elfCameraInsideAabb(elfCamera* camera, float* min, float* max)
 {
     return camera->position.x > min[0] - camera->clipNear && camera->position.y > min[1] - camera->clipNear &&
            camera->position.z > min[2] - camera->clipNear && camera->position.x < max[0] + camera->clipNear &&
            camera->position.y < max[1] + camera->clipNear && camera->position.z < max[2] + camera->clipNear;
 }
 
-unsigned char elfCameraInsideSphere(elfCamera* camera, float* pos, float radius)
+bool elfCameraInsideSphere(elfCamera* camera, float* pos, float radius)
 {
     return camera->position.x > pos[0] - radius && camera->position.y > pos[1] - radius &&
            camera->position.z > pos[2] - radius && camera->position.x < pos[0] + radius &&
