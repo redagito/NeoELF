@@ -29,22 +29,22 @@ set_target_properties (${PROJECT_NAME} PROPERTIES
 
 include(${CMAKE_BINARY_DIR}/conan.cmake)
 conan_cmake_run(REQUIRES 
-	glm/0.9.9.5@g-truc/stable
-	glfw/3.3@bincrafters/stable 
-	glad/0.1.29@bincrafters/stable
-	openal/1.19.0@bincrafters/stable
-	vorbis/1.3.6@bincrafters/stable
-	lua/5.3.4@zimmerk/stable
+	glm/0.9.9.8
+	glfw/3.3.2@bincrafters/stable 
+	glad/0.1.33
+	
+	openal/1.19.1
+	vorbis/1.3.6
+	
+	lua/5.3.5
 	bullet3/2.89
 	freetype/2.10.1
 	assimp/5.0.1
-	
-	jsonformoderncpp/3.7.0@vthiery/stable
+	nlohmann_json/3.7.0
 	lodepng/1.0@int010h/stable
 	
-	OPTIONS glad:profile=core
-	OPTIONS glad:api_type=gl
-	OPTIONS glad:api_version=4.6
+	OPTIONS glad:gl_profile=core
+	OPTIONS glad:gl_version=4.6
 	OPTIONS glad:spec=gl
 	OPTIONS glad:no_loader=False
 	
@@ -59,7 +59,7 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE CONAN_PKG::glfw
 	PRIVATE CONAN_PKG::glad
 	
-	PRIVATE CONAN_PKG::jsonformoderncpp
+	PRIVATE CONAN_PKG::nlohmann_json
 	PRIVATE CONAN_PKG::lodepng
 	PRIVATE CONAN_PKG::openal
 	PRIVATE CONAN_PKG::vorbis
