@@ -1,16 +1,18 @@
 ![Screen 3](https://github.com/redagito/NeoELF/blob/master/doc/images/blendelf_engine3b.jpg)
-![Screen 1](https://github.com/redagito/NeoELF/blob/master/doc/images/blendelf_engine1b.jpg)
-![Screen 2](https://github.com/redagito/NeoELF/blob/master/doc/images/blendelf_engine2b.jpg)
 
 # NeoELF
 
-A BlendELF based 3d game engine.
+A cross-platform 3d game engine based on BlendELF, written in C++ with a modern build system.
 
-Current project goals are:
-* Cleaner project structure
+# Project Goal
+
+Current goals are:
+* Clean project structure
+* Better / more documentation
 * Refactoring (mostly separating definition and implenetation into separate files)
 * Compile as C++ code
 * CMake / Conan build system
+* Achieve feature parity with last release of BlendELF (make sure everything still works)
 * Unit tests
 * Separate project into lib, app and tests
 * Performance benchmarks
@@ -18,6 +20,18 @@ Current project goals are:
 * Replace custom implementations of common functionality with std C++ counterparts (file system, string)
 * Changes must show same or better performance
 * Demos / games
+
+## Project Status
+
+Active development, no official release yet.
+The project is currently not in a usable state.
+
+## Screenshots
+
+These are from BlendELF, to be replaced once everything works
+
+![Screen 1](https://github.com/redagito/NeoELF/blob/master/doc/images/blendelf_engine1b.jpg)
+![Screen 2](https://github.com/redagito/NeoELF/blob/master/doc/images/blendelf_engine2b.jpg)
 
 # BlendELF
 
