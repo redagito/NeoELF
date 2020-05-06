@@ -11,6 +11,7 @@ struct elfFramePlayer;
 struct elfPhysicsObject;
 struct gfxTransform;
 
+// TODO Why does an actor need to know its scene
 #define ELF_ACTOR_HEADER                 \
     ELF_RESOURCE_HEADER;                 \
     char* filePath = nullptr;            \

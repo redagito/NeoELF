@@ -13,52 +13,6 @@ struct elfDirectoryItem
     unsigned char itemType;
 };
 
-struct elfScene
-{
-    ELF_RESOURCE_HEADER;
-    char* filePath;
-
-    unsigned char physics;
-    unsigned char runScripts;
-    unsigned char debugDraw;
-    unsigned char occlusionCulling;
-
-    elfColor ambientColor;
-
-    unsigned char fog;
-    float fogStart;
-    float fogEnd;
-    elfColor fogColor;
-
-    elfList* scripts;
-    elfList* textures;
-    elfList* materials;
-    elfList* models;
-    elfList* cameras;
-    elfList* entities;
-    elfList* lights;
-    elfList* armatures;
-    elfList* particles;
-    elfList* sprites;
-
-    elfList* entityQueue;
-    int entityQueueCount;
-
-    elfList* spriteQueue;
-    int spriteQueueCount;
-
-    elfPhysicsWorld* world;
-    elfPhysicsWorld* dworld;
-
-    elfCamera* curCamera;
-
-    gfxShaderParams shaderParams;
-
-    gfxShaderProgram* composeFogShdr;
-
-    elfPak* pak;
-};
-
 struct elfPakIndex
 {
     ELF_OBJECT_HEADER;

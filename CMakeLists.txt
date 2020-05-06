@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.16.0)
 project (NeoELF)
 
+set(VS_STARTUP_PROJECT ${PROJECT_NAME})
+
 # Download automatically
 if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
