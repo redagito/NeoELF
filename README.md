@@ -38,21 +38,33 @@ These are from BlendELF, to be replaced once everything works
 The version of the BlendELF source code used as basis for development was taken from https://github.com/cartuchogl/BlendELF (capi branch).
 The original version of the engine can be found at https://github.com/jesterKing/BlendELF.
 
-From the original Readme (slightly edited the formatting):
+## Original Readme
 
-BlendELF is a work in progress, OpenGL graphics powered, compact open source 3d game engine aimed towards independent game developers for quick prototyping and game/virtual environment creation. 
-It supports a standard set of features, like skeletal animation, post processing, windows and linux support, LUA/C programming, physics powered by Bullet Physics, GUI and 2D/3D Audio. 
-BlendELF binaries and code are provided free of charge without restrictions.
+```
+BlendELF is a work in progress, OpenGL graphics powered, compact
+open source 3d game engine aimed towards independent game developers
+for quick prototyping and game/virtual environment creation. It
+supports a standard set of features, like skeletal animation, post
+processing, windows and linux support, LUA/C programming, physics
+powered by Bullet Physics, GUI and 2D/3D Audio. BlendELF binaries
+and code are provided free of charge without restrictions. 
 
-## Authors
+--------------------------------
+----------- Authors ------------
+--------------------------------
 
 Samuel Anjam, aka centralnoise - Lead coder
 
-## Current Contributors
+--------------------------------
+----- Current Contributors -----
+--------------------------------
 
 Michael Gale, aka mbg - Networking
 
-## Contributors
+--------------------------------
+--------- Contributors ---------
+--------------------------------
 
 Michael Gale, aka mbg - .NET wraps for versions beta 1 - beta 3
 Carlos Bolaños, aka cartuchogl - Porting to Mac OSX, bug fixing
+```
