@@ -13,49 +13,6 @@ struct elfDirectoryItem
     unsigned char itemType;
 };
 
-struct elfParticles
-{
-    ELF_ACTOR_HEADER;
-
-    int maxCount;
-    unsigned char drawMode;
-    elfList* particles;
-    elfTexture* texture;
-    elfModel* model;
-    elfEntity* entity;
-    gfxVertexArray* vertexArray;
-    gfxVertexData* vertices;
-    gfxVertexData* texCoords;
-    gfxVertexData* colors;
-
-    int spawnCount;
-    float spawnDelay;
-    unsigned char spawn;
-    float curTime;
-    elfVec3f gravity;
-    float sizeMin;
-    float sizeMax;
-    float sizeGrowthMin;
-    float sizeGrowthMax;
-    float rotationMin;
-    float rotationMax;
-    float rotationGrowthMin;
-    float rotationGrowthMax;
-    float lifeSpanMin;
-    float lifeSpanMax;
-    float fadeSpeedMin;
-    float fadeSpeedMax;
-    elfVec3f velocityMin;
-    elfVec3f velocityMax;
-    elfVec3f positionMin;
-    elfVec3f positionMax;
-    elfColor colorMin;
-    elfColor colorMax;
-
-    elfVec3f cullAabbMin;
-    elfVec3f cullAabbMax;
-};
-
 struct elfSprite
 {
     ELF_ACTOR_HEADER;

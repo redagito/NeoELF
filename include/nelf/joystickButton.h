@@ -1,5 +1,7 @@
 #pragma once
 
+using JoystickButton = int;
+
 // <mdoc> JOYSTICK BUTTONS <mdocc> The joystick buttons used by elf.GetJoystickButtonState
 #define ELF_JOYSTICK_BUTTON_1 0x0000
 #define ELF_JOYSTICK_BUTTON_2 0x0001

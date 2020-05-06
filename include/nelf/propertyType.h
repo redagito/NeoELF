@@ -1,5 +1,7 @@
 #pragma once
 
+using PropertyType = int;
+
 // <mdoc> PROPERTY TYPES <mdocc> The property types returned by elf.GetPropertyType
 #define ELF_PROPERTY_INT 0x0001
 #define ELF_PROPERTY_FLOAT 0x0002

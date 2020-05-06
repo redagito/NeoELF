@@ -4,8 +4,7 @@
 
 struct elfObject;
 
-// List node
-// Double linked?
+// List node, double linked
 struct elfListPtr
 {
     // Previous node
@@ -38,33 +37,26 @@ struct elfList
 elfListPtr* elfCreateListPtr();
 
 void elfDestroyListPtr(elfListPtr* ptr);
-
 void elfDestroyListPtrs(elfListPtr* ptr);
 
 elfList* elfCreateList();
-
 void elfDestroyList(void* data);
 
 int elfGetListLength(elfList* list);
 
 void elfInsertListObject(elfList* list, int idx, elfObject* obj);
-
 void elfAppendListObject(elfList* list, elfObject* obj);
 
 elfObject* elfGetListObject(elfList* list, int idx);
-
 bool elfRemoveListObject(elfList* list, elfObject* obj);
 
 elfObject* elfBeginList(elfList* list);
-
 elfObject* elfGetListNext(elfList* list);
 
 elfObject* elfRBeginList(elfList* list);
-
 elfObject* elfGetListRNext(elfList* list);
 
 void elfSetListCurPtr(elfList* list, elfObject* ptr);
 
 void elfSeekList(elfList* list, elfObject* ptr);
-
 void elfRSeekList(elfList* list, elfObject* ptr);

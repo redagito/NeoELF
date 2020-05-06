@@ -1,5 +1,7 @@
 #pragma once
 
+using KeyState = int;
+
 // <mdoc> KEY AND MOUSE STATES <mdocc> The state codes returned by elf.GetKeyState and
 // elf.GetMouseButtonState
 #define ELF_UP 0x0000

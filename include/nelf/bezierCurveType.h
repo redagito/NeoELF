@@ -1,5 +1,7 @@
 #pragma once
 
+using BezierCurveType = int;
+
 // <mdoc> BEZIER CURVE TYPES
 #define ELF_LOC_X 0x0000
 #define ELF_LOC_Y 0x0001

@@ -3,28 +3,20 @@
 #include <cstdlib>
 #include <cstring>
 
-elfParticle* elfCreateParticle()
-{
-    elfParticle* particle;
-
-    particle = (elfParticle*)malloc(sizeof(elfParticle));
-    memset(particle, 0x0, sizeof(elfParticle));
-    particle->objType = ELF_PARTICLE;
-    particle->objDestr = elfDestroyParticle;
-
-    elfIncObj(ELF_PARTICLE);
-
-    return particle;
-}
-
-void elfDestroyParticle(void* data)
-{
-    elfParticle* particle = (elfParticle*)data;
-
-    free(particle);
-
-    elfDecObj(ELF_PARTICLE);
-}
+#include "nelf/Actor.h"
+#include "nelf/Entity.h"
+#include "nelf/General.h"
+#include "nelf/List.h"
+#include "nelf/Math.h"
+#include "nelf/Model.h"
+#include "nelf/Object.h"
+#include "nelf/Particle.h"
+#include "nelf/Random.h"
+#include "nelf/RenderStation.h"
+#include "nelf/Resources.h"
+#include "nelf/String.h"
+#include "nelf/objectType.h"
+#include "nelf/particleDrawMode.h"
 
 elfParticles* elfCreateParticles(const char* name, int maxCount)
 {
@@ -41,7 +33,7 @@ elfParticles* elfCreateParticles(const char* name, int maxCount)
     particles->objType = ELF_PARTICLES;
     particles->objDestr = elfDestroyParticles;
 
-    elfInitActor((elfActor*)particles, ELF_FALSE);
+    elfInitActor((elfActor*)particles, false);
 
     particles->maxCount = maxCount;
     particles->particles = elfCreateList();
@@ -50,7 +42,7 @@ elfParticles* elfCreateParticles(const char* name, int maxCount)
     particles->drawMode = ELF_ADD;
     particles->spawnCount = 50;
     particles->spawnDelay = 0.02f;
-    particles->spawn = ELF_TRUE;
+    particles->spawn = true;
     particles->sizeMin = 1.0f;
     particles->sizeMax = 1.0f;
     particles->sizeGrowthMin = 0.0f;

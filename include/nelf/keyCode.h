@@ -1,5 +1,7 @@
 #pragma once
 
+using KeyCode = int;
+
 // <mdoc> KEY CODES <mdocc> The key codes used by elf.GetKeyState
 #define ELF_KEY_ESC 135
 

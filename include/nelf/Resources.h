@@ -5,6 +5,7 @@
 struct elfList;
 struct elfTexture;
 
+// Info for resource lifetime and totla resource usage
 struct elfResources
 {
     ELF_OBJECT_HEADER;
