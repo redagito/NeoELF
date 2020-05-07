@@ -1,4 +1,4 @@
-#include "nelf/Particle.h"
+#include "nelf/actor/Particle.h"
 
 #include <cstdlib>
 #include <cstring>

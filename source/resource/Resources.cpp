@@ -1,4 +1,4 @@
-#include "nelf/Resources.h"
+#include "nelf/resource/Resources.h"
 
 #include <cstdlib>
 #include <cstring>

@@ -1,9 +1,9 @@
 #include "nelf/Config.h"
 #include "nelf/Log.h"
 #include "nelf/Object.h"
-#include "nelf/Script.h"
 #include "nelf/Scripting.h"
 #include "nelf/errorCode.h"
+#include "nelf/resource/Script.h"
 
 int main(int argc, char** argv)
 {

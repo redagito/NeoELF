@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nelf/actorHeader.h"
+#include "nelf/actor/actorHeader.h"
 
 struct elfFramePlayer;
 struct elfScript;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "nelf/Vector.h"
-#include "nelf/resourceHeader.h"
+#include "nelf/resource/resourceHeader.h"
 
 struct elfScene;
 struct elfList;

@@ -44,24 +44,19 @@ struct elfArmature
     elfVec3f bbMax;
 };
 
-elfBone* elfCreateBone(const char* name);
+// Bone
 
+elfBone* elfCreateBone(const char* name);
 void elfDestroyBone(void* data);
 
 elfArmature* elfGetBoneArmature(elfBone* bone);
 
 elfBone* elfGetBoneParent(elfBone* bone);
-
 elfBone* elfGetBoneChildByName(elfBone* bone, const char* name);
-
 elfBone* elfGetBoneChildById(elfBone* bone, int id);
-
 elfBone* elfGetBoneChildByIndex(elfBone* bone, int idx);
-
 elfVec3f elfGetBonePosition(elfBone* bone);
-
 elfVec3f elfGetBoneRotation(elfBone* bone);
-
 elfVec4f elfGetBoneOrientation(elfBone* bone);
 
 void elfSetBoneArmature(elfBone* bone, elfArmature* armature);
@@ -69,6 +64,8 @@ void elfSetBoneArmature(elfBone* bone, elfArmature* armature);
 int elfGetBoneMaxId(elfBone* bone);
 
 void elfPopulateBoneArray(elfBone* bone, elfBone** bones);
+
+// Armature
 
 void elfUpdateArmatureBones(elfArmature* armature);
 
@@ -79,7 +76,6 @@ void elfDeformEntityWithArmature(elfArmature* armature, elfEntity* entity, float
 void elfDestroyArmature(void* data);
 
 elfBone* elfGetBoneFromArmatureByName(const char* name, elfArmature* armature);
-
 elfBone* elfGetBoneFromArmatureById(int id, elfArmature* armature);
 
 void elfAddRootBoneToArmature(elfArmature* armature, elfBone* bone);

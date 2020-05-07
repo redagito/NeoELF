@@ -1,0 +1,19 @@
+#pragma once
+
+using PakMagic = int;
+
+// Probably only used for pak
+// TODO Figure out why those specific numbers
+// Identifies pak files
+#define ELF_PAK_MAGIC 179532100
+#define ELF_ARMATURE_MAGIC 179532122
+#define ELF_CAMERA_MAGIC 179532111
+#define ELF_ENTITY_MAGIC 179532112
+#define ELF_LIGHT_MAGIC 179532113
+#define ELF_MATERIAL_MAGIC 179532109
+#define ELF_MODEL_MAGIC 179532110
+#define ELF_PARTICLES_MAGIC 179532141
+#define ELF_SCENE_MAGIC 179532120
+#define ELF_SCRIPT_MAGIC 179532121
+#define ELF_SPRITE_MAGIC 179532140
+#define ELF_TEXTURE_MAGIC 179532108

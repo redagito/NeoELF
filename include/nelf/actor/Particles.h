@@ -2,7 +2,7 @@
 
 #include "nelf/Color.h"
 #include "nelf/Vector.h"
-#include "nelf/actorHeader.h"
+#include "nelf/actor/actorHeader.h"
 
 struct elfTexture;
 struct elfModel;

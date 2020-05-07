@@ -1,29 +1,38 @@
+#include "nelf/pak/Pak.h"
 
-elfPakIndex* elfCreatePakIndex()
-{
-    elfPakIndex* index;
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
-    index = (elfPakIndex*)malloc(sizeof(elfPakIndex));
-    memset(index, 0x0, sizeof(elfPakIndex));
-    index->objType = ELF_PAK_INDEX;
-    index->objDestr = elfDestroyPakIndex;
-
-    elfIncObj(ELF_PAK_INDEX);
-
-    return index;
-}
-
-void elfDestroyPakIndex(void* data)
-{
-    elfPakIndex* index = (elfPakIndex*)data;
-
-    if (index->name)
-        elfDestroyString(index->name);
-
-    free(index);
-
-    elfDecObj(ELF_PAK_INDEX);
-}
+#include "nelf/General.h"
+#include "nelf/Ipo.h"
+#include "nelf/List.h"
+#include "nelf/Log.h"
+#include "nelf/Math.h"
+#include "nelf/Object.h"
+#include "nelf/Property.h"
+#include "nelf/String.h"
+#include "nelf/actor/Actor.h"
+#include "nelf/actor/Camera.h"
+#include "nelf/actor/Entity.h"
+#include "nelf/actor/Light.h"
+#include "nelf/actor/Particle.h"
+#include "nelf/actor/Particles.h"
+#include "nelf/actor/Sprite.h"
+#include "nelf/errorCode.h"
+#include "nelf/objectType.h"
+#include "nelf/pak/PakIndex.h"
+#include "nelf/pak/nameLength.h"
+#include "nelf/pak/pakMagic.h"
+#include "nelf/pak/pakVersion.h"
+#include "nelf/propertyType.h"
+#include "nelf/resource/Armature.h"
+#include "nelf/resource/Material.h"
+#include "nelf/resource/Model.h"
+#include "nelf/resource/Resources.h"
+#include "nelf/resource/Scene.h"
+#include "nelf/resource/Script.h"
+#include "nelf/resource/Texture.h"
 
 elfPak* elfCreatePakFromFile(const char* filePath)
 {
@@ -49,7 +58,7 @@ elfPak* elfCreatePakFromFile(const char* filePath)
     magic = 0;
     fread((char*)&magic, sizeof(int), 1, file);
 
-    if (magic != 179532100)
+    if (magic != ELF_PAK_MAGIC)
     {
         elfSetError(ELF_INVALID_FILE, "error: \"%s\" is not a elf pak file\n", filePath);
         fclose(file);
@@ -176,12 +185,6 @@ elfPakIndex* elfGetPakIndexByIndex(elfPak* pak, int idx)
         return NULL;
     return (elfPakIndex*)elfGetListObject(pak->indexes, idx);
 }
-
-unsigned char elfGetPakIndexType(elfPakIndex* index) { return index->objType; }
-
-const char* elfGetPakIndexName(elfPakIndex* index) { return index->name; }
-
-int elfGetPakIndexOffset(elfPakIndex* index) { return index->offset; }
 
 int elfGetActorHeaderSizeBytes(elfActor* actor)
 {
@@ -2326,7 +2329,7 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
     offset += sizeof(int);  // version
     offset += sizeof(int);  // number of indexes
 
-    ival = 179532100;
+    ival = ELF_PAK_MAGIC;
 
     fwrite((char*)&ival, sizeof(int), 1, file);  // magic
 

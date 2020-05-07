@@ -3,6 +3,9 @@
 #include "nelf/Vector.h"
 #include "nelf/objectHeader.h"
 
+struct elfObject;
+struct elfList;
+
 struct elfVideoMode
 {
     ELF_OBJECT_HEADER;

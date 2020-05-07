@@ -16,7 +16,6 @@ struct elfFramePlayer
 };
 
 elfFramePlayer* elfCreateFramePlayer();
-
 void elfDestroyFramePlayer(void* data);
 
 void elfUpdateFramePlayer(elfFramePlayer* player);
@@ -24,29 +23,19 @@ void elfUpdateFramePlayer(elfFramePlayer* player);
 void elfSetFramePlayerFrame(elfFramePlayer* player, float frame);
 
 void elfPlayFramePlayer(elfFramePlayer* player, float start, float end, float speed);
-
 void elfLoopFramePlayer(elfFramePlayer* player, float start, float end, float speed);
-
 void elfStopFramePlayer(elfFramePlayer* player);
-
 void elfPauseFramePlayer(elfFramePlayer* player);
-
 void elfResumeFramePlayer(elfFramePlayer* player);
 
 float elfGetFramePlayerStart(elfFramePlayer* player);
-
 float elfGetFramePlayerEnd(elfFramePlayer* player);
-
 float elfGetFramePlayerSpeed(elfFramePlayer* player);
-
 float elfGetFramePlayerFrame(elfFramePlayer* player);
 
 bool elfIsFramePlayerPlaying(elfFramePlayer* player);
-
 bool elfIsFramePlayerPaused(elfFramePlayer* player);
 
 void elfSetFramePlayerUserData(elfFramePlayer* player, void* userData);
-
 void* elfGetFramePlayerUserData(elfFramePlayer* player);
-
 void elfSetFramePlayerCallback(elfFramePlayer* player, void (*callback)(elfFramePlayer*));
