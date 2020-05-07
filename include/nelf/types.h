@@ -12,10 +12,3 @@ struct elfDirectoryItem
     char* name;
     unsigned char itemType;
 };
-
-struct elfRequest
-{
-    ELF_RESOURCE_HEADER;
-    char* url;
-    char* method;
-};

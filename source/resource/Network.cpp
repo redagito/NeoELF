@@ -1,3 +1,5 @@
+#include "nelf/resource/Network.h"
+
 #ifdef USE_SERF
 apr_pool_t *pool;
 #endif
@@ -419,7 +421,7 @@ elfRequest *elfCreateRequest(const char *name)
 
     return request;
 #else
-    return NULL;
+    return nullptr;
 #endif
 }
 
@@ -446,7 +448,7 @@ const char *elfGetRequestUrl(elfRequest *request)
 #ifdef USE_SERF
     return request->url;
 #else
-    return NULL;
+    return nullptr;
 #endif
 }
 
@@ -464,7 +466,7 @@ const char *elfGetRequestMethod(elfRequest *request)
 #ifdef USE_SERF
     return request->method;
 #else
-    return NULL;
+    return nullptr;
 #endif
 }
 
