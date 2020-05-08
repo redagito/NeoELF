@@ -1,6 +1,7 @@
 #include "nelf/Object.h"
 
 #include "nelf/General.h"
+#include "nelf/Log.h"
 
 void elfIncRef(elfObject* obj)
 {

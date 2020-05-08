@@ -1,0 +1,24 @@
+#pragma once
+
+using GfxTextureFormat = int;
+
+#define GFX_LUMINANCE 0x0000
+#define GFX_LUMINANCE_ALPHA 0x0001
+#define GFX_RGB 0x0002
+#define GFX_RGBA 0x0003
+#define GFX_BGR 0x0004
+#define GFX_BGRA 0x0005
+#define GFX_RGB16F 0x0006
+#define GFX_RGB32F 0x0007
+#define GFX_RGBA16F 0x0008
+#define GFX_RGBA32F 0x0009
+#define GFX_DEPTH_COMPONENT 0x000A
+#define GFX_COMPRESSED_RGB 0x000B
+#define GFX_COMPRESSED_RGBA 0x000C
+#define GFX_R 0x000D
+#define GFX_RG 0x000E
+#define GFX_R16F 0x000F
+#define GFX_R32F 0x0010
+#define GFX_RG16F 0x0011
+#define GFX_RG32F 0x0012
+#define GFX_MAX_TEXTURE_FORMATS 0x0013

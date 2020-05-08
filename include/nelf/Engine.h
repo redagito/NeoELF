@@ -143,33 +143,3 @@ bool elfIsDof();
 bool elfIsLightShafts();
 
 elfObject* elfGetActor();
-
-elfDirectoryItem* elfCreateDirectoryItem();
-
-void elfDestroyDirectoryItem(void* data);
-
-elfDirectory* elfCreateDirectory();
-
-void elfDestroyDirectory(void* data);
-
-void elfAppendDirectoryItemListFolder(elfList* items, elfDirectoryItem* nitem);
-
-typedef struct elfDirItemEmul
-{
-    char* str;
-    int type;
-} elfDirItemEmul;
-
-static int alphacmp(const void* a, const void* b);
-
-elfDirectory* elfReadDirectory(const char* path);
-
-const char* elfGetDirectoryPath(elfDirectory* directory);
-
-int elfGetDirectoryItemCount(elfDirectory* directory);
-
-elfDirectoryItem* elfGetDirectoryItem(elfDirectory* directory, int idx);
-
-const char* elfGetDirectoryItemName(elfDirectoryItem* dirItem);
-
-int elfGetDirectoryItemType(elfDirectoryItem* dirItem);

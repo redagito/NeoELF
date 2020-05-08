@@ -18,8 +18,8 @@ void elfDestroyVideoMode(void* data);
 struct elfKeyEvent
 {
     ELF_OBJECT_HEADER;
-    int key;
-    unsigned char state;
+    int key = 0;
+    unsigned char state = 0;
 };
 
 elfKeyEvent* elfCreateKeyEvent();
@@ -67,6 +67,9 @@ struct elfContext
 
     elfJoystick joysticks[16];
     elfList* events = nullptr;
+
+    // App window
+    GLFWwindow* window = nullptr;
 };
 
 // Global context

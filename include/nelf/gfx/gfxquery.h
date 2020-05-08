@@ -1,42 +1,16 @@
+#pragma once
 
-gfxQuery* gfxCreateQuery()
+struct gfxQuery
 {
-    gfxQuery* query;
+    // Should be a GLint
+    unsigned int id = 0;
+};
 
-    query = (gfxQuery*)malloc(sizeof(gfxQuery));
-    memset(query, 0x0, sizeof(gfxQuery));
+gfxQuery* gfxCreateQuery();
+void gfxDestroyQuery(gfxQuery* query);
 
-    glGenQueries(1, &query->id);
+void gfxBeginQuery(gfxQuery* query);
+void gfxEndQuery(gfxQuery* query);
 
-    return query;
-}
-
-void gfxDestroyQuery(gfxQuery* query)
-{
-    glDeleteQueries(1, &query->id);
-    free(query);
-}
-
-void gfxBeginQuery(gfxQuery* query) { glBeginQuery(GL_SAMPLES_PASSED, query->id); }
-
-void gfxEndQuery(gfxQuery* query) { glEndQuery(GL_SAMPLES_PASSED); }
-
-unsigned char gfxIsQueryResult(gfxQuery* query)
-{
-    int result;
-
-    result = 0;
-    glGetQueryObjectiv(query->id, GL_QUERY_RESULT_AVAILABLE, &result);
-
-    return result == GL_TRUE;
-}
-
-int gfxGetQueryResult(gfxQuery* query)
-{
-    int result;
-
-    result = 0;
-    glGetQueryObjectiv(query->id, GL_QUERY_RESULT, &result);
-
-    return result;
-}
+bool gfxIsQueryResult(gfxQuery* query);
+int gfxGetQueryResult(gfxQuery* query);

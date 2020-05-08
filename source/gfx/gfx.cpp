@@ -15,7 +15,6 @@
 
 #include "gfx.h"
 
-gfxGeneral* gfxGen = NULL;
 gfxDriver* driver = NULL;
 
 extern void elfLogWrite(const char* fmt, ...);

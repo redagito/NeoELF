@@ -124,12 +124,7 @@ void elfDestroyContext(void* data)
 
 bool elfInitContext(int width, int height, const char* title, int multisamples, bool fullscreen)
 {
-    int i;
-    int videoModeCount;
-    GLFWvidmode* vidmodes;
-    elfVideoMode* videoMode;
-
-    if (ctx)
+    if (ctx != nullptr)
     {
         elfLogWrite("warning: can not open window twice\n");
         return false;
@@ -150,43 +145,60 @@ bool elfInitContext(int width, int height, const char* title, int multisamples, 
     ctx->fullscreen = fullscreen;
     ctx->title = elfCreateString(title);
 
-#ifndef ELF_MACOSX
-    glfwInit();
-#endif
-
-    glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
-    glfwOpenWindowHint(GLFW_FSAA_SAMPLES, multisamples);
-
-    if (!glfwOpenWindow(width, height, 8, 8, 8, 0, 24, 0, (fullscreen == ELF_FALSE) ? GLFW_WINDOW : GLFW_FULLSCREEN))
+    if (!glfwInit())
     {
-        elfDecRef((elfObject*)ctx);
-        return ELF_FALSE;
+        elfSetError(ELF_CANT_INITIALIZE, "Failed to init GLFW");
+        return false;
     }
 
-    glfwGetWindowSize(&ctx->width, &ctx->height);
+    // Setup for Opengl context
+    glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_FALSE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    // glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwWindowHint(GLFW_SAMPLES, multisamples);
 
-    glfwEnable(GLFW_MOUSE_CURSOR);
+    GLFWmonitor* monitor = nullptr;
+    if (fullscreen)
+    {
+        monitor = glfwGetPrimaryMonitor();
+    }
+    ctx->window = glfwCreateWindow(width, height, title, monitor, nullptr);
 
-    glfwSetWindowTitle(title);
+    if (ctx->window == nullptr)
+    {
+        glfwTerminate();
+        elfSetError(ELF_CANT_INITIALIZE, "Failed to create GLFW window");
+        elfDecRef((elfObject*)ctx);
+        return false;
+    }
+
+    glfwGetWindowSize(ctx->window, &ctx->width, &ctx->height);
+    glfwSetInputMode(ctx->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
     glfwPollEvents();
     glfwSwapInterval(0);
 
-    glfwSetMouseButtonCallback(mouseButtonCallback);
+    glfwSetMouseButtonCallback(ctx->window, mouseButtonCallback);
     glfwSetMousePosCallback(mousePositionCallback);
     glfwSetMouseWheelCallback(mouseWheelCallback);
     glfwSetKeyCallback(keyCallback);
     glfwSetCharCallback(charCallback);
 
-    vidmodes = (GLFWvidmode*)malloc(sizeof(GLFWvidmode) * 256);
-    videoModeCount = glfwGetVideoModes(vidmodes, 256);
+    // TODO Video mode retrieval should be cleaned up
+    int videoModeCount;
+    const GLFWvidmode* vidmodes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &videoModeCount);
 
-    for (i = 0; i < videoModeCount; i++)
+    for (int i = 0; i < videoModeCount; i++)
     {
-        if (vidmodes[i].RedBits == 8 && vidmodes[i].GreenBits == 8 && vidmodes[i].BlueBits == 8)
+        if (vidmodes[i].redBits == 8 && vidmodes[i].greenBits == 8 && vidmodes[i].blueBits == 8)
         {
-            videoMode = elfCreateVideoMode();
-            videoMode->reso.x = vidmodes[i].Width;
-            videoMode->reso.y = vidmodes[i].Height;
+            elfVideoMode* videoMode = elfCreateVideoMode();
+            videoMode->reso.x = vidmodes[i].width;
+            videoMode->reso.y = vidmodes[i].height;
             elfAppendListObject(ctx->videoModes, (elfObject*)videoMode);
         }
     }
@@ -195,9 +207,9 @@ bool elfInitContext(int width, int height, const char* title, int multisamples, 
     // 8 for some reason...
     if (videoModeCount > 0 && elfGetListLength(ctx->videoModes) == 0)
     {
-        for (i = 0; i < videoModeCount; i++)
+        for (int i = 0; i < videoModeCount; i++)
         {
-            videoMode = elfCreateVideoMode();
+            elfVideoMode* videoMode = elfCreateVideoMode();
             videoMode->reso.x = vidmodes[i].Width;
             videoMode->reso.y = vidmodes[i].Height;
             elfAppendListObject(ctx->videoModes, (elfObject*)videoMode);
