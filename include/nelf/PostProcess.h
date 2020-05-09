@@ -1,5 +1,6 @@
 #pragma once
 
+#include "nelf/gfx/gfxShaderParams.h"
 #include "nelf/objectHeader.h"
 
 struct elfScene;

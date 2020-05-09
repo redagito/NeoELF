@@ -3,6 +3,8 @@
 #include "nelf/Vector.h"
 #include "nelf/objectHeader.h"
 
+struct elfList;
+
 // Single point in bezier curve
 struct elfBezierPoint
 {
@@ -13,7 +15,6 @@ struct elfBezierPoint
 };
 
 elfBezierPoint* elfCreateBezierPoint();
-
 void elfDestroyBezierPoint(void* data);
 
 // Setter
@@ -36,19 +37,15 @@ struct elfBezierCurve
 };
 
 elfBezierCurve* elfCreateBezierCurve();
-
 void elfDestroyBezierCurve(void* data);
 
 void elfSetBezierCurveType(elfBezierCurve* curve, int type);
-
 int elfGetBezierCurveType(elfBezierCurve* curve);
 
 void elfAddBezierCurvePoint(elfBezierCurve* curve, elfBezierPoint* point);
 
 int elfGetCurvePointCount(elfBezierCurve* curve);
-
 elfBezierPoint* elfGetPointFromBezierCurve(elfBezierCurve* curve, int idx);
-
 float elfGetBezierCurveValue(elfBezierCurve* curve, float x);
 
 // Honestly no idea what Ipo stands for
@@ -63,19 +60,13 @@ struct elfIpo
 };
 
 elfIpo* elfCreateIpo();
-
 void elfDestroyIpo(void* data);
 
 bool elfAddIpoCurve(elfIpo* ipo, elfBezierCurve* curve);
 
 int elfGetIpoCurveCount(elfIpo* ipo);
-
 elfBezierCurve* elfGetCurveFromIpo(elfIpo* ipo, int idx);
-
 elfVec3f elfGetIpoLoc(elfIpo* ipo, float x);
-
 elfVec3f elfGetIpoRot(elfIpo* ipo, float x);
-
 elfVec3f elfGetIpoScale(elfIpo* ipo, float x);
-
 elfVec4f elfGetIpoQua(elfIpo* ipo, float x);

@@ -1,10 +1,24 @@
 #include "nelf/Font.h"
 
+#include <freetype2/ft2build.h>
+
 #include <cstdlib>
 #include <cstring>
+#include FT_FREETYPE_H
 
+#include "nelf/Engine.h"
 #include "nelf/General.h"
+#include "nelf/Log.h"
+#include "nelf/RenderStation.h"
 #include "nelf/String.h"
+#include "nelf/errorCode.h"
+#include "nelf/gfx/gfxFormatType.h"
+#include "nelf/gfx/gfxShaderParams.h"
+#include "nelf/gfx/gfxTexture.h"
+#include "nelf/gfx/gfxTextureFilterType.h"
+#include "nelf/gfx/gfxTextureFormat.h"
+#include "nelf/gfx/gfxTextureMapType.h"
+#include "nelf/gfx/gfxTextureWrapMode.h"
 #include "nelf/objectType.h"
 
 elfFont* elfCreateFont()

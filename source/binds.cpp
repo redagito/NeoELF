@@ -23,6 +23,7 @@ typedef struct lua_elfVec2f lua_elfVec2f;
 typedef struct lua_elfVec3f lua_elfVec3f;
 typedef struct lua_elfVec4f lua_elfVec4f;
 typedef struct lua_elfColor lua_elfColor;
+
 struct lua_elf_userdata
 {
     LUA_ELF_USERDATA_HEADER;
@@ -57,6 +58,7 @@ struct lua_elfColor
     LUA_ELF_USERDATA_HEADER;
     elfColor val;
 };
+
 static int lua_fail_with_backtrace(lua_State* L, const char* fmt, ...)
 {
     va_list argp;
@@ -104,12 +106,14 @@ static int lua_fail_with_backtrace(lua_State* L, const char* fmt, ...)
 
     return lua_error(L);
 }
+
 static int lua_elfObject__gc(lua_State* L)
 {
     lua_elfObject* obj = (lua_elfObject*)lua_touserdata(L, 1);
     elfDecRef(obj->object);
     return 0;
 }
+
 static int lua_elfVec2i__index(lua_State* L)
 {
     lua_elfVec2i* ud = (lua_elfVec2i*)lua_touserdata(L, 1);
@@ -3351,6 +3355,7 @@ static int lua_CreateEmptyImage(lua_State* L)
         lua_pushnil(L);
     return 1;
 }
+
 static int lua_CreateImageFromFile(lua_State* L)
 {
     elfImage* result;
@@ -3371,6 +3376,7 @@ static int lua_CreateImageFromFile(lua_State* L)
         lua_pushnil(L);
     return 1;
 }
+
 static int lua_SetImagePixel(lua_State* L)
 {
     elfImage* arg0;
@@ -16429,6 +16435,7 @@ static int lua_SetRequestMethod(lua_State* L)
     elfSetRequestMethod(arg0, arg1);
     return 0;
 }
+
 static int lua_GetRequestState(lua_State* L)
 {
     int result;
@@ -16440,6 +16447,7 @@ static int lua_GetRequestState(lua_State* L)
     lua_pushnumber(L, (lua_Number)result);
     return 1;
 }
+
 static const struct luaL_reg lua_elf_functions[] = {
     {"IncRef", lua_IncRef},
     {"DecRef", lua_DecRef},
@@ -17190,6 +17198,7 @@ static const struct luaL_reg lua_elf_functions[] = {
     {"SetRequestMethod", lua_SetRequestMethod},
     {"GetRequestState", lua_GetRequestState},
     {NULL, NULL}};
+
 int luaopen_elf(lua_State* L)
 {
     lua_pushvalue(L, LUA_GLOBALSINDEX);

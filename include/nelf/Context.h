@@ -5,6 +5,7 @@
 
 struct elfObject;
 struct elfList;
+struct GLFWwindow;
 
 struct elfVideoMode
 {

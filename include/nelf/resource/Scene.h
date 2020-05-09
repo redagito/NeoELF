@@ -2,7 +2,7 @@
 
 #include "nelf/Color.h"
 #include "nelf/Vector.h"
-#include "nelf/resourceHeader.h"
+#include "nelf/resource/resourceHeader.h"
 
 struct elfList;
 struct elfPhysicsWorld;

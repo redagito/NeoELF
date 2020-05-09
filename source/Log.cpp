@@ -135,3 +135,7 @@ void elfWriteLogLine(const char* str)
     }
     printf("%s\n", str);
 }
+
+const char* elfGetErrorString() { return errStr; }
+
+int elfGetError() { return errCode; }

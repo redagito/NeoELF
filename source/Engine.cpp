@@ -6,16 +6,33 @@
 #include <filesystem>
 
 #include "nelf/Config.h"
+#include "nelf/Context.h"
 #include "nelf/Font.h"
 #include "nelf/General.h"
+#include "nelf/Image.h"
 #include "nelf/Log.h"
+#include "nelf/Math.h"
 #include "nelf/Object.h"
 #include "nelf/PostProcess.h"
+#include "nelf/RenderStation.h"
+#include "nelf/Scripting.h"
 #include "nelf/String.h"
 #include "nelf/Timer.h"
 #include "nelf/Version.h"
+#include "nelf/audio/AudioDevice.h"
 #include "nelf/errorCode.h"
+#include "nelf/gfx/gfxDriver.h"
+#include "nelf/gfx/gfxObject.h"
+#include "nelf/gfx/gfxRenderTarget.h"
+#include "nelf/gfx/gfxTexture.h"
+#include "nelf/gfx/gfxTextureFilterType.h"
+#include "nelf/gfx/gfxTextureWrapMode.h"
+#include "nelf/gui/Gui.h"
+#include "nelf/keyCode.h"
 #include "nelf/objectType.h"
+#include "nelf/resource/Network.h"
+#include "nelf/resource/Resources.h"
+#include "nelf/resource/Scene.h"
 
 elfEngine* eng = nullptr;
 
@@ -96,6 +113,7 @@ bool elfInitEngine()
         eng->cwd = path.string();
     }
 
+    // TODO Load from data directory
     // Default font
     file = fopen("deffont.ttf", "r");
     if (!file)
@@ -134,12 +152,14 @@ bool elfInit(elfConfig* config)
 
     if (!elfInitContext(config->windowSize.x, config->windowSize.y, config->windowTitle, config->multisamples,
                         config->fullscreen))
-        return ELF_FALSE;
+        return false;
     if (!gfxInit())
     {
         elfDeinitContext();
-        return ELF_FALSE;
+        return false;
     }
+
+    // TODO Check return values
     elfInitAudio();
     elfInitEngine();
     elfInitRenderStation();
@@ -159,7 +179,7 @@ bool elfInit(elfConfig* config)
     eng->config = config;
     elfIncRef((elfObject*)eng->config);
 
-    return ELF_TRUE;
+    return true;
 }
 
 void elfLimitEngineFps()
@@ -230,17 +250,17 @@ void elfCountEngineFps()
     }
 }
 
-unsigned char elfRun()
+bool elfRun()
 {
     if (!eng || !eng->freeRun)
-        return ELF_FALSE;
+        return false;
 
-    eng->freeRun = ELF_FALSE;
+    eng->freeRun = false;
 
     if ((eng->config->f10Exit && elfGetKeyState(ELF_KEY_F10)) || !elfIsWindowOpened() || eng->quit)
     {
-        eng->freeRun = ELF_TRUE;
-        return ELF_FALSE;
+        eng->freeRun = true;
+        return false;
     }
 
     gfxResetVerticesDrawn();
@@ -288,11 +308,11 @@ unsigned char elfRun()
     elfUpdateEngine();
     elfCountEngineFps();
 
-    eng->freeRun = ELF_TRUE;
+    eng->freeRun = true;
 
     elfSleep(0.001f);
 
-    return ELF_TRUE;
+    return true;
 }
 
 void elfDeinit()
@@ -355,17 +375,13 @@ char* elfGetDirectoryFromPath(const char* filePath)
     }
 }
 
-const char* elfGetCurrentDirectory() { return eng->cwd; }
+const char* elfGetCurrentDirectory() { return eng->cwd.c_str(); }
 
-const char* elfGetErrorString() { return gen->errStr; }
+void elfQuit() { eng->quit = true; }
 
-int elfGetError() { return gen->errCode; }
+void elfSetF10Exit(bool exit) { eng->config->f10Exit = exit; }
 
-void elfQuit() { eng->quit = ELF_TRUE; }
-
-void elfSetF10Exit(unsigned char exit) { eng->config->f10Exit = !(exit == ELF_FALSE); }
-
-unsigned char elfGetF10Exit() { return eng->config->f10Exit; }
+bool elfGetF10Exit() { return eng->config->f10Exit; }
 
 elfScene* elfLoadScene(const char* filePath)
 {
@@ -447,12 +463,12 @@ bool elfSaveScreenShot(const char* filePath)
     if (!elfSaveImageData(filePath, elfGetWindowWidth(), elfGetWindowHeight(), 32, data))
     {
         free(data);
-        return ELF_FALSE;
+        return false;
     }
 
     free(data);
 
-    return ELF_TRUE;
+    return true;
 }
 
 void elfSetTextureCompress(bool compress) { eng->config->textureCompress = compress; }
@@ -517,7 +533,7 @@ void elfDisableBloom()
 float elfGetBloomThreshold()
 {
     if (!eng->postProcess)
-        return ELF_FALSE;
+        return 0.f;
     return elfGetPostProcessBloomThreshold(eng->postProcess);
 }
 
@@ -548,14 +564,14 @@ void elfDisableDof()
 float elfGetDofFocalRange()
 {
     if (!eng->postProcess)
-        return ELF_FALSE;
+        return 0.f;
     return elfGetPostProcessDofFocalRange(eng->postProcess);
 }
 
 float elfGetDofFocalDistance()
 {
     if (!eng->postProcess)
-        return ELF_FALSE;
+        return 0.f;
     return elfGetPostProcessDofFocalDistance(eng->postProcess);
 }
 
@@ -621,32 +637,32 @@ float elfGetLightShaftsIntensity()
     return 0.0f;
 }
 
-unsigned char elfIsBloom()
+bool elfIsBloom()
 {
     if (eng->postProcess)
         return elfIsPostProcessBloom(eng->postProcess);
-    return ELF_FALSE;
+    return false;
 }
 
-unsigned char elfIsSsao()
+bool elfIsSsao()
 {
     if (eng->postProcess)
         return elfIsPostProcessSsao(eng->postProcess);
-    return ELF_FALSE;
+    return false;
 }
 
-unsigned char elfIsDof()
+bool elfIsDof()
 {
     if (eng->postProcess)
         return elfIsPostProcessDof(eng->postProcess);
-    return ELF_FALSE;
+    return false;
 }
 
-unsigned char elfIsLightShafts()
+bool elfIsLightShafts()
 {
     if (eng->postProcess)
         return elfIsPostProcessLightShafts(eng->postProcess);
-    return ELF_FALSE;
+    return false;
 }
 
 // Current actor?

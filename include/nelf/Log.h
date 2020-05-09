@@ -18,3 +18,7 @@ void elfLogWrite(const char* fmt, ...);
 void elfSetError(int code, const char* fmt, ...);
 
 void elfWriteLogLine(const char* str);
+
+// Retrieve last set error info
+const char* elfGetErrorString();
+int elfGetError();

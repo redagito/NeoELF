@@ -32,7 +32,7 @@ struct elfEngine
     elfTimer* timeSyncTimer = nullptr;
 
     bool freeRun = true;
-    unsigned char quit;
+    bool quit = false;
 
     elfPostProcess* postProcess = nullptr;
 
@@ -48,11 +48,9 @@ struct elfEngine
 extern elfEngine* eng;
 
 elfEngine* elfCreateEngine();
-
 void elfDestroyEngine(void* data);
 
 bool elfInitEngine();
-
 void elfDeinitEngine();
 
 // TODO General application init?
@@ -64,21 +62,16 @@ void elfUpdateEngine();
 
 void elfCountEngineFps();
 
-unsigned char elfRun();
+bool elfRun();
 
 void elfDeinit();
 
 void elfResizeWindow(int width, int height);
 
 char* elfGetFileFromPath(const char* filePath);
-
 char* elfGetDirectoryFromPath(const char* filePath);
 
 const char* elfGetCurrentDirectory();
-
-const char* elfGetErrorString();
-
-int elfGetError();
 
 void elfQuit();
 
@@ -106,7 +99,7 @@ float elfGetTickRate();
 void elfSetSpeed(float speed);
 float elfGetSpeed();
 
-unsigned char elfSaveScreenShot(const char* filePath);
+bool elfSaveScreenShot(const char* filePath);
 
 void elfSetTextureCompress(bool compress);
 bool elfGetTextureCompress();

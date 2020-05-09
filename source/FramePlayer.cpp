@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/Engine.h"
 #include "nelf/General.h"
 #include "nelf/objectType.h"
 
