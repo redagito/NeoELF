@@ -7,6 +7,7 @@
 #include "lauxlib.h"
 #include "lua.h"
 #include "lualib.h"
+
 #define LUA_ELF_USERDATA_HEADER unsigned char type
 #define LUA_ELF_OBJECT 0x0001
 #define LUA_ELF_VEC2I 0x0002
@@ -14,6 +15,7 @@
 #define LUA_ELF_VEC3F 0x0003
 #define LUA_ELF_VEC4F 0x0004
 #define LUA_ELF_COLOR 0x0005
+
 typedef struct lua_elf_userdata lua_elf_userdata;
 typedef struct lua_elfObject lua_elfObject;
 typedef struct lua_elfVec2i lua_elfVec2i;

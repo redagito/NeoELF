@@ -9,6 +9,7 @@
 #include "nelf/Object.h"
 #include "nelf/errorCode.h"
 #include "nelf/objectType.h"
+#include "nelf/resource/Script.h"
 
 int luaopen_elf(lua_State* L);
 

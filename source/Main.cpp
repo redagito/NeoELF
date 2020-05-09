@@ -1,4 +1,5 @@
 #include "nelf/Config.h"
+#include "nelf/Engine.h"
 #include "nelf/Log.h"
 #include "nelf/Object.h"
 #include "nelf/Scripting.h"

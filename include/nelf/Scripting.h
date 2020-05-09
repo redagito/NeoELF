@@ -2,8 +2,9 @@
 
 #include <lua.hpp>
 
-#include "nelf/Script.h"
 #include "nelf/objectHeader.h"
+
+struct elfScript;
 
 struct elfScripting
 {

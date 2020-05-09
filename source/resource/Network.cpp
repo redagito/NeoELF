@@ -1,6 +1,20 @@
 #include "nelf/resource/Network.h"
 
 #ifdef USE_SERF
+#include <apr.h>
+#include <apr_atomic.h>
+#include <apr_base64.h>
+#include <apr_general.h>
+#include <apr_getopt.h>
+#include <apr_strings.h>
+#include <apr_thread_proc.h>
+#include <apr_uri.h>
+#include <apr_version.h>
+
+#include "serf.h"
+#endif
+
+#ifdef USE_SERF
 apr_pool_t *pool;
 #endif
 
