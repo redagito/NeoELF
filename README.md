@@ -21,6 +21,20 @@ Current goals are:
 * Changes must show same or better performance
 * Demos / games
 
+## Building
+
+Development is currently done with
+* CMake, 3.16.0, https://cmake.org
+* Conan, 1.25.0, https://conan.io/
+* Visual Studio 2019 Community Edition, https://visualstudio.microsoft.com/vs/community/
+
+Conan remotes used are
+* conan-center: https://conan.bintray.com
+* bincrafters: https://api.bintray.com/conan/bincrafters/public-conan
+* int010h: https://api.bintray.com/conan/int010h/recipes
+
+Building the project should just require running CMake and the respective build command.
+
 ## Project Status
 
 Active development, no official release yet.

@@ -1,30 +1,5 @@
 
 
-struct gfxDriver
-{
-    int formatSizes[GFX_MAX_FORMATS];
-    int formats[GFX_MAX_FORMATS];
-    int drawModes[GFX_MAX_DRAW_MODES];
-    int textureInternalFormats[GFX_MAX_TEXTURE_FORMATS];
-    int textureDataFormats[GFX_MAX_TEXTURE_FORMATS];
-    int vertexDataDrawModes[GFX_MAX_VERTEX_DATA_TYPES];
-
-    gfxRenderTarget* renderTarget;
-    gfxShaderProgram* shaderPrograms;
-    gfxShaderParams shaderParams;
-
-    int version;
-    int maxTextureSize;
-    int maxTextureImageUnits;
-    int maxDrawBuffers;
-    int maxColorAttachments;
-    float maxAnisotropy;
-    unsigned char dirtyVertexArrays;
-    unsigned int verticesDrawn[GFX_MAX_DRAW_MODES];
-
-    gfxShaderConfig shaderConfig;
-};
-
 struct gfxTransform
 {
     float position[3];

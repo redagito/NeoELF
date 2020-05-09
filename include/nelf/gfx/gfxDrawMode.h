@@ -1,0 +1,12 @@
+#pragma once
+
+using GfxDrawMode = int;
+
+#define GFX_POINTS 0x0000
+#define GFX_LINES 0x0001
+#define GFX_LINE_LOOP 0x0002
+#define GFX_LINE_STRIP 0x0003
+#define GFX_TRIANGLES 0x0004
+#define GFX_TRIANGLE_STRIP 0x0005
+#define GFX_TRIANGLE_FAN 0x0006
+#define GFX_MAX_DRAW_MODES 0x0007
