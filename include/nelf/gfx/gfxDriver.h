@@ -9,6 +9,7 @@
 
 struct gfxRenderTarget;
 struct gfxShaderProgram;
+struct gfxTexture;
 
 struct gfxDriver
 {
@@ -32,8 +33,30 @@ struct gfxDriver
     int maxColorAttachments = 0;
     float maxAnisotropy = 0.f;
 
-    unsigned char dirtyVertexArrays;
+    bool dirtyVertexArrays = false;
     unsigned int verticesDrawn[GFX_MAX_DRAW_MODES];
 
     gfxShaderConfig shaderConfig;
 };
+
+// Globally accessible driver
+// Initialized on gfx init
+extern gfxDriver* driver = nullptr;
+
+bool gfxInit();
+void gfxDeinit();
+
+int gfxGetVersion();
+
+void gfxClearBuffers(float r, float g, float b, float a, float d);
+void gfxClearColorBuffer(float r, float g, float b, float a);
+void gfxClearDepthBuffer(float d);
+
+void gfxReadPixels(int x, int y, int width, int height, int format, int dataFormat, void* data);
+
+void gfxCopyFrameBuffer(gfxTexture* texture, int ox, int oy, int x, int y, int width, int height);
+
+void gfxResetVerticesDrawn();
+int gfxGetVerticesDrawn(unsigned int drawMode);
+
+void gfxPrintGLError();

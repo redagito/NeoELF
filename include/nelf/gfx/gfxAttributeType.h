@@ -1,5 +1,7 @@
 #pragma once
 
+// TODO Use name VertexArrayType instead?
+//      Or buffer type?
 using GfxAttributeType = int;
 
 #define GFX_VERTEX 0x0000

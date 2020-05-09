@@ -1,3 +1,11 @@
+#include "nelf/gfx/gfxTransform.h"
+
+#include <glad/glad.h>
+
+#include <cstdlib>
+#include <cstring>
+
+#include "nelf/gfx/gfxMath.h"
 
 void gfxSetViewport(int x, int y, int width, int height) { glViewport(x, y, width, height); }
 
@@ -140,7 +148,7 @@ void gfxRecalcTransformMatrix(gfxTransform* transform)
     float tempMatrix2[16];
     float invQua[4];
 
-    if (transform->cameraMode == GFX_FALSE)
+    if (transform->cameraMode == false)
     {
         gfxMatrix4SetIdentity(transform->matrix);
 
@@ -178,10 +186,10 @@ void gfxRecalcTransformMatrix(gfxTransform* transform)
 
 float* gfxGetTransformMatrix(gfxTransform* transform)
 {
-    if (transform->recalcMatrix == GFX_TRUE)
+    if (transform->recalcMatrix == true)
     {
         gfxRecalcTransformMatrix(transform);
-        transform->recalcMatrix = GFX_FALSE;
+        transform->recalcMatrix = false;
     }
 
     return transform->matrix;
@@ -189,10 +197,10 @@ float* gfxGetTransformMatrix(gfxTransform* transform)
 
 float* gfxGetTransformNormalMatrix(gfxTransform* transform)
 {
-    if (transform->recalcMatrix == GFX_TRUE)
+    if (transform->recalcMatrix == true)
     {
         gfxRecalcTransformMatrix(transform);
-        transform->recalcMatrix = GFX_FALSE;
+        transform->recalcMatrix = false;
     }
 
     return transform->normalMatrix;
@@ -212,7 +220,7 @@ gfxTransform* gfxCreateCameraTransform()
     transform->scale[1] = 1.0f;
     transform->scale[2] = 1.0f;
 
-    transform->cameraMode = GFX_TRUE;
+    transform->cameraMode = true;
 
     return transform;
 }
@@ -242,7 +250,7 @@ void gfxSetTransformPosition(gfxTransform* transform, float x, float y, float z)
     transform->position[1] = y;
     transform->position[2] = z;
 
-    transform->recalcMatrix = GFX_TRUE;
+    transform->recalcMatrix = true;
 }
 
 void gfxSetTransformRotation(gfxTransform* transform, float x, float y, float z)
@@ -253,7 +261,7 @@ void gfxSetTransformRotation(gfxTransform* transform, float x, float y, float z)
 
     gfxQuaFromEuler(x, y, z, transform->orient);
 
-    transform->recalcMatrix = GFX_TRUE;
+    transform->recalcMatrix = true;
 }
 
 void gfxSetTransformScale(gfxTransform* transform, float x, float y, float z)
@@ -262,7 +270,7 @@ void gfxSetTransformScale(gfxTransform* transform, float x, float y, float z)
     transform->scale[1] = y;
     transform->scale[2] = z;
 
-    transform->recalcMatrix = GFX_TRUE;
+    transform->recalcMatrix = true;
 }
 
 void gfxSetTransformOrientation(gfxTransform* transform, float x, float y, float z, float w)
@@ -274,7 +282,7 @@ void gfxSetTransformOrientation(gfxTransform* transform, float x, float y, float
 
     gfxQuaToEuler(transform->orient, transform->rotation);
 
-    transform->recalcMatrix = GFX_TRUE;
+    transform->recalcMatrix = true;
 }
 
 void gfxRotateTransform(gfxTransform* transform, float x, float y, float z)
@@ -285,7 +293,7 @@ void gfxRotateTransform(gfxTransform* transform, float x, float y, float z)
 
     gfxRotateQua(x, y, z, transform->orient);
 
-    transform->recalcMatrix = GFX_TRUE;
+    transform->recalcMatrix = true;
 }
 
 void gfxRotateTransformLocal(gfxTransform* transform, float x, float y, float z)
@@ -296,7 +304,7 @@ void gfxRotateTransformLocal(gfxTransform* transform, float x, float y, float z)
 
     gfxRotateQuaLocal(x, y, z, transform->orient);
 
-    transform->recalcMatrix = GFX_TRUE;
+    transform->recalcMatrix = true;
 }
 
 void gfxMoveTransform(gfxTransform* transform, float x, float y, float z)
@@ -305,7 +313,7 @@ void gfxMoveTransform(gfxTransform* transform, float x, float y, float z)
     transform->position[1] += y;
     transform->position[2] += z;
 
-    transform->recalcMatrix = GFX_TRUE;
+    transform->recalcMatrix = true;
 }
 
 void gfxMoveTransformLocal(gfxTransform* transform, float x, float y, float z)
@@ -323,7 +331,7 @@ void gfxMoveTransformLocal(gfxTransform* transform, float x, float y, float z)
     transform->position[1] += vec[1];
     transform->position[2] += vec[2];
 
-    transform->recalcMatrix = GFX_TRUE;
+    transform->recalcMatrix = true;
 }
 
 unsigned char gfxGetTransformCameraMode(gfxTransform* transform) { return transform->cameraMode; }

@@ -1,41 +1,20 @@
+#include "nelf/gfx/gfxDriver.h"
 
-#include <GL/glew.h>
-#include <malloc.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#ifdef ELF_MACOSX
-#include <OpenGL/gl.h>
-#else
-#include <GL/gl.h>
-#endif
+#include <glad/glad.h>
 
-#include "gfx.h"
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
-gfxDriver* driver = NULL;
+#include "nelf/Log.h"
+#include "nelf/gfx/gfxGeneral.h"
 
-extern void elfLogWrite(const char* fmt, ...);
+gfxDriver* driver = nullptr;
 
-#include "gfxgbuffer.h"
-#include "gfxgeneral.h"
-#include "gfxmath.h"
-#include "gfxquery.h"
-#include "gfxrendertarget.h"
-#include "gfxshadergen.h"
-#include "gfxshaderparams.h"
-#include "gfxshaderprogram.h"
-#include "gfxtexture.h"
-#include "gfxtransform.h"
-#include "gfxtypes.h"
-#include "gfxvertexarray.h"
-
-unsigned char gfxInit()
+bool gfxInit()
 {
     if (driver)
-        return GFX_TRUE;
+        return true;
 
     gfxGen = gfxCreateGeneral();
 
@@ -72,10 +51,10 @@ unsigned char gfxInit()
     driver->textureInternalFormats[GFX_RGBA] = GL_RGBA;
     driver->textureInternalFormats[GFX_BGR] = GL_BGR;
     driver->textureInternalFormats[GFX_BGRA] = GL_BGRA;
-    driver->textureInternalFormats[GFX_RGB16F] = GL_RGB16F_ARB;
-    driver->textureInternalFormats[GFX_RGB32F] = GL_RGB32F_ARB;
-    driver->textureInternalFormats[GFX_RGBA16F] = GL_RGBA16F_ARB;
-    driver->textureInternalFormats[GFX_RGBA32F] = GL_RGBA32F_ARB;
+    driver->textureInternalFormats[GFX_RGB16F] = GL_RGB16F;
+    driver->textureInternalFormats[GFX_RGB32F] = GL_RGB32F;
+    driver->textureInternalFormats[GFX_RGBA16F] = GL_RGBA16F;
+    driver->textureInternalFormats[GFX_RGBA32F] = GL_RGBA32F;
     driver->textureInternalFormats[GFX_COMPRESSED_RGB] = GL_COMPRESSED_RGB;
     driver->textureInternalFormats[GFX_COMPRESSED_RGBA] = GL_COMPRESSED_RGBA;
     driver->textureInternalFormats[GFX_DEPTH_COMPONENT] = GL_DEPTH_COMPONENT;
@@ -174,8 +153,8 @@ unsigned char gfxInit()
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &driver->maxTextureSize);
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &driver->maxTextureImageUnits);
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &driver->maxDrawBuffers);
-    glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &driver->maxColorAttachments);
-    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &driver->maxAnisotropy);
+    glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &driver->maxColorAttachments);
+    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &driver->maxAnisotropy);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClearDepth(1.0f);
