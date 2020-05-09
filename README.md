@@ -4,7 +4,7 @@
 
 A cross-platform 3d game engine based on BlendELF, written in C++ with a modern build system.
 
-# Project Goal
+## Project Goal
 
 Current goals are:
 * Clean project structure
@@ -80,5 +80,5 @@ Michael Gale, aka mbg - Networking
 --------------------------------
 
 Michael Gale, aka mbg - .NET wraps for versions beta 1 - beta 3
-Carlos Bolaños, aka cartuchogl - Porting to Mac OSX, bug fixing
+Carlos BolaÃ±os, aka cartuchogl - Porting to Mac OSX, bug fixing
 ```
