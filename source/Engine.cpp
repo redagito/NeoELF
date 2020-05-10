@@ -339,42 +339,6 @@ void elfResizeWindow(int width, int height)
     elfInitPostProcessBuffers(eng->postProcess);*/
 }
 
-char* elfGetFileFromPath(const char* filePath)
-{
-    int idx;
-
-    if (strlen(filePath) < 1)
-        return elfCreateString("");
-
-    idx = elfRFindCharsFromString("/\\", filePath);
-    if (idx < 1 || idx == strlen(filePath) - 1)
-    {
-        return elfCreateString("");
-    }
-    else
-    {
-        return elfSubString((char*)filePath, idx + 1, strlen(filePath) - (idx + 1));
-    }
-}
-
-char* elfGetDirectoryFromPath(const char* filePath)
-{
-    int idx;
-
-    if (strlen(filePath) < 1)
-        return elfCreateString("");
-
-    idx = elfRFindCharsFromString("/\\", filePath);
-    if (idx < 1)
-    {
-        return elfCreateString("");
-    }
-    else
-    {
-        return elfSubString((char*)filePath, 0, idx + 1);
-    }
-}
-
 const char* elfGetCurrentDirectory() { return eng->cwd.c_str(); }
 
 void elfQuit() { eng->quit = true; }

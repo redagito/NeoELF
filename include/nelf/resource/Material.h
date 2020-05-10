@@ -1,7 +1,7 @@
 #pragma once
 
 #include "nelf/Color.h"
-#include "nelf/resourceHeader.h"
+#include "nelf/resource/resourceHeader.h"
 
 struct elfTexture;
 struct gfxTextureParams;

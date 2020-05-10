@@ -2,6 +2,7 @@
 
 #include "nelf/Color.h"
 #include "nelf/Vector.h"
+#include "nelf/gfx/gfxShaderParams.h"
 #include "nelf/resource/resourceHeader.h"
 
 struct elfList;
@@ -19,6 +20,7 @@ struct elfCollision;
 struct elfArmature;
 struct elfModel;
 struct elfScript;
+struct elfTexture;
 struct gfxShaderProgram;
 
 // Assimp

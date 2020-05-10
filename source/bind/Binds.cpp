@@ -1,12 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
-#include "blendelf.h"
-#include "gfx.h"
-#include "lauxlib.h"
-#include "lua.h"
-#include "lualib.h"
+#include "lua.hpp"
+#include "nelf/bind/Bind.h"
 
 #define LUA_ELF_USERDATA_HEADER unsigned char type
 #define LUA_ELF_OBJECT 0x0001

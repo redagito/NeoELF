@@ -1,4 +1,4 @@
-#include "nelf/Armature.h"
+#include "nelf/resource/Armature.h"
 
 #include <cstdlib>
 #include <cstring>
@@ -6,8 +6,18 @@
 #include "nelf/General.h"
 #include "nelf/List.h"
 #include "nelf/Object.h"
+#include "nelf/RenderStation.h"
 #include "nelf/String.h"
+#include "nelf/actor/Entity.h"
+#include "nelf/gfx/gfxFormatType.h"
+#include "nelf/gfx/gfxMath.h"
+#include "nelf/gfx/gfxObject.h"
+#include "nelf/gfx/gfxShaderParams.h"
+#include "nelf/gfx/gfxVertexData.h"
+#include "nelf/gfx/gfxVertexDataType.h"
 #include "nelf/objectType.h"
+#include "nelf/resource/Model.h"
+#include "nelf/resource/Resources.h"
 
 elfBone* elfCreateBone(const char* name)
 {

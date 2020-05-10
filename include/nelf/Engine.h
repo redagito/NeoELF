@@ -68,9 +68,6 @@ void elfDeinit();
 
 void elfResizeWindow(int width, int height);
 
-char* elfGetFileFromPath(const char* filePath);
-char* elfGetDirectoryFromPath(const char* filePath);
-
 const char* elfGetCurrentDirectory();
 
 void elfQuit();

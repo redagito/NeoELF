@@ -1,6 +1,6 @@
 #pragma once
 
-using GfxBlendMode = int;
+using GfxBlendMode = unsigned char;
 
 //#define GFX_NONE					0x0000
 #define GFX_TRANSPARENT 0x0001

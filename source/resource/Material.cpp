@@ -1,14 +1,23 @@
-#include "nelf/Material.h"
+#include "nelf/resource/Material.h"
 
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/Engine.h"
 #include "nelf/General.h"
 #include "nelf/Object.h"
-#include "nelf/Resources.h"
 #include "nelf/String.h"
 #include "nelf/drawMode.h"
+#include "nelf/gfx/gfxProjectionMode.h"
+#include "nelf/gfx/gfxShaderParams.h"
+#include "nelf/gfx/gfxTexture.h"
+#include "nelf/gfx/gfxTextureFormat.h"
+#include "nelf/gfx/gfxTextureType.h"
 #include "nelf/objectType.h"
+#include "nelf/resource/Resources.h"
+#include "nelf/resource/Scene.h"
+#include "nelf/resource/Texture.h"
+#include "nelf/resource/textureType.h"
 
 elfMaterial* elfCreateMaterial(const char* name)
 {
@@ -129,7 +138,7 @@ void elfSetMaterialDiffuseMap(elfMaterial* material, elfTexture* texture)
 
         format = elfGetTextureFormat(material->diffuseMap);
         if (format == GFX_RGBA || format == GFX_COMPRESSED_RGBA || format == GFX_BGRA || format == GFX_LUMINANCE_ALPHA)
-            material->alphaTest = ELF_TRUE;
+            material->alphaTest = true;
     }
 }
 
@@ -241,7 +250,7 @@ void elfSetMaterialParallaxScale(elfMaterial* material, float scale)
         material->parallaxScale = 0.0f;
 }
 
-void elfSetMaterialAlphaTest(elfMaterial* material, bool alphaTest) { material->alphaTest = alphaTest }
+void elfSetMaterialAlphaTest(elfMaterial* material, bool alphaTest) { material->alphaTest = alphaTest; }
 
 void elfSetMaterialAlphaThreshold(elfMaterial* material, float threshold)
 {
@@ -262,7 +271,7 @@ void elfSetTextureParamsDefault(gfxTextureParams* params)
 {
     params->type = ELF_COLOR_MAP;
     params->texture = NULL;
-    params->projectionMode = GFX_NONE;
+    params->projectionMode = GFX_PROJECTION_NONE;
     params->parallaxScale = 0.0f;
 }
 
@@ -276,11 +285,11 @@ void elfSetMaterial(elfMaterial* material, int mode, gfxShaderParams* shaderPara
     {
         if (material->diffuseMap && material->alphaTest)
         {
-            shaderParams->renderParams.alphaTest = ELF_TRUE;
+            shaderParams->renderParams.alphaTest = true;
             shaderParams->renderParams.alphaThreshold = material->alphaThreshold;
             shaderParams->textureParams[0].type = ELF_COLOR_MAP;
             shaderParams->textureParams[0].texture = material->diffuseMap->texture;
-            shaderParams->textureParams[0].projectionMode = GFX_NONE;
+            shaderParams->textureParams[0].projectionMode = GFX_PROJECTION_NONE;
         }
     }
     else if (mode == ELF_DRAW_AMBIENT)
@@ -294,14 +303,14 @@ void elfSetMaterial(elfMaterial* material, int mode, gfxShaderParams* shaderPara
         {
             shaderParams->textureParams[0].type = ELF_COLOR_MAP;
             shaderParams->textureParams[0].texture = material->diffuseMap->texture;
-            shaderParams->textureParams[0].projectionMode = GFX_NONE;
+            shaderParams->textureParams[0].projectionMode = GFX_PROJECTION_NONE;
         }
 
         if (material->heightMap)
         {
             shaderParams->textureParams[2].type = ELF_HEIGHT_MAP;
             shaderParams->textureParams[2].texture = material->heightMap->texture;
-            shaderParams->textureParams[2].projectionMode = GFX_NONE;
+            shaderParams->textureParams[2].projectionMode = GFX_PROJECTION_NONE;
             shaderParams->textureParams[2].parallaxScale = material->parallaxScale * 0.05f;
         }
 
@@ -309,14 +318,14 @@ void elfSetMaterial(elfMaterial* material, int mode, gfxShaderParams* shaderPara
         {
             shaderParams->textureParams[4].type = ELF_LIGHT_MAP;
             shaderParams->textureParams[4].texture = material->lightMap->texture;
-            shaderParams->textureParams[4].projectionMode = GFX_NONE;
+            shaderParams->textureParams[4].projectionMode = GFX_PROJECTION_NONE;
         }
 
         if (material->cubeMap)
         {
             shaderParams->textureParams[5].type = ELF_CUBE_MAP;
             shaderParams->textureParams[5].texture = material->cubeMap->texture;
-            shaderParams->textureParams[5].projectionMode = GFX_NONE;
+            shaderParams->textureParams[5].projectionMode = GFX_PROJECTION_NONE;
         }
     }
     else if (mode == ELF_DRAW_WITHOUT_LIGHTING)
@@ -327,14 +336,14 @@ void elfSetMaterial(elfMaterial* material, int mode, gfxShaderParams* shaderPara
         {
             shaderParams->textureParams[0].type = ELF_COLOR_MAP;
             shaderParams->textureParams[0].texture = material->diffuseMap->texture;
-            shaderParams->textureParams[0].projectionMode = GFX_NONE;
+            shaderParams->textureParams[0].projectionMode = GFX_PROJECTION_NONE;
         }
 
         if (material->heightMap)
         {
             shaderParams->textureParams[2].type = ELF_HEIGHT_MAP;
             shaderParams->textureParams[2].texture = material->heightMap->texture;
-            shaderParams->textureParams[2].projectionMode = GFX_NONE;
+            shaderParams->textureParams[2].projectionMode = GFX_PROJECTION_NONE;
             shaderParams->textureParams[2].parallaxScale = material->parallaxScale * 0.05f;
         }
 
@@ -342,14 +351,14 @@ void elfSetMaterial(elfMaterial* material, int mode, gfxShaderParams* shaderPara
         {
             shaderParams->textureParams[4].type = ELF_LIGHT_MAP;
             shaderParams->textureParams[4].texture = material->lightMap->texture;
-            shaderParams->textureParams[4].projectionMode = GFX_NONE;
+            shaderParams->textureParams[4].projectionMode = GFX_PROJECTION_NONE;
         }
 
         if (material->cubeMap)
         {
             shaderParams->textureParams[5].type = ELF_CUBE_MAP;
             shaderParams->textureParams[5].texture = material->cubeMap->texture;
-            shaderParams->textureParams[5].projectionMode = GFX_NONE;
+            shaderParams->textureParams[5].projectionMode = GFX_PROJECTION_NONE;
         }
     }
     else if (mode == ELF_DRAW_WITH_LIGHTING)
@@ -362,21 +371,21 @@ void elfSetMaterial(elfMaterial* material, int mode, gfxShaderParams* shaderPara
         {
             shaderParams->textureParams[0].type = ELF_COLOR_MAP;
             shaderParams->textureParams[0].texture = material->diffuseMap->texture;
-            shaderParams->textureParams[0].projectionMode = GFX_NONE;
+            shaderParams->textureParams[0].projectionMode = GFX_PROJECTION_NONE;
         }
 
         if (material->normalMap)
         {
             shaderParams->textureParams[1].type = ELF_NORMAL_MAP;
             shaderParams->textureParams[1].texture = material->normalMap->texture;
-            shaderParams->textureParams[1].projectionMode = GFX_NONE;
+            shaderParams->textureParams[1].projectionMode = GFX_PROJECTION_NONE;
         }
 
         if (material->heightMap)
         {
             shaderParams->textureParams[2].type = ELF_HEIGHT_MAP;
             shaderParams->textureParams[2].texture = material->heightMap->texture;
-            shaderParams->textureParams[2].projectionMode = GFX_NONE;
+            shaderParams->textureParams[2].projectionMode = GFX_PROJECTION_NONE;
             shaderParams->textureParams[2].parallaxScale = material->parallaxScale * 0.05f;
         }
 
@@ -384,21 +393,21 @@ void elfSetMaterial(elfMaterial* material, int mode, gfxShaderParams* shaderPara
         {
             shaderParams->textureParams[3].type = ELF_SPECULAR_MAP;
             shaderParams->textureParams[3].texture = material->specularMap->texture;
-            shaderParams->textureParams[3].projectionMode = GFX_NONE;
+            shaderParams->textureParams[3].projectionMode = GFX_PROJECTION_NONE;
         }
 
         if (material->lightMap)
         {
             shaderParams->textureParams[4].type = ELF_LIGHT_MAP;
             shaderParams->textureParams[4].texture = material->lightMap->texture;
-            shaderParams->textureParams[4].projectionMode = GFX_NONE;
+            shaderParams->textureParams[4].projectionMode = GFX_PROJECTION_NONE;
         }
 
         if (material->cubeMap)
         {
             shaderParams->textureParams[5].type = ELF_CUBE_MAP;
             shaderParams->textureParams[5].texture = material->cubeMap->texture;
-            shaderParams->textureParams[5].projectionMode = GFX_NONE;
+            shaderParams->textureParams[5].projectionMode = GFX_PROJECTION_NONE;
         }
     }
 }

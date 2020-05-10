@@ -4,6 +4,7 @@
 #include <cstring>
 
 #include "nelf/General.h"
+#include "nelf/List.h"
 #include "nelf/Object.h"
 #include "nelf/bezierCurveType.h"
 #include "nelf/objectType.h"

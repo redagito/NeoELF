@@ -204,3 +204,39 @@ elfDirectoryItem* elfGetDirectoryItem(elfDirectory* directory, int idx)
 const char* elfGetDirectoryItemName(elfDirectoryItem* dirItem) { return dirItem->name; }
 
 int elfGetDirectoryItemType(elfDirectoryItem* dirItem) { return dirItem->itemType; }
+
+char* elfGetFileFromPath(const char* filePath)
+{
+    int idx;
+
+    if (strlen(filePath) < 1)
+        return elfCreateString("");
+
+    idx = elfRFindCharsFromString("/\\", filePath);
+    if (idx < 1 || idx == strlen(filePath) - 1)
+    {
+        return elfCreateString("");
+    }
+    else
+    {
+        return elfSubString((char*)filePath, idx + 1, strlen(filePath) - (idx + 1));
+    }
+}
+
+char* elfGetDirectoryFromPath(const char* filePath)
+{
+    int idx;
+
+    if (strlen(filePath) < 1)
+        return elfCreateString("");
+
+    idx = elfRFindCharsFromString("/\\", filePath);
+    if (idx < 1)
+    {
+        return elfCreateString("");
+    }
+    else
+    {
+        return elfSubString((char*)filePath, 0, idx + 1);
+    }
+}

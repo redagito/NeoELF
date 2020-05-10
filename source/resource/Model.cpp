@@ -1,18 +1,29 @@
-#include "nelf/Model.h"
+#include "nelf/resource/Model.h"
 
 #include <cstdlib>
 #include <cstring>
 
 #include "nelf/Face.h"
 #include "nelf/General.h"
-#include "nelf/Material.h"
 #include "nelf/MeshData.h"
 #include "nelf/Object.h"
-#include "nelf/Resources.h"
+#include "nelf/RenderStation.h"
 #include "nelf/String.h"
 #include "nelf/Vertex.h"
 #include "nelf/drawMode.h"
+#include "nelf/gfx/gfxDrawMode.h"
+#include "nelf/gfx/gfxFormatType.h"
+#include "nelf/gfx/gfxMath.h"
+#include "nelf/gfx/gfxObject.h"
+#include "nelf/gfx/gfxShaderParams.h"
+#include "nelf/gfx/gfxTextureMapType.h"
+#include "nelf/gfx/gfxVertexArray.h"
+#include "nelf/gfx/gfxVertexData.h"
+#include "nelf/gfx/gfxVertexDataType.h"
+#include "nelf/gfx/gfxVertexIndex.h"
 #include "nelf/objectType.h"
+#include "nelf/resource/Material.h"
+#include "nelf/resource/Resources.h"
 
 elfModel* elfCreateModel(const char* name)
 {
@@ -124,14 +135,14 @@ elfModel* elfCreateModelFromMeshData(elfMeshData* data)
             model->bbMax.z = vertexBuffer[j + 2];
     }
 
-    model->vertexArray = gfxCreateVertexArray(GFX_TRUE);
+    model->vertexArray = gfxCreateVertexArray(true);
     gfxIncRef((gfxObject*)model->vertexArray);
 
     gfxSetVertexArrayData(model->vertexArray, GFX_VERTEX, model->vertices);
     gfxSetVertexArrayData(model->vertexArray, GFX_NORMAL, model->normals);
     gfxSetVertexArrayData(model->vertexArray, GFX_TEX_COORD, model->texCoords);
 
-    model->areas[0].vertexIndex = gfxCreateVertexIndex(GFX_TRUE, model->areas[0].index);
+    model->areas[0].vertexIndex = gfxCreateVertexIndex(true, model->areas[0].index);
     gfxIncRef((gfxObject*)model->areas[0].vertexIndex);
 
     memcpy(model->index, indexBuffer, sizeof(unsigned int) * model->areas[0].indiceCount);

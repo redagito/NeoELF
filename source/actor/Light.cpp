@@ -98,7 +98,7 @@ void elfSetLightRange(elfLight* light, float range, float fadeRange)
     elfSetCameraClip(light->shadowCamera, 1.0f, light->range + light->fadeRange);
 }
 
-void elfSetLightShadows(elfLight* light, unsigned char shadows)
+void elfSetLightShadows(elfLight* light, bool shadows)
 {
     if (light->shadows == shadows)
         return;
@@ -108,7 +108,7 @@ void elfSetLightShadows(elfLight* light, unsigned char shadows)
     light->moved = ELF_TRUE;
 }
 
-void elfSetLightVisible(elfLight* light, unsigned char visible) { light->visible = !(visible == ELF_FALSE); }
+void elfSetLightVisible(elfLight* light, bool visible) { light->visible = !(visible == ELF_FALSE); }
 
 void elfSetLightCone(elfLight* light, float innerCone, float outerCone)
 {

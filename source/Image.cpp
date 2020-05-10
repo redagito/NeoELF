@@ -1,9 +1,18 @@
 #include "nelf/Image.h"
 
+#include <cassert>
 #include <cstdlib>
 #include <cstring>
+#include <vector>
+
+// TODO Currently no conan pcakcage for freeimage library is available
+//      So for now just support reading/writing png files
+//      Support other file types asap
+#include <lodepng.h>
 
 #include "nelf/General.h"
+#include "nelf/Log.h"
+#include "nelf/errorCode.h"
 #include "nelf/objectType.h"
 
 elfImage* elfCreateImage()
@@ -39,10 +48,34 @@ elfImage* elfCreateEmptyImage(int width, int height, int bpp)
     return image;
 }
 
+// Uses lodepng for png loading for now
+static elfImage* loadPng(const char* filePath)
+{
+    std::vector<unsigned char> data;
+    unsigned int width = 0;
+    unsigned int height = 0;
+
+    if (lodepng::decode(data, width, height, filePath, LCT_RGBA, 8) != 0)
+        return nullptr;
+
+    elfImage* image = elfCreateImage();
+
+    image->width = width;
+    image->height = height;
+    image->bpp = 32;
+
+    int sizeBytes = image->width * image->height * (image->bpp / 8);
+    assert(sizeBytes == data.size());
+
+    image->data = (unsigned char*)malloc(sizeBytes);
+    memcpy(image->data, data.data(), sizeBytes);
+
+    return image;
+}
+
 elfImage* elfCreateImageFromFile(const char* filePath)
 {
     elfImage* image;
-    FIBITMAP* in;
     int sizeBytes;
     const char* type;
 
@@ -53,6 +86,20 @@ elfImage* elfCreateImageFromFile(const char* filePath)
         return NULL;
     }
 
+    // TODO Remove later
+    if ((strcmp(type, ".png") == 0))
+    {
+        image = loadPng(filePath);
+    }
+    else
+    {
+        elfSetError(ELF_UNKNOWN_FORMAT, "error: can't load image \"%s\", unknown format\n", filePath);
+        return NULL;
+    }
+    // Remove until here
+
+    /*
+    FIBITMAP* in;
     if (strcmp(type, ".jpg") == 0)
         in = FreeImage_Load(FIF_JPEG, filePath, JPEG_ACCURATE);
     else if (strcmp(type, ".png") == 0)
@@ -99,6 +146,8 @@ elfImage* elfCreateImageFromFile(const char* filePath)
                                FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, FALSE);
 
     FreeImage_Unload(in);
+
+    */
 
     return image;
 }
@@ -166,21 +215,29 @@ void* elfGetImageData(elfImage* image) { return image->data; }
 
 bool elfSaveImageData(const char* filePath, int width, int height, unsigned char bpp, void* data)
 {
-    FIBITMAP* out;
-    FIBITMAP* temp;
-    const char* type;
+    if (width < 1 || height < 1 || bpp % 8 != 0 || bpp > 32 || data == nullptr)
+        return false;
 
-    if (width < 1 || height < 1 || bpp % 8 != 0 || bpp > 32 || !data)
-        return ELF_FALSE;
+    // Temporary solution for png support remove later
+    const char* type = strrchr(filePath, '.');
+    if (strcmp(type, ".png") == 0)
+        return lodepng::encode(filePath, (unsigned char*)data, width, height, LCT_RGBA, 8) == 0;
+    else
+    {
+        elfSetError(ELF_UNKNOWN_FORMAT, "error: can't save image \"%s\", unknown format\n", filePath);
+        return false;
+    }
+    // Remove until here
 
-    out = FreeImage_ConvertFromRawBits((BYTE*)data, width, height, width * (bpp / 8), bpp, FI_RGBA_RED_MASK,
+    /*
+    FIBITMAP* out = FreeImage_ConvertFromRawBits((BYTE*)data, width, height, width * (bpp / 8), bpp, FI_RGBA_RED_MASK,
                                        FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, FALSE);
 
     // the jpg freeimage plugin can't save a 32 bit map, and who knows what other
     // plugins can't, so for now, this should fix it...
     if (bpp != 24)
     {
-        temp = FreeImage_ConvertTo24Bits(out);
+        FIBITMAP* temp = FreeImage_ConvertTo24Bits(out);
         FreeImage_Unload(out);
         out = temp;
     }
@@ -191,7 +248,7 @@ bool elfSaveImageData(const char* filePath, int width, int height, unsigned char
         return false;
     }
 
-    type = strrchr(filePath, '.');
+    const char* type = strrchr(filePath, '.');
     if (strcmp(type, ".bmp") == 0)
         FreeImage_Save(FIF_BMP, out, filePath, 0);
     else if (strcmp(type, ".tga") == 0)
@@ -208,10 +265,11 @@ bool elfSaveImageData(const char* filePath, int width, int height, unsigned char
     {
         FreeImage_Unload(out);
         elfSetError(ELF_UNKNOWN_FORMAT, "error: can't save image \"%s\", unknown format\n", filePath);
-        return true;
+        return false;
     }
 
     FreeImage_Unload(out);
+    */
 
     return true;
 }

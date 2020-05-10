@@ -4,6 +4,17 @@
 
 struct elfList;
 struct elfResource;
+struct elfPakIndex;
+struct elfActor;
+struct elfArmature;
+struct elfCamera;
+struct elfEntity;
+struct elfLight;
+struct elfMaterial;
+struct elfModel;
+struct elfParticles;
+struct elfScript;
+struct elfSprite;
 
 // TODO Lazy loading / hot reloading
 // TODO Move to separate lib

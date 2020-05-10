@@ -2,5 +2,6 @@
 
 using GfxProjectionMode = int;
 
-#define GFX_NONE 0x0000
+// TODO Renamed from GFX_NONE
+#define GFX_PROJECTION_NONE 0x0000
 #define GFX_SHADOW_PROJECTION 0x0001

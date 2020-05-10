@@ -1,5 +1,6 @@
-#include "nelf/Scene.h"
+#include "nelf/resource/Scene.h"
 
+#include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
@@ -7,29 +8,47 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "nelf/Actor.h"
-#include "nelf/Camera.h"
-#include "nelf/Entity.h"
+#include "nelf/Directory.h"
 #include "nelf/General.h"
-#include "nelf/Light.h"
 #include "nelf/List.h"
 #include "nelf/Log.h"
-#include "nelf/Material.h"
 #include "nelf/Math.h"
-#include "nelf/Model.h"
 #include "nelf/Object.h"
-#include "nelf/Particles.h"
-#include "nelf/Resource.h"
-#include "nelf/Resources.h"
-#include "nelf/Script.h"
-#include "nelf/Sprite.h"
 #include "nelf/String.h"
-#include "nelf/Texture.h"
+#include "nelf/actor/Actor.h"
+#include "nelf/actor/Camera.h"
+#include "nelf/actor/Entity.h"
+#include "nelf/actor/Light.h"
+#include "nelf/actor/Particles.h"
+#include "nelf/actor/Sprite.h"
+#include "nelf/actor/lightType.h"
 #include "nelf/audio/AudioDevice.h"
 #include "nelf/drawMode.h"
 #include "nelf/errorCode.h"
-#include "nelf/lightType.h"
+#include "nelf/gfx/gfxDriver.h"
+#include "nelf/gfx/gfxFormatType.h"
+#include "nelf/gfx/gfxMath.h"
+#include "nelf/gfx/gfxObject.h"
+#include "nelf/gfx/gfxQuery.h"
+#include "nelf/gfx/gfxRenderTarget.h"
+#include "nelf/gfx/gfxShaderProgram.h"
+#include "nelf/gfx/gfxVertexArray.h"
+#include "nelf/gfx/gfxVertexData.h"
+#include "nelf/gfx/gfxVertexDataType.h"
+#include "nelf/gfx/gfxVertexIndex.h"
 #include "nelf/objectType.h"
+#include "nelf/pak/Pak.h"
+#include "nelf/pak/PakIndex.h"
+#include "nelf/physics/Joint.h"
+#include "nelf/physics/PhysicsObject.h"
+#include "nelf/physics/PhysicsWorld.h"
+#include "nelf/resource/Armature.h"
+#include "nelf/resource/Material.h"
+#include "nelf/resource/Model.h"
+#include "nelf/resource/Resource.h"
+#include "nelf/resource/Resources.h"
+#include "nelf/resource/Script.h"
+#include "nelf/resource/Texture.h"
 
 // Fog shader
 static const char* composeFogVert = R"##(
@@ -130,23 +149,22 @@ void elfRecursivelyImportAssets(elfScene* scene, const struct aiScene* aiscn, st
     float* normalBuffer;
     float* texcoordBuffer = NULL;
     unsigned int* indexBuffer;
-    struct aiColor4D col;
-    const struct aiMaterial* aimat;
+    aiColor4D col;
+    const aiMaterial* aimat;
     float shininess;
     float strength;
     unsigned int max;
-    struct aiString path;
-    struct aiString name;
+    aiString path;
+    aiString name;
     char* parentFolder;
     char* realPath;
     char* texName;
-    unsigned char isTexCoords;
+    bool isTexCoords = false;
 
     entity = elfCreateEntity(aind->mName.data);
     model = elfCreateModel(aind->mName.data);
 
     model->frameCount = 1;
-    isTexCoords = ELF_FALSE;
 
     for (i = 0; i < (int)aind->mNumMeshes; i++)
     {
@@ -160,7 +178,7 @@ void elfRecursivelyImportAssets(elfScene* scene, const struct aiScene* aiscn, st
         model->indiceCount += mesh->mNumFaces * 3;
 
         if (mesh->mTextureCoords[0] != NULL)
-            isTexCoords = ELF_TRUE;
+            isTexCoords = true;
     }
 
     if (model->verticeCount > 2 && model->indiceCount > 2)
@@ -226,7 +244,7 @@ void elfRecursivelyImportAssets(elfScene* scene, const struct aiScene* aiscn, st
 
             vertexOffset += mesh->mNumVertices;
 
-            model->areas[areaIndex].vertexIndex = gfxCreateVertexIndex(GFX_TRUE, model->areas[areaIndex].index);
+            model->areas[areaIndex].vertexIndex = gfxCreateVertexIndex(true, model->areas[areaIndex].index);
             gfxIncRef((gfxObject*)model->areas[areaIndex].vertexIndex);
 
             areaIndex += 1;
@@ -343,7 +361,7 @@ void elfRecursivelyImportAssets(elfScene* scene, const struct aiScene* aiscn, st
             elfAddEntityMaterial(entity, material);
         }
 
-        model->vertexArray = gfxCreateVertexArray(GFX_TRUE);
+        model->vertexArray = gfxCreateVertexArray(true);
         gfxIncRef((gfxObject*)model->vertexArray);
 
         gfxSetVertexArrayData(model->vertexArray, GFX_VERTEX, model->vertices);
@@ -680,7 +698,7 @@ void elfSetSceneOcclusionCulling(elfScene* scene, bool occlusionCulling)
     scene->occlusionCulling = occlusionCulling;
 }
 
-unsigned char elfGetSceneOcclusionCulling(elfScene* scene) { return scene->occlusionCulling; }
+bool elfGetSceneOcclusionCulling(elfScene* scene) { return scene->occlusionCulling; }
 
 void elfSetSceneGravity(elfScene* scene, float x, float y, float z)
 {
@@ -1406,11 +1424,11 @@ bool elfRemoveSceneCamera(elfScene* scene, const char* name)
             elfRemoveListObject(scene->cameras, (elfObject*)cam);
             if (scene->curCamera == cam)
                 scene->curCamera = elfGetSceneCameraByIndex(scene, 0);
-            return ELF_TRUE;
+            return true;
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
 bool elfRemoveSceneEntity(elfScene* scene, const char* name)
@@ -1424,11 +1442,11 @@ bool elfRemoveSceneEntity(elfScene* scene, const char* name)
         {
             elfRemoveActor((elfActor*)ent);
             elfRemoveListObject(scene->entities, (elfObject*)ent);
-            return ELF_TRUE;
+            return true;
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
 bool elfRemoveSceneLight(elfScene* scene, const char* name)
@@ -1441,11 +1459,11 @@ bool elfRemoveSceneLight(elfScene* scene, const char* name)
         {
             elfRemoveActor((elfActor*)lig);
             elfRemoveListObject(scene->lights, (elfObject*)lig);
-            return ELF_TRUE;
+            return true;
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
 bool elfRemoveSceneParticles(elfScene* scene, const char* name)
@@ -1459,11 +1477,11 @@ bool elfRemoveSceneParticles(elfScene* scene, const char* name)
         {
             elfRemoveActor((elfActor*)par);
             elfRemoveListObject(scene->particles, (elfObject*)par);
-            return ELF_TRUE;
+            return true;
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
 bool elfRemoveSceneSprite(elfScene* scene, const char* name)
@@ -1476,11 +1494,11 @@ bool elfRemoveSceneSprite(elfScene* scene, const char* name)
         {
             elfRemoveActor((elfActor*)spr);
             elfRemoveListObject(scene->sprites, (elfObject*)spr);
-            return ELF_TRUE;
+            return true;
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
 bool elfRemoveSceneCameraByIndex(elfScene* scene, int idx)
@@ -1489,7 +1507,7 @@ bool elfRemoveSceneCameraByIndex(elfScene* scene, int idx)
     int i;
 
     if (idx < 0 || idx > elfGetListLength(scene->cameras) - 1)
-        return ELF_FALSE;
+        return false;
 
     for (i = 0, cam = (elfCamera*)elfBeginList(scene->cameras); cam != NULL;
          cam = (elfCamera*)elfGetListNext(scene->cameras), i++)
@@ -1502,11 +1520,11 @@ bool elfRemoveSceneCameraByIndex(elfScene* scene, int idx)
             {
                 scene->curCamera = elfGetSceneCameraByIndex(scene, 0);
             }
-            return ELF_TRUE;
+            return true;
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
 bool elfRemoveSceneEntityByIndex(elfScene* scene, int idx)
@@ -1515,7 +1533,7 @@ bool elfRemoveSceneEntityByIndex(elfScene* scene, int idx)
     int i;
 
     if (idx < 0 || idx > elfGetListLength(scene->entities) - 1)
-        return ELF_FALSE;
+        return false;
 
     for (i = 0, ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
          ent = (elfEntity*)elfGetListNext(scene->entities), i++)
@@ -1524,11 +1542,11 @@ bool elfRemoveSceneEntityByIndex(elfScene* scene, int idx)
         {
             elfRemoveActor((elfActor*)ent);
             elfRemoveListObject(scene->entities, (elfObject*)ent);
-            return ELF_TRUE;
+            return true;
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
 bool elfRemoveSceneLightByIndex(elfScene* scene, int idx)
@@ -1537,7 +1555,7 @@ bool elfRemoveSceneLightByIndex(elfScene* scene, int idx)
     int i;
 
     if (idx < 0 || idx > elfGetListLength(scene->lights) - 1)
-        return ELF_FALSE;
+        return false;
 
     for (i = 0, lig = (elfLight*)elfBeginList(scene->lights); lig != NULL;
          lig = (elfLight*)elfGetListNext(scene->lights), i++)
@@ -1546,11 +1564,11 @@ bool elfRemoveSceneLightByIndex(elfScene* scene, int idx)
         {
             elfRemoveActor((elfActor*)lig);
             elfRemoveListObject(scene->lights, (elfObject*)lig);
-            return ELF_TRUE;
+            return true;
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
 bool elfRemoveSceneParticlesByIndex(elfScene* scene, int idx)
@@ -1559,7 +1577,7 @@ bool elfRemoveSceneParticlesByIndex(elfScene* scene, int idx)
     int i;
 
     if (idx < 0 || idx > elfGetListLength(scene->particles) - 1)
-        return ELF_FALSE;
+        return false;
 
     for (i = 0, par = (elfParticles*)elfBeginList(scene->particles); par != NULL;
          par = (elfParticles*)elfGetListNext(scene->particles), i++)
@@ -1568,11 +1586,11 @@ bool elfRemoveSceneParticlesByIndex(elfScene* scene, int idx)
         {
             elfRemoveActor((elfActor*)par);
             elfRemoveListObject(scene->particles, (elfObject*)par);
-            return ELF_TRUE;
+            return true;
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
 bool elfRemoveSceneSpriteByIndex(elfScene* scene, int idx)
@@ -1581,7 +1599,7 @@ bool elfRemoveSceneSpriteByIndex(elfScene* scene, int idx)
     int i;
 
     if (idx < 0 || idx > elfGetListLength(scene->sprites) - 1)
-        return ELF_FALSE;
+        return false;
 
     for (i = 0, spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
          spr = (elfSprite*)elfGetListNext(scene->sprites), i++)
@@ -1590,11 +1608,11 @@ bool elfRemoveSceneSpriteByIndex(elfScene* scene, int idx)
         {
             elfRemoveActor((elfActor*)spr);
             elfRemoveListObject(scene->sprites, (elfObject*)spr);
-            return ELF_TRUE;
+            return true;
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
 bool elfRemoveSceneCameraByObject(elfScene* scene, elfCamera* camera)
@@ -1631,8 +1649,9 @@ bool elfRemoveSceneSpriteByObject(elfScene* scene, elfSprite* sprite)
 
 bool elfRemoveSceneActorByObject(elfScene* scene, elfActor* actor)
 {
-    unsigned char result;
+    bool result = false;
 
+    // TODO Seriously???
     result = elfRemoveSceneCameraByObject(scene, (elfCamera*)actor);
     if (result)
         return result;
@@ -1649,7 +1668,7 @@ bool elfRemoveSceneActorByObject(elfScene* scene, elfActor* actor)
     if (result)
         return result;
 
-    return ELF_FALSE;
+    return false;
 }
 
 void elfDrawScene(elfScene* scene)
@@ -1679,8 +1698,8 @@ void elfDrawScene(elfScene* scene)
         // draw occluders to depth buffer
         gfxSetShaderParamsDefault(&scene->shaderParams);
         elfSetCamera(scene->curCamera, &scene->shaderParams);
-        scene->shaderParams.renderParams.colorWrite = ELF_FALSE;
-        scene->shaderParams.renderParams.alphaWrite = ELF_FALSE;
+        scene->shaderParams.renderParams.colorWrite = false;
+        scene->shaderParams.renderParams.alphaWrite = false;
 
         found = false;
         scene->entityQueueCount = 0;
@@ -1734,14 +1753,14 @@ void elfDrawScene(elfScene* scene)
                 scene->spriteQueueCount++;
                 if (spr->occluder)
                 {
-                    found = ELF_TRUE;
+                    found = true;
                     elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
                 }
-                spr->culled = ELF_FALSE;
+                spr->culled = false;
             }
             else
             {
-                spr->culled = ELF_TRUE;
+                spr->culled = true;
             }
         }
 
@@ -1750,11 +1769,11 @@ void elfDrawScene(elfScene* scene)
             // initiate occlusion queries
             gfxSetShaderParamsDefault(&scene->shaderParams);
             elfSetCamera(scene->curCamera, &scene->shaderParams);
-            scene->shaderParams.renderParams.depthWrite = GFX_FALSE;
+            scene->shaderParams.renderParams.depthWrite = false;
             scene->shaderParams.renderParams.depthFunc = GFX_LEQUAL;
-            scene->shaderParams.renderParams.colorWrite = GFX_FALSE;
-            scene->shaderParams.renderParams.alphaWrite = GFX_FALSE;
-            scene->shaderParams.renderParams.cullFace = GFX_FALSE;
+            scene->shaderParams.renderParams.colorWrite = false;
+            scene->shaderParams.renderParams.alphaWrite = false;
+            scene->shaderParams.renderParams.cullFace = false;
 
             for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
                  i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
@@ -1767,8 +1786,8 @@ void elfDrawScene(elfScene* scene)
             // draw depth buffer
             gfxSetShaderParamsDefault(&scene->shaderParams);
             elfSetCamera(scene->curCamera, &scene->shaderParams);
-            scene->shaderParams.renderParams.colorWrite = ELF_FALSE;
-            scene->shaderParams.renderParams.alphaWrite = ELF_FALSE;
+            scene->shaderParams.renderParams.colorWrite = false;
+            scene->shaderParams.renderParams.alphaWrite = false;
 
             for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
                  i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
@@ -1802,8 +1821,8 @@ void elfDrawScene(elfScene* scene)
             // draw depth buffer
             gfxSetShaderParamsDefault(&scene->shaderParams);
             elfSetCamera(scene->curCamera, &scene->shaderParams);
-            scene->shaderParams.renderParams.colorWrite = ELF_FALSE;
-            scene->shaderParams.renderParams.alphaWrite = ELF_FALSE;
+            scene->shaderParams.renderParams.colorWrite = false;
+            scene->shaderParams.renderParams.alphaWrite = false;
 
             for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
                  i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
@@ -1823,8 +1842,8 @@ void elfDrawScene(elfScene* scene)
         // draw depth buffer
         gfxSetShaderParamsDefault(&scene->shaderParams);
         elfSetCamera(scene->curCamera, &scene->shaderParams);
-        scene->shaderParams.renderParams.colorWrite = ELF_FALSE;
-        scene->shaderParams.renderParams.alphaWrite = ELF_FALSE;
+        scene->shaderParams.renderParams.colorWrite = false;
+        scene->shaderParams.renderParams.alphaWrite = false;
 
         scene->entityQueueCount = 0;
         elfBeginList(scene->entityQueue);
@@ -1845,7 +1864,7 @@ void elfDrawScene(elfScene* scene)
                 }
                 scene->entityQueueCount++;
                 elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
-                ent->culled = ELF_FALSE;
+                ent->culled = false;
             }
             else
             {
@@ -1872,7 +1891,7 @@ void elfDrawScene(elfScene* scene)
                 }
                 scene->spriteQueueCount++;
                 elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
-                spr->culled = ELF_FALSE;
+                spr->culled = false;
             }
             else
             {
@@ -1888,7 +1907,7 @@ void elfDrawScene(elfScene* scene)
         gfxSetShaderParamsDefault(&scene->shaderParams);
         elfSetCamera(scene->curCamera, &scene->shaderParams);
 
-        scene->shaderParams.renderParams.depthWrite = GFX_FALSE;
+        scene->shaderParams.renderParams.depthWrite = false;
         scene->shaderParams.renderParams.depthFunc = GFX_EQUAL;
         scene->shaderParams.renderParams.blendMode = GFX_ADD;
 
@@ -1909,7 +1928,7 @@ void elfDrawScene(elfScene* scene)
     gfxSetShaderParamsDefault(&scene->shaderParams);
     elfSetCamera(scene->curCamera, &scene->shaderParams);
 
-    scene->shaderParams.renderParams.depthWrite = GFX_FALSE;
+    scene->shaderParams.renderParams.depthWrite = false;
     scene->shaderParams.renderParams.depthFunc = GFX_EQUAL;
     scene->shaderParams.renderParams.blendMode = GFX_ADD;
 
@@ -1940,13 +1959,13 @@ void elfDrawScene(elfScene* scene)
 
             // check are there any entities visible for the spot, if there aren't don't bother continuing, just skip to
             // the next light
-            found = ELF_FALSE;
+            found = false;
             for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
                  i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
             {
                 if (!elfCullEntity(ent, light->shadowCamera))
                 {
-                    found = ELF_TRUE;
+                    found = true;
                     break;
                 }
             }

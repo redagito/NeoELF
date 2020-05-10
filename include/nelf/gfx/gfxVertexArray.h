@@ -21,7 +21,7 @@ struct gfxVertexArray
     bool gpuData = false;
 };
 
-gfxVertexArray* gfxCreateVertexArray(unsigned char gpuData);
+gfxVertexArray* gfxCreateVertexArray(bool gpuData);
 void gfxDestroyVertexArray(void* data);
 
 int gfxGetVertexArrayVertexCount(gfxVertexArray* vertexArray);

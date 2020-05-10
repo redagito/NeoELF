@@ -6,8 +6,10 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/gfx/gfxDriver.h"
 #include "nelf/gfx/gfxFormatType.h"
 #include "nelf/gfx/gfxGeneral.h"
+#include "nelf/gfx/gfxTexture.h"
 #include "nelf/gfx/gfxTextureFilterType.h"
 #include "nelf/gfx/gfxTextureFormat.h"
 #include "nelf/gfx/gfxTextureType.h"

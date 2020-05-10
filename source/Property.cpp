@@ -49,7 +49,7 @@ float elfGetPropertyFloat(elfProperty* property) { return property->fval; }
 
 const char* elfGetPropertyString(elfProperty* property) { return property->sval; }
 
-unsigned char elfGetPropertyBool(elfProperty* property) { return property->bval; }
+bool elfGetPropertyBool(elfProperty* property) { return property->bval; }
 
 void elfSetPropertyInt(elfProperty* property, int ival)
 {

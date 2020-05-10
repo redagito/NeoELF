@@ -1,5 +1,11 @@
 #include "nelf/MeshData.h"
 
+#include <cstdlib>
+#include <cstring>
+
+#include "nelf/General.h"
+#include "nelf/Object.h"
+
 elfMeshData* elfCreateMeshData()
 {
     elfMeshData* meshData;

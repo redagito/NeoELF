@@ -6,7 +6,7 @@
 #include <cstring>
 
 // Path to log file
-static char* log = nullptr;
+static char* logFileName = nullptr;
 
 // Last error that happened
 static char* errStr = nullptr;
@@ -15,7 +15,7 @@ static char* errStr = nullptr;
 static int errCode = 0;
 
 // Keep file open for appending
-static FILE* file = nullptr;
+static FILE* fileHandle = nullptr;
 
 void elfSetLogFilePath(const char* filePath)
 {
@@ -30,63 +30,65 @@ void elfSetLogFilePath(const char* filePath)
         }
     }
 
-    if (log)
-        free(log);
+    if (logFileName)
+        free(logFileName);
 
-    log = (char*)malloc(sizeof(char) * (strlen(filePath) + 1));
+    logFileName = (char*)malloc(sizeof(char) * (strlen(filePath) + 1));
     memcpy(log, filePath, sizeof(char) * strlen(filePath));
-    log[strlen(filePath)] = '\0';
+    logFileName[strlen(filePath)] = '\0';
 }
 
 void elfInitLog()
 {
-    if (log != nullptr)
+    if (logFileName != nullptr)
     {
         printf("error: log system already initialized");
         return;
     }
 
-    log = (char*)malloc(sizeof(char) * 8);
+    logFileName = (char*)malloc(sizeof(char) * 8);
     memcpy(log, "elf.log", sizeof(char) * 7);
-    log[7] = '\0';
+    logFileName[7] = '\0';
 }
 
 void elfDeinitLog()
 {
-    if (log != nullptr)
-        free(log);
+    if (logFileName != nullptr)
+        free(logFileName);
     if (errStr != nullptr)
         free(errStr);
-    if (file != nullptr)
-        fclose(file);
-    log = nullptr;
+    if (fileHandle != nullptr)
+        fclose(fileHandle);
+
+    logFileName = nullptr;
+    fileHandle = nullptr;
     errStr = nullptr;
     errCode = 0;
 }
 
 void elfStartLog()
 {
-    if (file)
-        fclose(file);
+    if (fileHandle)
+        fclose(fileHandle);
 
     // Make sure log exists
-    file = fopen(log, "w");
+    fileHandle = fopen(logFileName, "w");
 
-    if (file)
+    if (fileHandle)
     {
         // Reopen for appending
-        fclose(file);
-        file = fopen(log, "a");
+        fclose(fileHandle);
+        fileHandle = fopen(logFileName, "a");
     }
 }
 
 void elfLogWrite(const char* fmt, ...)
 {
     va_list args;
-    if (file)
+    if (fileHandle)
     {
         va_start(args, fmt);
-        vfprintf(file, fmt, args);
+        vfprintf(fileHandle, fmt, args);
         va_end(args);
     }
 
@@ -100,10 +102,10 @@ void elfSetError(int code, const char* fmt, ...)
     va_list args;
     int len = -1;
 
-    if (file)
+    if (fileHandle)
     {
         va_start(args, fmt);
-        len = vfprintf(file, fmt, args);
+        len = vfprintf(fileHandle, fmt, args);
         va_end(args);
     }
 
@@ -129,9 +131,9 @@ void elfSetError(int code, const char* fmt, ...)
 
 void elfWriteLogLine(const char* str)
 {
-    if (file)
+    if (fileHandle)
     {
-        fprintf(file, "%s\n", str);
+        fprintf(fileHandle, "%s\n", str);
     }
     printf("%s\n", str);
 }

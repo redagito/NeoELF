@@ -3,7 +3,9 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/Context.h"
 #include "nelf/General.h"
+#include "nelf/List.h"
 #include "nelf/RenderStation.h"
 #include "nelf/Vector.h"
 #include "nelf/actor/Actor.h"
@@ -11,6 +13,19 @@
 #include "nelf/actor/Entity.h"
 #include "nelf/actor/Light.h"
 #include "nelf/actor/Sprite.h"
+#include "nelf/drawMode.h"
+#include "nelf/gfx/gfxBlendMode.h"
+#include "nelf/gfx/gfxDriver.h"
+#include "nelf/gfx/gfxFormatType.h"
+#include "nelf/gfx/gfxMath.h"
+#include "nelf/gfx/gfxObject.h"
+#include "nelf/gfx/gfxRenderTarget.h"
+#include "nelf/gfx/gfxShaderProgram.h"
+#include "nelf/gfx/gfxTexture.h"
+#include "nelf/gfx/gfxTextureFilterType.h"
+#include "nelf/gfx/gfxTextureFormat.h"
+#include "nelf/gfx/gfxTextureWrapMode.h"
+#include "nelf/gfx/gfxTransform.h"
 #include "nelf/objectType.h"
 #include "nelf/resource/Scene.h"
 
@@ -471,9 +486,9 @@ void elfRunPostProcess(elfPostProcess* postProcess, elfScene* scene)
     gfxDisableRenderTarget();
 
     gfxSetShaderParamsDefault(&postProcess->shaderParams);
-    postProcess->shaderParams.renderParams.depthTest = GFX_FALSE;
-    postProcess->shaderParams.renderParams.depthWrite = GFX_FALSE;
-    postProcess->shaderParams.renderParams.alphaTest = GFX_FALSE;
+    postProcess->shaderParams.renderParams.depthTest = false;
+    postProcess->shaderParams.renderParams.depthWrite = false;
+    postProcess->shaderParams.renderParams.alphaTest = false;
 
     // SSAO
     if (postProcess->ssao && scene->curCamera)
@@ -705,8 +720,8 @@ void elfRunPostProcess(elfPostProcess* postProcess, elfScene* scene)
                     gfxSetRenderTargetColorTexture(postProcess->rtHigh, 0, postProcess->rtTexHigh_1);
                     gfxClearBuffers(0.0f, 0.0f, 0.0f, 1.0f, 1.0f);
 
-                    scene->shaderParams.renderParams.colorWrite = ELF_FALSE;
-                    scene->shaderParams.renderParams.alphaWrite = ELF_FALSE;
+                    scene->shaderParams.renderParams.colorWrite = false;
+                    scene->shaderParams.renderParams.alphaWrite = false;
 
                     for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue);
                          i < scene->entityQueueCount && ent != NULL;
@@ -722,7 +737,7 @@ void elfRunPostProcess(elfPostProcess* postProcess, elfScene* scene)
                         elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
                     }
 
-                    firstShaft = ELF_FALSE;
+                    firstShaft = false;
                 }
 
                 camPos = elfGetActorPosition((elfActor*)scene->curCamera);
@@ -744,7 +759,7 @@ void elfRunPostProcess(elfPostProcess* postProcess, elfScene* scene)
                 elfSetCamera(scene->curCamera, &scene->shaderParams);
                 gfxSetViewport(0, 0, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
 
-                scene->shaderParams.renderParams.depthWrite = GFX_FALSE;
+                scene->shaderParams.renderParams.depthWrite = false;
 
                 gfxSetTransformPosition(postProcess->lightShaftTransform, lightPos.x, lightPos.y, lightPos.z);
                 memcpy(scene->shaderParams.modelviewMatrix, gfxGetTransformMatrix(postProcess->lightShaftTransform),
@@ -768,8 +783,8 @@ void elfRunPostProcess(elfPostProcess* postProcess, elfScene* scene)
                                                    (float)postProcess->bufferHeight * 2, -1.0f, 1.0f,
                                                    scene->shaderParams.projectionMatrix);
 
-                scene->shaderParams.renderParams.depthTest = ELF_FALSE;
-                scene->shaderParams.renderParams.depthWrite = ELF_FALSE;
+                scene->shaderParams.renderParams.depthTest = false;
+                scene->shaderParams.renderParams.depthWrite = false;
                 scene->shaderParams.shaderProgram = postProcess->lightShaftShdr;
                 scene->shaderParams.textureParams[0].texture = postProcess->rtTexHigh_1;
 
@@ -793,8 +808,8 @@ void elfRunPostProcess(elfPostProcess* postProcess, elfScene* scene)
                 gfxGetOrthographicProjectionMatrix(0.0f, (float)elfGetWindowWidth(), 0.0f, (float)elfGetWindowHeight(),
                                                    -1.0f, 1.0f, scene->shaderParams.projectionMatrix);
 
-                scene->shaderParams.renderParams.depthTest = GFX_FALSE;
-                scene->shaderParams.renderParams.depthWrite = GFX_FALSE;
+                scene->shaderParams.renderParams.depthTest = false;
+                scene->shaderParams.renderParams.depthWrite = false;
                 scene->shaderParams.renderParams.blendMode = GFX_ADD;
                 scene->shaderParams.textureParams[0].texture = postProcess->rtTexHigh_2;
 
@@ -897,7 +912,7 @@ void elfSetPostProcessLightShafts(elfPostProcess* postProcess, float intensity)
     }
 }
 
-void elfDisablePostProcessLightShafts(elfPostProcess* postProcess) { postProcess->lightShafts = ELF_FALSE; }
+void elfDisablePostProcessLightShafts(elfPostProcess* postProcess) { postProcess->lightShafts = false; }
 
 float elfGetPostProcessLightShaftsIntensity(elfPostProcess* postProcess) { return postProcess->lightShaftsIntensity; }
 

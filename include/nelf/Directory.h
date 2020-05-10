@@ -37,3 +37,7 @@ int elfGetDirectoryItemCount(elfDirectory* directory);
 elfDirectoryItem* elfGetDirectoryItem(elfDirectory* directory, int idx);
 const char* elfGetDirectoryItemName(elfDirectoryItem* dirItem);
 int elfGetDirectoryItemType(elfDirectoryItem* dirItem);
+
+// Utility
+char* elfGetFileFromPath(const char* filePath);
+char* elfGetDirectoryFromPath(const char* filePath);

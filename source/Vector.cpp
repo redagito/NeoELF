@@ -1,6 +1,9 @@
 #include "nelf/Vector.h"
 
+#include <cmath>
 #include <cstring>
+
+#include "nelf/gfx/gfxMath.h"
 
 elfVec2f elfCreateVec2f(float x, float y)
 {

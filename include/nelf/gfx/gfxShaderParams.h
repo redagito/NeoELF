@@ -72,6 +72,7 @@ struct gfxMaterialParams
 
 struct gfxTextureParams
 {
+    // TextureMapType
     int type = 0;
     gfxTexture* texture = nullptr;
     int projectionMode = 0;

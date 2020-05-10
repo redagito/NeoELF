@@ -1,4 +1,4 @@
-#include "nelf/Script.h"
+#include "nelf/resource/Script.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -6,10 +6,10 @@
 
 #include "nelf/General.h"
 #include "nelf/Log.h"
-#include "nelf/Resources.h"
 #include "nelf/String.h"
 #include "nelf/errorCode.h"
 #include "nelf/objectType.h"
+#include "nelf/resource/Resources.h"
 
 elfScript* elfCreateScript(const char* name)
 {

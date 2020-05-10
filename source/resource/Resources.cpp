@@ -8,6 +8,7 @@
 #include "nelf/Object.h"
 #include "nelf/errorCode.h"
 #include "nelf/objectType.h"
+#include "nelf/resource/Texture.h"
 
 elfResources* res = nullptr;
 

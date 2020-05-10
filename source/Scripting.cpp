@@ -7,17 +7,10 @@
 #include "nelf/General.h"
 #include "nelf/Log.h"
 #include "nelf/Object.h"
+#include "nelf/bind/Bind.h"
 #include "nelf/errorCode.h"
 #include "nelf/objectType.h"
 #include "nelf/resource/Script.h"
-
-int luaopen_elf(lua_State* L);
-
-struct elfScripting
-{
-    ELF_OBJECT_HEADER;
-    struct lua_State* L;
-};
 
 elfScripting* scr = NULL;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nelf/resourceHeader.h"
+#include "nelf/resource/resourceHeader.h"
 
 struct elfImage;
 struct gfxTexture;

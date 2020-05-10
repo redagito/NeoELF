@@ -1,11 +1,12 @@
 #pragma once
 
 #include "nelf/Vector.h"
-#include "nelf/resourceHeader.h"
+#include "nelf/resource/resourceHeader.h"
 
 struct elfList;
 struct elfEntity;
 struct gfxShaderParams;
+struct elfArmature;
 
 struct elfBoneFrame
 {
@@ -25,21 +26,21 @@ struct elfBone
     elfVec4f curQua;
     elfVec3f curOffsetPos;
     elfVec4f curOffsetQua;
-    elfBoneFrame* frames;
-    elfList* children;
-    elfArmature* armature;
+    elfBoneFrame* frames = nullptr;
+    elfList* children = nullptr;
+    elfArmature* armature = nullptr;
 };
 
 // TODO Should probably be called elfSkeleton instead?
 struct elfArmature
 {
     ELF_RESOURCE_HEADER;
-    char* filePath;
-    int frameCount;
-    int boneCount;
-    elfList* rootBones;
-    elfBone** bones;
-    float curFrame;
+    char* filePath = nullptr;
+    int frameCount = 0;
+    int boneCount = 0;
+    elfList* rootBones = nullptr;
+    elfBone** bones = nullptr;
+    float curFrame = 0.f;
     elfVec3f bbMin;
     elfVec3f bbMax;
 };

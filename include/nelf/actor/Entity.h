@@ -1,7 +1,7 @@
 #pragma once
 
 #include "nelf/Vector.h"
-#include "nelf/actorHeader.h"
+#include "nelf/actor/actorHeader.h"
 
 struct elfModel;
 struct elfArmature;
@@ -37,9 +37,9 @@ struct elfEntity
     float cullRadius = 0.f;
 
     gfxQuery* query = nullptr;
-    bool visible;
+    bool visible = true;
     unsigned char occluder;
-    bool culled;
+    bool culled = false;
 };
 
 elfEntity* elfCreateEntity(const char* name);
@@ -49,87 +49,62 @@ void elfGenerateEntityTangents(elfEntity* entity);
 void elfUpdateEntity(elfEntity* entity);
 
 void elfEntityPreDraw(elfEntity* entity);
-
 void elfEntityPostDraw(elfEntity* entity);
 
 void elfDestroyEntity(void* data);
 
 void elfEvalEntityAabbCorner(elfEntity* entity, elfVec4f* orient, elfVec3f* corner, elfVec3f* result);
-
 void elfEvalEntityAabbArmatureCorner(elfEntity* entity, elfVec4f* orient, elfVec3f* corner, elfVec3f* result);
 
 void elfCalcEntityAabb(elfEntity* entity);
-
 void elfCalcEntityBoundingVolumes(elfEntity* entity, unsigned char newModel);
 
 void elfSetEntityScale(elfEntity* entity, float x, float y, float z);
-
 elfVec3f elfGetEntityScale(elfEntity* entity);
-
 void elfGetEntityScale_(elfEntity* entity, float* scale);
 
 void elfSetEntityModel(elfEntity* entity, elfModel* model);
-
 void elfClearEntityModel(elfEntity* entity);
-
 elfModel* elfGetEntityModel(elfEntity* entity);
 
 int elfGetEntityMaterialCount(elfEntity* entity);
-
 void elfAddEntityMaterial(elfEntity* entity, elfMaterial* material);
-
 void elfSetEntityMaterial(elfEntity* entity, int idx, elfMaterial* material);
-
 void elfRemoveEntityMaterial(elfEntity* entity, int idx);
-
 elfMaterial* elfGetEntityMaterial(elfEntity* entity, int idx);
 
 void elfSetEntityVisible(elfEntity* entity, unsigned char visible);
-
 unsigned char elfGetEntityVisible(elfEntity* entity);
 
 void elfSetEntityOccluder(elfEntity* entity, unsigned char occluder);
-
 unsigned char elfGetEntityOccluder(elfEntity* entity);
 
 void elfResetEntityDebugPhysicsObject(elfEntity* entity);
 
 void elfSetEntityArmature(elfEntity* entity, elfArmature* armature);
-
 void elfSetEntityArmatureFrame(elfEntity* entity, float frame);
 
 void elfPlayEntityArmature(elfEntity* entity, float start, float end, float speed);
-
 void elfLoopEntityArmature(elfEntity* entity, float start, float end, float speed);
-
 void elfStopEntityArmature(elfEntity* entity);
-
 void elfPauseEntityArmature(elfEntity* entity);
-
 void elfResumeEntityArmature(elfEntity* entity);
 
 float elfGetEntityArmatureStart(elfEntity* entity);
-
 float elfGetEntityArmatureEnd(elfEntity* entity);
-
 float elfGetEntityArmatureSpeed(elfEntity* entity);
-
 float elfGetEntityArmatureFrame(elfEntity* entity);
 
 unsigned char elfIsEntityArmaturePlaying(elfEntity* entity);
-
 unsigned char elfIsEntityArmaturePaused(elfEntity* entity);
 
 elfArmature* elfGetEntityArmature(elfEntity* entity);
 
 void elfPreDrawEntity(elfEntity* entity);
-
 void elfPostDrawEntity(elfEntity* entity);
 
 void elfDrawEntity(elfEntity* entity, int mode, gfxShaderParams* shaderParams);
-
 void elfDrawEntityBoundingBox(elfEntity* entity, gfxShaderParams* shaderParams);
-
 void elfDrawEntityDebug(elfEntity* entity, gfxShaderParams* shaderParams);
 
 unsigned char elfCullEntity(elfEntity* entity, elfCamera* camera);

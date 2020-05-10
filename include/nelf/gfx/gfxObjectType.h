@@ -2,7 +2,8 @@
 
 using GfxObjectType = int;
 
-#define GFX_NONE 0x0000
+// Renamed from GFX_NONE
+#define GFX_OBJECT_NONE 0x0000
 #define GFX_VERTEX_DATA 0x0001
 #define GFX_VERTEX_ARRAY 0x0002
 #define GFX_VERTEX_INDEX 0x0003

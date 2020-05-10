@@ -1,16 +1,26 @@
-#include "nelf/Texture.h"
+#include "nelf/resource/Texture.h"
 
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/Config.h"
+#include "nelf/Engine.h"
 #include "nelf/General.h"
 #include "nelf/Image.h"
 #include "nelf/Log.h"
-#include "nelf/Resources.h"
 #include "nelf/String.h"
 #include "nelf/errorCode.h"
+#include "nelf/gfx/gfxDriver.h"
+#include "nelf/gfx/gfxTexture.h"
+#include "nelf/gfx/gfxTextureFilterType.h"
+#include "nelf/gfx/gfxTextureFormat.h"
+#include "nelf/gfx/gfxTextureWrapMode.h"
 #include "nelf/objectType.h"
+#include "nelf/pak/Pak.h"
+#include "nelf/pak/PakIndex.h"
+#include "nelf/pak/nameLength.h"
+#include "nelf/resource/Resources.h"
 
 elfTexture* elfCreateTexture()
 {
@@ -403,7 +413,7 @@ bool elfLoadTextureData(elfTexture* texture)
                         texture->name);
             elfDestroyPak(pak);
             fclose(file);
-            return ELF_FALSE;
+            return false;
         }
 
         elfDestroyPak(pak);

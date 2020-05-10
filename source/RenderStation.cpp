@@ -8,6 +8,21 @@
 #include "nelf/Math.h"
 #include "nelf/Object.h"
 #include "nelf/errorCode.h"
+#include "nelf/gfx/gfxAttributeType.h"
+#include "nelf/gfx/gfxDrawMode.h"
+#include "nelf/gfx/gfxFormatType.h"
+#include "nelf/gfx/gfxMath.h"
+#include "nelf/gfx/gfxMaxCircleVertices.h"
+#include "nelf/gfx/gfxObject.h"
+#include "nelf/gfx/gfxRenderTarget.h"
+#include "nelf/gfx/gfxTexture.h"
+#include "nelf/gfx/gfxTextureFilterType.h"
+#include "nelf/gfx/gfxTextureFormat.h"
+#include "nelf/gfx/gfxTextureWrapMode.h"
+#include "nelf/gfx/gfxVertexArray.h"
+#include "nelf/gfx/gfxVertexData.h"
+#include "nelf/gfx/gfxVertexDataType.h"
+#include "nelf/gfx/gfxVertexIndex.h"
 #include "nelf/objectType.h"
 
 elfRenderStation* rnd = nullptr;
@@ -37,7 +52,7 @@ elfRenderStation* elfCreateRenderStation()
     rs->quadVertexData = gfxCreateVertexData(12, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
     rs->quadTexCoordData = gfxCreateVertexData(12, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
     rs->quadNormalData = gfxCreateVertexData(12, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
-    rs->quadVertexArray = gfxCreateVertexArray(GFX_FALSE);
+    rs->quadVertexArray = gfxCreateVertexArray(false);
 
     gfxIncRef((gfxObject*)rs->quadVertexData);
     gfxIncRef((gfxObject*)rs->quadNormalData);
@@ -51,8 +66,8 @@ elfRenderStation* elfCreateRenderStation()
     // bounding box
     rs->bbVertexData = gfxCreateVertexData(24, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
     rs->bbIndexData = gfxCreateVertexData(36, GFX_UINT, GFX_VERTEX_DATA_STATIC);
-    rs->bbVertexArray = gfxCreateVertexArray(GFX_FALSE);
-    rs->bbVertexIndex = gfxCreateVertexIndex(GFX_FALSE, rs->bbIndexData);
+    rs->bbVertexArray = gfxCreateVertexArray(false);
+    rs->bbVertexIndex = gfxCreateVertexIndex(false, rs->bbIndexData);
 
     gfxIncRef((gfxObject*)rs->bbVertexData);
     gfxIncRef((gfxObject*)rs->bbIndexData);
@@ -101,7 +116,7 @@ elfRenderStation* elfCreateRenderStation()
     indexBuffer[35] = 7;
 
     // lines
-    rs->linesVertexArray = gfxCreateVertexArray(GFX_FALSE);
+    rs->linesVertexArray = gfxCreateVertexArray(false);
     gfxIncRef((gfxObject*)rs->linesVertexArray);
 
     rs->lines = gfxCreateVertexData(512, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
@@ -109,7 +124,7 @@ elfRenderStation* elfCreateRenderStation()
 
     // circle
     rs->circleVertexData = gfxCreateVertexData((GFX_MAX_CIRCLE_VERTICES + 2) * 3, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
-    rs->circleVertexArray = gfxCreateVertexArray(GFX_FALSE);
+    rs->circleVertexArray = gfxCreateVertexArray(false);
 
     gfxIncRef((gfxObject*)rs->circleVertexData);
     gfxIncRef((gfxObject*)rs->circleVertexArray);
@@ -119,7 +134,7 @@ elfRenderStation* elfCreateRenderStation()
     rs->prevCircleVerticeCount = 0;
 
     // sprite
-    rs->spriteVertexArray = gfxCreateVertexArray(GFX_FALSE);
+    rs->spriteVertexArray = gfxCreateVertexArray(false);
     gfxIncRef((gfxObject*)rs->spriteVertexArray);
 
     vertexData = gfxCreateVertexData(36, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
@@ -251,7 +266,7 @@ elfRenderStation* elfCreateRenderStation()
     // gradient
     rs->gradientVertexData = gfxCreateVertexData(18, GFX_INT, GFX_VERTEX_DATA_DYNAMIC);
     rs->gradientColorData = gfxCreateVertexData(24, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
-    rs->gradientVertexArray = gfxCreateVertexArray(GFX_FALSE);
+    rs->gradientVertexArray = gfxCreateVertexArray(false);
 
     gfxSetVertexArrayData(rs->gradientVertexArray, GFX_VERTEX, rs->gradientVertexData);
     gfxSetVertexArrayData(rs->gradientVertexArray, GFX_COLOR, rs->gradientColorData);
