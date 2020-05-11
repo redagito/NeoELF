@@ -310,6 +310,7 @@ bool elfRun()
 
     eng->freeRun = true;
 
+    // TODO WHYY
     elfSleep(0.001f);
 
     return true;

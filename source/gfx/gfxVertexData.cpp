@@ -1,8 +1,11 @@
 #include "nelf/gfx/gfxVertexData.h"
 
+#include <glad/glad.h>
+
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/gfx/gfxDriver.h"
 #include "nelf/gfx/gfxFormatType.h"
 #include "nelf/gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxObjectType.h"

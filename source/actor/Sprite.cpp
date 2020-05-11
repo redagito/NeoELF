@@ -1,20 +1,29 @@
-#include "nelf/Sprite.h"
+#include "nelf/actor/Sprite.h"
 
 #include <cstdlib>
 #include <cstring>
 
-#include "nelf/Actor.h"
-#include "nelf/Camera.h"
 #include "nelf/FramePlayer.h"
 #include "nelf/General.h"
-#include "nelf/Material.h"
 #include "nelf/Object.h"
 #include "nelf/RenderStation.h"
-#include "nelf/Resources.h"
 #include "nelf/String.h"
-#include "nelf/Texture.h"
+#include "nelf/actor/Actor.h"
+#include "nelf/actor/Camera.h"
 #include "nelf/drawMode.h"
+#include "nelf/gfx/gfxDrawMode.h"
+#include "nelf/gfx/gfxMath.h"
+#include "nelf/gfx/gfxQuery.h"
+#include "nelf/gfx/gfxTexture.h"
+#include "nelf/gfx/gfxTransform.h"
+#include "nelf/gfx/gfxVertexArray.h"
+#include "nelf/gfx/gfxVertexData.h"
 #include "nelf/objectType.h"
+#include "nelf/physics/PhysicsObject.h"
+#include "nelf/resource/Material.h"
+#include "nelf/resource/Resources.h"
+#include "nelf/resource/Scene.h"
+#include "nelf/resource/Texture.h"
 
 elfSprite* elfCreateSprite(const char* name)
 {
@@ -159,7 +168,7 @@ void elfSetSpriteMaterial(elfSprite* sprite, elfMaterial* material)
     elfCalcSpriteBounds(sprite);
 
     if (sprite->object)
-        elfSetActorPhysics((elfActor*)sprite, ELF_TRUE);
+        elfSetActorPhysics((elfActor*)sprite, true);
 
     elfResetSpriteDebugPhysicsObject(sprite);
 }
@@ -213,9 +222,9 @@ bool elfCullSprite(elfSprite* sprite, elfCamera* camera)
 
 void elfDrawSprite(elfSprite* sprite, int mode, gfxShaderParams* shaderParams)
 {
-    float* vertexBuffer;
-    float* texCoordBuffer;
-    float* normalBuffer;
+    float* vertexBuffer = nullptr;
+    float* texCoordBuffer = nullptr;
+    float* normalBuffer = nullptr;
     float sizex, sizey;
 
     if (!sprite->material || !sprite->visible || (mode == ELF_DRAW_WITHOUT_LIGHTING && sprite->material->lighting))
@@ -226,9 +235,9 @@ void elfDrawSprite(elfSprite* sprite, int mode, gfxShaderParams* shaderParams)
     gfxMulMatrix3Matrix4(gfxGetTransformNormalMatrix(sprite->transform), shaderParams->cameraMatrix,
                          shaderParams->normalMatrix);
 
-    vertexBuffer = gfxGetVertexDataBuffer(rnd->quadVertexData);
-    texCoordBuffer = gfxGetVertexDataBuffer(rnd->quadTexCoordData);
-    normalBuffer = gfxGetVertexDataBuffer(rnd->quadNormalData);
+    vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->quadVertexData);
+    texCoordBuffer = (float*)gfxGetVertexDataBuffer(rnd->quadTexCoordData);
+    normalBuffer = (float*)gfxGetVertexDataBuffer(rnd->quadNormalData);
 
     sizex = sprite->size.x / 2.0f;
     sizey = sprite->size.y / 2.0f;

@@ -57,7 +57,7 @@ void elfEvalEntityAabbCorner(elfEntity* entity, elfVec4f* orient, elfVec3f* corn
 void elfEvalEntityAabbArmatureCorner(elfEntity* entity, elfVec4f* orient, elfVec3f* corner, elfVec3f* result);
 
 void elfCalcEntityAabb(elfEntity* entity);
-void elfCalcEntityBoundingVolumes(elfEntity* entity, unsigned char newModel);
+void elfCalcEntityBoundingVolumes(elfEntity* entity, bool newModel);
 
 void elfSetEntityScale(elfEntity* entity, float x, float y, float z);
 elfVec3f elfGetEntityScale(elfEntity* entity);
@@ -73,11 +73,11 @@ void elfSetEntityMaterial(elfEntity* entity, int idx, elfMaterial* material);
 void elfRemoveEntityMaterial(elfEntity* entity, int idx);
 elfMaterial* elfGetEntityMaterial(elfEntity* entity, int idx);
 
-void elfSetEntityVisible(elfEntity* entity, unsigned char visible);
-unsigned char elfGetEntityVisible(elfEntity* entity);
+void elfSetEntityVisible(elfEntity* entity, bool visible);
+bool elfGetEntityVisible(elfEntity* entity);
 
-void elfSetEntityOccluder(elfEntity* entity, unsigned char occluder);
-unsigned char elfGetEntityOccluder(elfEntity* entity);
+void elfSetEntityOccluder(elfEntity* entity, bool occluder);
+bool elfGetEntityOccluder(elfEntity* entity);
 
 void elfResetEntityDebugPhysicsObject(elfEntity* entity);
 

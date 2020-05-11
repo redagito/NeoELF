@@ -1,4 +1,23 @@
-#include "nelf/Light.h"
+#include "nelf/actor/Light.h"
+
+#include <cstdlib>
+#include <cstring>
+
+#include "nelf/General.h"
+#include "nelf/Object.h"
+#include "nelf/RenderStation.h"
+#include "nelf/String.h"
+#include "nelf/actor/Actor.h"
+#include "nelf/actor/Camera.h"
+#include "nelf/actor/lightType.h"
+#include "nelf/gfx/gfxDriver.h"
+#include "nelf/gfx/gfxMath.h"
+#include "nelf/gfx/gfxShaderParams.h"
+#include "nelf/gfx/gfxTransform.h"
+#include "nelf/gfx/gfxVertexData.h"
+#include "nelf/objectType.h"
+#include "nelf/physics/PhysicsObject.h"
+#include "nelf/resource/Resources.h"
 
 elfLight* elfCreateLight(const char* name)
 {
@@ -9,15 +28,15 @@ elfLight* elfCreateLight(const char* name)
     light->objType = ELF_LIGHT;
     light->objDestr = elfDestroyLight;
 
-    elfInitActor((elfActor*)light, ELF_FALSE);
+    elfInitActor((elfActor*)light, false);
 
     light->range = 20.0f;
     light->fadeRange = 15.0f;
     light->innerCone = 45.0f;
     light->outerCone = 0.0f;
     light->lightType = ELF_POINT_LIGHT;
-    light->visible = ELF_TRUE;
-    light->shaft = ELF_FALSE;
+    light->visible = true;
+    light->shaft = false;
     light->shaftSize = 1.0f;
     light->shaftIntensity = 1.0f;
     light->shaftFadeOff = 0.0f;
@@ -103,12 +122,11 @@ void elfSetLightShadows(elfLight* light, bool shadows)
     if (light->shadows == shadows)
         return;
 
-    light->shadows = !shadows == ELF_FALSE;
-
-    light->moved = ELF_TRUE;
+    light->shadows = shadows;
+    light->moved = true;
 }
 
-void elfSetLightVisible(elfLight* light, bool visible) { light->visible = !(visible == ELF_FALSE); }
+void elfSetLightVisible(elfLight* light, bool visible) { light->visible = visible; }
 
 void elfSetLightCone(elfLight* light, float innerCone, float outerCone)
 {
@@ -121,7 +139,7 @@ void elfSetLightCone(elfLight* light, float innerCone, float outerCone)
     elfSetCameraFov(light->shadowCamera, (light->innerCone + light->outerCone) * 2);
 }
 
-void elfSetLightShaft(elfLight* light, unsigned char shaft) { light->shaft = !shaft == ELF_FALSE; }
+void elfSetLightShaft(elfLight* light, bool shaft) { light->shaft = shaft; }
 
 void elfSetLightShaftSize(elfLight* light, float size)
 {
@@ -151,15 +169,15 @@ elfColor elfGetLightColor(elfLight* light) { return light->color; }
 float elfGetLightRange(elfLight* light) { return light->range; }
 float elfGetLightFadeRange(elfLight* light) { return light->fadeRange; }
 
-unsigned char elfGetLightShadows(elfLight* light) { return light->shadows; }
+bool elfGetLightShadows(elfLight* light) { return light->shadows; }
 
-unsigned char elfGetLightVisible(elfLight* light) { return light->visible; }
+bool elfGetLightVisible(elfLight* light) { return light->visible; }
 
 float elfGetLightInnerCone(elfLight* light) { return light->innerCone; }
 
 float elfGetLightOuterCone(elfLight* light) { return light->outerCone; }
 
-unsigned char elfGetLightShaft(elfLight* light) { return light->shaft; }
+bool elfGetLightShaft(elfLight* light) { return light->shaft; }
 
 float elfGetLightShaftSize(elfLight* light) { return light->shaftSize; }
 

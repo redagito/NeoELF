@@ -1,15 +1,32 @@
-#include "nelf/Entity.h"
+#include "nelf/actor/Entity.h"
 
 #include <cstdlib>
 #include <cstring>
 
-#include "nelf/Actor.h"
 #include "nelf/FramePlayer.h"
 #include "nelf/General.h"
 #include "nelf/List.h"
 #include "nelf/Object.h"
+#include "nelf/RenderStation.h"
 #include "nelf/String.h"
+#include "nelf/actor/Actor.h"
+#include "nelf/actor/Camera.h"
+#include "nelf/gfx/gfxAttributeType.h"
+#include "nelf/gfx/gfxBlendMode.h"
+#include "nelf/gfx/gfxDriver.h"
+#include "nelf/gfx/gfxMath.h"
+#include "nelf/gfx/gfxObject.h"
+#include "nelf/gfx/gfxQuery.h"
+#include "nelf/gfx/gfxTransform.h"
+#include "nelf/gfx/gfxVertexArray.h"
+#include "nelf/gfx/gfxVertexData.h"
 #include "nelf/objectType.h"
+#include "nelf/physics/PhysicsObject.h"
+#include "nelf/resource/Armature.h"
+#include "nelf/resource/Material.h"
+#include "nelf/resource/Model.h"
+#include "nelf/resource/Resources.h"
+#include "nelf/resource/Scene.h"
 
 elfEntity* elfCreateEntity(const char* name)
 {
@@ -276,7 +293,7 @@ void elfCalcEntityAabb(elfEntity* entity)
     entity->cullRadius = gfxVecLength(&tmpVec.x) / 2;
 }
 
-void elfCalcEntityBoundingVolumes(elfEntity* entity, unsigned char newModel)
+void elfCalcEntityBoundingVolumes(elfEntity* entity, bool newModel)
 {
     if (!entity->model)
     {
@@ -340,7 +357,7 @@ void elfSetEntityScale(elfEntity* entity, float x, float y, float z)
     gfxSetTransformScale(entity->transform, x, y, z);
     gfxGetTransformScale(entity->transform, &entity->scale.x);
 
-    elfCalcEntityBoundingVolumes(entity, ELF_FALSE);
+    elfCalcEntityBoundingVolumes(entity, false);
 
     if (entity->object)
         elfSetPhysicsObjectScale(entity->object, x, y, z);
@@ -376,9 +393,9 @@ void elfSetEntityModel(elfEntity* entity, elfModel* model)
     if (!entity->model)
     {
         if (entity->object)
-            elfSetActorPhysics((elfActor*)entity, ELF_FALSE);
+            elfSetActorPhysics((elfActor*)entity, false);
         elfResetEntityDebugPhysicsObject(entity);
-        elfCalcEntityBoundingVolumes(entity, ELF_FALSE);
+        elfCalcEntityBoundingVolumes(entity, false);
         return;
     }
     else
@@ -393,14 +410,14 @@ void elfSetEntityModel(elfEntity* entity, elfModel* model)
     }
 
     elfSetEntityScale(entity, 1.0f, 1.0f, 1.0f);
-    elfCalcEntityBoundingVolumes(entity, ELF_TRUE);
+    elfCalcEntityBoundingVolumes(entity, true);
 
     if (elfGetActorPhysics((elfActor*)entity))
-        elfSetActorPhysics((elfActor*)entity, ELF_TRUE);
+        elfSetActorPhysics((elfActor*)entity, true);
 
     elfResetEntityDebugPhysicsObject(entity);
 
-    entity->moved = ELF_TRUE;
+    entity->moved = true;
 }
 
 void elfClearEntityModel(elfEntity* entity)
@@ -416,7 +433,7 @@ void elfClearEntityModel(elfEntity* entity)
     }
 
     elfSetEntityScale(entity, 1.0f, 1.0f, 1.0f);
-    elfCalcEntityBoundingVolumes(entity, ELF_FALSE);
+    elfCalcEntityBoundingVolumes(entity, false);
 }
 
 elfModel* elfGetEntityModel(elfEntity* entity) { return entity->model; }
@@ -474,22 +491,22 @@ elfMaterial* elfGetEntityMaterial(elfEntity* entity, int idx)
     return (elfMaterial*)elfGetListObject(entity->materials, idx);
 }
 
-void elfSetEntityVisible(elfEntity* entity, unsigned char visible)
+void elfSetEntityVisible(elfEntity* entity, bool visible)
 {
     if (entity->visible == visible)
         return;
 
-    entity->visible = (visible == ELF_FALSE) ? ELF_FALSE : ELF_TRUE;
+    entity->visible = visible;
 
     if (!entity->visible)
-        entity->moved = ELF_TRUE;
+        entity->moved = true;
 }
 
-unsigned char elfGetEntityVisible(elfEntity* entity) { return entity->visible; }
+bool elfGetEntityVisible(elfEntity* entity) { return entity->visible; }
 
-void elfSetEntityOccluder(elfEntity* entity, unsigned char occluder) { entity->occluder = !occluder == ELF_FALSE; }
+void elfSetEntityOccluder(elfEntity* entity, bool occluder) { entity->occluder = occluder; }
 
-unsigned char elfGetEntityOccluder(elfEntity* entity) { return entity->occluder; }
+bool elfGetEntityOccluder(elfEntity* entity) { return entity->occluder; }
 
 void elfResetEntityDebugPhysicsObject(elfEntity* entity)
 {
@@ -538,7 +555,7 @@ void elfSetEntityArmature(elfEntity* entity, elfArmature* armature)
     entity->armature = armature;
     if (entity->armature)
         elfIncRef((elfObject*)entity->armature);
-    elfCalcEntityBoundingVolumes(entity, ELF_FALSE);
+    elfCalcEntityBoundingVolumes(entity, false);
 }
 
 void elfSetEntityArmatureFrame(elfEntity* entity, float frame)
@@ -743,7 +760,7 @@ void elfDrawEntityDebug(elfEntity* entity, gfxShaderParams* shaderParams)
     else
     {
         gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 0.0f, 0.0f, 1.0f);
-        shaderParams->renderParams.blendMode = GFX_NONE;
+        shaderParams->renderParams.blendMode = GFX_BLEND_NONE;
     }
     gfxSetShaderParams(shaderParams);
     elfDrawLines(24, rnd->lines);
@@ -759,7 +776,7 @@ void elfDrawEntityDebug(elfEntity* entity, gfxShaderParams* shaderParams)
 unsigned char elfCullEntity(elfEntity* entity, elfCamera* camera)
 {
     if (!entity->model || !entity->visible)
-        return ELF_TRUE;
+        return true;
 
     return !elfAabbInsideFrustum(camera, &entity->cullAabbMin.x, &entity->cullAabbMax.x);
 }

@@ -5,7 +5,8 @@ struct gfxShaderConfig
     // Bitfield GfxTextureMapType
     unsigned short int textures = 0;
 
-    bool light = false;
+    // Number of lights?
+    unsigned char light = 0;
 
     // GfxGBufferMode
     unsigned char gbuffer;

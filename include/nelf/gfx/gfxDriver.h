@@ -41,7 +41,7 @@ struct gfxDriver
 
 // Globally accessible driver
 // Initialized on gfx init
-extern gfxDriver* driver = nullptr;
+extern gfxDriver* driver;
 
 bool gfxInit();
 void gfxDeinit();

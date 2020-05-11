@@ -1,5 +1,6 @@
 #include "nelf/gfx/gfxDriver.h"
 
+#include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
 #include <cstdio>
@@ -8,6 +9,7 @@
 
 #include "nelf/Log.h"
 #include "nelf/gfx/gfxGeneral.h"
+#include "nelf/gfx/gfxShaderProgram.h"
 
 gfxDriver* driver = nullptr;
 
@@ -92,43 +94,20 @@ bool gfxInit()
     driver->shaderConfig.textures = 255;
     driver->shaderConfig.light = 255;
 
-    glewInit();
+    // Load opengl functions
+    if (gladLoadGLLoader((GLADloadproc)glfwGetProcAddress) == 0)
+    {
+        elfLogWrite("Failed to init OpenGL context\n");
+        return false;
+    }
 
+    driver->version = GLVersion.major * 100 + GLVersion.minor * 10;
     elfLogWrite("OpenGL %s; %s; %s\n", glGetString(GL_VERSION), glGetString(GL_VENDOR), glGetString(GL_RENDERER));
-
-    if (glewIsSupported("GL_VERSION_1_0"))
-        driver->version = 100;
-    if (glewIsSupported("GL_VERSION_1_1"))
-        driver->version = 110;
-    if (glewIsSupported("GL_VERSION_1_2"))
-        driver->version = 120;
-    if (glewIsSupported("GL_VERSION_1_3"))
-        driver->version = 130;
-    if (glewIsSupported("GL_VERSION_1_4"))
-        driver->version = 140;
-    if (glewIsSupported("GL_VERSION_1_5"))
-        driver->version = 150;
-    if (glewIsSupported("GL_VERSION_2_0"))
-        driver->version = 200;
-    if (glewIsSupported("GL_VERSION_2_1"))
-        driver->version = 210;
-    if (glewIsSupported("GL_VERSION_3_0"))
-        driver->version = 300;
-    if (glewIsSupported("GL_VERSION_3_1"))
-        driver->version = 310;
-    if (glewIsSupported("GL_VERSION_3_2"))
-        driver->version = 320;
-    if (glewIsSupported("GL_VERSION_3_3"))
-        driver->version = 330;
-    if (glewIsSupported("GL_VERSION_4_0"))
-        driver->version = 400;
-    if (glewIsSupported("GL_VERSION_4_1"))
-        driver->version = 410;
 
     if (driver->version < 110)
     {
         elfLogWrite("OpenGL version 1.1 not supported\n");
-        return GFX_FALSE;
+        return false;
     }
 
     if (driver->version < 140)
@@ -154,6 +133,7 @@ bool gfxInit()
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &driver->maxTextureImageUnits);
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &driver->maxDrawBuffers);
     glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &driver->maxColorAttachments);
+    // This is actualy in core since OpenGL 4.6
     glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &driver->maxAnisotropy);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -167,7 +147,7 @@ bool gfxInit()
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    return GFX_TRUE;
+    return true;
 }
 
 void gfxDeinit()

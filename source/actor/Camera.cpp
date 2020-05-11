@@ -1,14 +1,22 @@
-#include "nelf/Camera.h"
+#include "nelf/actor/Camera.h"
 
 #include <cstdlib>
 #include <cstring>
 
-#include "nelf/Actor.h"
+#include "nelf/Context.h"
 #include "nelf/General.h"
 #include "nelf/Object.h"
+#include "nelf/RenderStation.h"
 #include "nelf/String.h"
-#include "nelf/cameraMode.h"
+#include "nelf/actor/Actor.h"
+#include "nelf/actor/cameraMode.h"
+#include "nelf/gfx/gfxMath.h"
+#include "nelf/gfx/gfxShaderParams.h"
+#include "nelf/gfx/gfxTransform.h"
+#include "nelf/gfx/gfxVertexData.h"
 #include "nelf/objectType.h"
+#include "nelf/physics/PhysicsObject.h"
+#include "nelf/resource/Resources.h"
 
 elfCamera* elfCreateCamera(const char* name)
 {

@@ -69,10 +69,10 @@ float* elfGetCameraModelviewMatrix(elfCamera* camera);
 
 void elfSetCamera(elfCamera* camera, gfxShaderParams* shaderParams);
 
-unsigned char elfAabbInsideFrustum(elfCamera* camera, float* min, float* max);
-unsigned char elfSphereInsideFrustum(elfCamera* camera, float* pos, float radius);
-unsigned char elfCameraInsideAabb(elfCamera* camera, float* min, float* max);
-unsigned char elfCameraInsideSphere(elfCamera* camera, float* pos, float radius);
+bool elfAabbInsideFrustum(elfCamera* camera, float* min, float* max);
+bool elfSphereInsideFrustum(elfCamera* camera, float* pos, float radius);
+bool elfCameraInsideAabb(elfCamera* camera, float* min, float* max);
+bool elfCameraInsideSphere(elfCamera* camera, float* pos, float radius);
 
 void elfDrawCameraDebug(elfCamera* camera, gfxShaderParams* shaderParams);
 

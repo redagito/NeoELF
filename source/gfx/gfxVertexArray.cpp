@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/gfx/gfxDriver.h"
 #include "nelf/gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxObject.h"
 #include "nelf/gfx/gfxObjectType.h"

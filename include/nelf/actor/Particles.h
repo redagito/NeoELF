@@ -135,7 +135,7 @@ elfEntity* elfGetParticlesEntity(elfParticles* particles);
 elfVec3f elfGetParticlesGravity(elfParticles* particles);
 
 int elfGetParticlesSpawnCount(elfParticles* particles);
-unsigned char elfGetParticlesSpawn(elfParticles* particles);
+bool elfGetParticlesSpawn(elfParticles* particles);
 
 float elfGetParticlesSizeMin(elfParticles* particles);
 float elfGetParticlesSizeMax(elfParticles* particles);
@@ -157,4 +157,4 @@ elfVec3f elfGetParticlesVelocityMax(elfParticles* particles);
 elfColor elfGetParticlesColorMin(elfParticles* particles);
 elfColor elfGetParticlesColorMax(elfParticles* particles);
 
-unsigned char elfCullParticles(elfParticles* particles, elfCamera* camera);
+bool elfCullParticles(elfParticles* particles, elfCamera* camera);

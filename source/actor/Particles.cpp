@@ -3,21 +3,34 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "nelf/Actor.h"
-#include "nelf/Camera.h"
-#include "nelf/Entity.h"
 #include "nelf/General.h"
 #include "nelf/List.h"
 #include "nelf/Math.h"
-#include "nelf/Model.h"
 #include "nelf/Object.h"
-#include "nelf/Particle.h"
 #include "nelf/Random.h"
 #include "nelf/RenderStation.h"
-#include "nelf/Resources.h"
 #include "nelf/String.h"
+#include "nelf/actor/Actor.h"
+#include "nelf/actor/Camera.h"
+#include "nelf/actor/Entity.h"
+#include "nelf/actor/Particle.h"
+#include "nelf/gfx/gfxAttributeType.h"
+#include "nelf/gfx/gfxDrawMode.h"
+#include "nelf/gfx/gfxFormatType.h"
+#include "nelf/gfx/gfxMath.h"
+#include "nelf/gfx/gfxObject.h"
+#include "nelf/gfx/gfxShaderParams.h"
+#include "nelf/gfx/gfxTextureMapType.h"
+#include "nelf/gfx/gfxTransform.h"
+#include "nelf/gfx/gfxVertexArray.h"
+#include "nelf/gfx/gfxVertexData.h"
+#include "nelf/gfx/gfxVertexDataType.h"
 #include "nelf/objectType.h"
 #include "nelf/particleDrawMode.h"
+#include "nelf/physics/PhysicsObject.h"
+#include "nelf/resource/Model.h"
+#include "nelf/resource/Resources.h"
+#include "nelf/resource/Texture.h"
 
 elfParticles* elfCreateParticles(const char* name, int maxCount)
 {
@@ -74,7 +87,7 @@ elfParticles* elfCreateParticles(const char* name, int maxCount)
     particles->vertices = gfxCreateVertexData(3 * 6 * maxCount, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
     particles->texCoords = gfxCreateVertexData(2 * 6 * maxCount, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
     particles->colors = gfxCreateVertexData(4 * 6 * maxCount, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
-    particles->vertexArray = gfxCreateVertexArray(GFX_FALSE);
+    particles->vertexArray = gfxCreateVertexArray(false);
     gfxSetVertexArrayData(particles->vertexArray, GFX_VERTEX, particles->vertices);
     gfxSetVertexArrayData(particles->vertexArray, GFX_TEX_COORD, particles->texCoords);
     gfxSetVertexArrayData(particles->vertexArray, GFX_COLOR, particles->colors);
@@ -678,7 +691,7 @@ void elfSetParticlesMaxCount(elfParticles* particles, int maxCount)
     particles->vertices = gfxCreateVertexData(3 * 6 * maxCount, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
     particles->texCoords = gfxCreateVertexData(2 * 6 * maxCount, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
     particles->colors = gfxCreateVertexData(4 * 6 * maxCount, GFX_FLOAT, GFX_VERTEX_DATA_DYNAMIC);
-    particles->vertexArray = gfxCreateVertexArray(GFX_FALSE);
+    particles->vertexArray = gfxCreateVertexArray(false);
     gfxSetVertexArrayData(particles->vertexArray, GFX_VERTEX, particles->vertices);
     gfxSetVertexArrayData(particles->vertexArray, GFX_TEX_COORD, particles->texCoords);
     gfxSetVertexArrayData(particles->vertexArray, GFX_COLOR, particles->colors);
@@ -831,7 +844,7 @@ void elfSetParticlesSpawnCount(elfParticles* particles, int perSecond)
     }
 }
 
-void elfSetParticlesSpawn(elfParticles* particles, unsigned char spawn) { particles->spawn = !spawn == ELF_FALSE; }
+void elfSetParticlesSpawn(elfParticles* particles, bool spawn) { particles->spawn = spawn; }
 
 void elfSetParticlesSize(elfParticles* particles, float min, float max)
 {
@@ -937,7 +950,7 @@ elfVec3f elfGetParticlesGravity(elfParticles* particles) { return particles->gra
 
 int elfGetParticlesSpawnCount(elfParticles* particles) { return particles->spawnCount; }
 
-unsigned char elfGetParticlesSpawn(elfParticles* particles) { return particles->spawn; }
+bool elfGetParticlesSpawn(elfParticles* particles) { return particles->spawn; }
 
 float elfGetParticlesSizeMin(elfParticles* particles) { return particles->sizeMin; }
 
@@ -975,7 +988,7 @@ elfColor elfGetParticlesColorMin(elfParticles* particles) { return particles->co
 
 elfColor elfGetParticlesColorMax(elfParticles* particles) { return particles->colorMax; }
 
-unsigned char elfCullParticles(elfParticles* particles, elfCamera* camera)
+bool elfCullParticles(elfParticles* particles, elfCamera* camera)
 {
     return !elfAabbInsideFrustum(camera, &particles->cullAabbMin.x, &particles->cullAabbMax.x);
 }

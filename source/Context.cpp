@@ -4,6 +4,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <thread>
 
 #include "nelf/General.h"
 #include "nelf/List.h"
@@ -183,6 +184,7 @@ bool elfInitContext(int width, int height, const char* title, int multisamples, 
     glfwSwapInterval(0);
 
     glfwSetMouseButtonCallback(ctx->window, mouseButtonCallback);
+    glfwSetCursorPosCallback(ctx->window, mousePositionCallback);
     glfwSetMousePosCallback(mousePositionCallback);
     glfwSetMouseWheelCallback(mouseWheelCallback);
     glfwSetKeyCallback(keyCallback);
@@ -210,14 +212,13 @@ bool elfInitContext(int width, int height, const char* title, int multisamples, 
         for (int i = 0; i < videoModeCount; i++)
         {
             elfVideoMode* videoMode = elfCreateVideoMode();
-            videoMode->reso.x = vidmodes[i].Width;
-            videoMode->reso.y = vidmodes[i].Height;
+            videoMode->reso.x = vidmodes[i].width;
+            videoMode->reso.y = vidmodes[i].height;
             elfAppendListObject(ctx->videoModes, (elfObject*)videoMode);
         }
     }
 
-    free(vidmodes);
-
+    glfwMakeContextCurrent(ctx->window);
     return true;
 }
 
@@ -237,7 +238,7 @@ unsigned char elfResizeContext(int width, int height)
     if (width <= 0 || height <= 0 || (width == ctx->width && height == ctx->height))
         return false;
 
-    glfwSetWindowSize(width, height);
+    glfwSetWindowSize(ctx->window, width, height);
     ctx->width = width;
     ctx->height = height;
 
@@ -254,7 +255,8 @@ void elfSetTitle(const char* title)
 
     ctx->title = elfCreateString(title);
 
-    glfwSetWindowTitle(title);
+    glfwSetWindowTitle(ctx->window, title);
+    // TODO whypoll here?
     glfwPollEvents();
 }
 
@@ -290,9 +292,12 @@ const char* elfGetTitle() { return ctx->title; }
 double elfGetTime() { return glfwGetTime(); }
 
 // Really required?
-void elfSleep(float time) { glfwSleep(time); }
+// TODO Hacky, but the application should NOT be required to limit its fps by actually sleeping
+//      This should not be necessary, something is wrong here..
+//      Maybe physics thread with small delta time causes issues?
+void elfSleep(float time) { std::this_thread::sleep_for(std::chrono::milliseconds((int)(time * 1000.0))); }
 
-unsigned char elfIsWindowOpened() { return glfwGetWindowParam(GLFW_OPENED); }
+bool elfIsWindowOpened() { return !glfwWindowShouldClose(ctx->window); }
 
 void elfSwapBuffers()
 {
@@ -313,7 +318,7 @@ void elfSwapBuffers()
         }
     }
 
-    glfwSwapBuffers();
+    glfwSwapBuffers(ctx->window);
 
     for (i = 0; i < 16; i++)
     {
@@ -345,11 +350,12 @@ void mouseButtonCallback(int button, int state)
         return;
     }
 
-    ctx->curMbuts[elfButton] = (state == GLFW_PRESS) ? ELF_TRUE : ELF_FALSE;
+    ctx->curMbuts[elfButton] = (state == GLFW_PRESS);
 }
 
-void mousePositionCallback(int x, int y)
+void mousePositionCallback(double x, double y)
 {
+    // TODO Actually double, or just range 0-1 and requires multiplication with window width?
     ctx->mousePosition[0] = x;
     ctx->mousePosition[1] = y;
 }
@@ -524,11 +530,11 @@ void keyCallback(int key, int state)
         }
     }
 
-    ctx->curKeys[elfKey] = (state == GLFW_PRESS) ? ELF_TRUE : ELF_FALSE;
+    ctx->curKeys[elfKey] = (state == GLFW_PRESS);
 
     keyEvent = elfCreateKeyEvent();
     keyEvent->key = elfKey;
-    keyEvent->state = (state == GLFW_PRESS) ? ELF_TRUE : ELF_FALSE;
+    keyEvent->state = (state == GLFW_PRESS);
 
     elfAppendListObject(ctx->events, (elfObject*)keyEvent);
 }
@@ -539,7 +545,7 @@ void charCallback(int code, int state)
 
     charEvent = elfCreateCharEvent();
     charEvent->code = code;
-    charEvent->state = (state == GLFW_PRESS) ? ELF_TRUE : ELF_FALSE;
+    charEvent->state = (state == GLFW_PRESS);
 
     elfAppendListObject(ctx->events, (elfObject*)charEvent);
 }
@@ -591,7 +597,7 @@ void elfHideMouse(unsigned char hide)
     else
     {
         glfwEnable(GLFW_MOUSE_CURSOR);
-        ctx->hideMouse = ELF_FALSE;
+        ctx->hideMouse = false;
     }
 }
 
@@ -639,10 +645,10 @@ int elfGetKeyState(int key)
     }
 }
 
-unsigned char elfGetJoystickPresent(int joy)
+bool elfGetJoystickPresent(int joy)
 {
     if (joy < 0 || joy > 15)
-        return ELF_FALSE;
+        return false;
     return ctx->joysticks[joy].present;
 }
 

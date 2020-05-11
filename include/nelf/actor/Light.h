@@ -45,7 +45,8 @@ void elfSetLightRange(elfLight* light, float range, float fadeRange);
 void elfSetLightShadows(elfLight* light, bool shadows);
 void elfSetLightVisible(elfLight* light, bool visible);
 void elfSetLightCone(elfLight* light, float innerCone, float outerCone);
-void elfSetLightShaft(elfLight* light, unsigned char shaft);
+
+void elfSetLightShaft(elfLight* light, bool shaft);
 void elfSetLightShaftSize(elfLight* light, float size);
 void elfSetLightShaftIntensity(elfLight* light, float intensity);
 void elfSetLightShaftFadeOff(elfLight* light, float fadeOff);
@@ -54,12 +55,12 @@ int elfGetLightType(elfLight* light);
 elfColor elfGetLightColor(elfLight* light);
 float elfGetLightRange(elfLight* light);
 float elfGetLightFadeRange(elfLight* light);
-unsigned char elfGetLightShadows(elfLight* light);
-unsigned char elfGetLightVisible(elfLight* light);
+bool elfGetLightShadows(elfLight* light);
+bool elfGetLightVisible(elfLight* light);
 float elfGetLightInnerCone(elfLight* light);
 float elfGetLightOuterCone(elfLight* light);
 
-unsigned char elfGetLightShaft(elfLight* light);
+bool elfGetLightShaft(elfLight* light);
 float elfGetLightShaftSize(elfLight* light);
 float elfGetLightShaftIntensity(elfLight* light);
 float elfGetLightShaftFadeOff(elfLight* light);

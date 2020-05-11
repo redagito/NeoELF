@@ -54,7 +54,7 @@ struct elfContext
     int multisamples = 0;
     elfList* videoModes = nullptr;
 
-    unsigned char curKeys[256];
+    bool curKeys[256];
     unsigned char prvKeys[256];
 
     // TODO Why no vec2?
@@ -63,7 +63,7 @@ struct elfContext
     bool hideMouse = false;
     int mouseWheel = 0;
 
-    unsigned char curMbuts[3];
+    bool curMbuts[3];
     unsigned char prvMbuts[3];
 
     elfJoystick joysticks[16];
@@ -113,7 +113,7 @@ double elfGetTime();
 
 void elfSleep(float time);
 
-unsigned char elfIsWindowOpened();
+bool elfIsWindowOpened();
 
 void elfSwapBuffers();
 
@@ -121,7 +121,7 @@ void elfSwapBuffers();
 
 void mouseButtonCallback(int button, int state);
 
-void mousePositionCallback(int x, int y);
+void mousePositionCallback(double x, double y);
 
 void mouseWheelCallback(int wheel);
 
