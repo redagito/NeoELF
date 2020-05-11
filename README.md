@@ -46,11 +46,14 @@ These are from BlendELF, to be replaced once everything works
 
 ![Screen 1](https://github.com/redagito/NeoELF/blob/master/doc/images/blendelf_engine1b.jpg)
 ![Screen 2](https://github.com/redagito/NeoELF/blob/master/doc/images/blendelf_engine2b.jpg)
+![Screen 2](https://github.com/redagito/NeoELF/blob/master/doc/images/blendelf_engine4b.jpg)
 
 # BlendELF
 
 The version of the BlendELF source code used as basis for development was taken from https://github.com/cartuchogl/BlendELF (capi branch).
 The original version of the engine can be found at https://github.com/jesterKing/BlendELF.
+
+![Screen 2](https://github.com/redagito/NeoELF/blob/master/doc/images/topbanner.jpg)
 
 ## Original Readme
 

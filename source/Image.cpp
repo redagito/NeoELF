@@ -1,14 +1,11 @@
 #include "nelf/Image.h"
 
+#include <SOIL2/SOIL2.h>
+
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
 #include <vector>
-
-// TODO Currently no conan pcakcage for freeimage library is available
-//      So for now just support reading/writing png files
-//      Support other file types asap
-#include <lodepng.h>
 
 #include "nelf/General.h"
 #include "nelf/Log.h"
@@ -48,106 +45,42 @@ elfImage* elfCreateEmptyImage(int width, int height, int bpp)
     return image;
 }
 
-// Uses lodepng for png loading for now
-static elfImage* loadPng(const char* filePath)
-{
-    std::vector<unsigned char> data;
-    unsigned int width = 0;
-    unsigned int height = 0;
-
-    if (lodepng::decode(data, width, height, filePath, LCT_RGBA, 8) != 0)
-        return nullptr;
-
-    elfImage* image = elfCreateImage();
-
-    image->width = width;
-    image->height = height;
-    image->bpp = 32;
-
-    int sizeBytes = image->width * image->height * (image->bpp / 8);
-    assert(sizeBytes == data.size());
-
-    image->data = (unsigned char*)malloc(sizeBytes);
-    memcpy(image->data, data.data(), sizeBytes);
-
-    return image;
-}
-
 elfImage* elfCreateImageFromFile(const char* filePath)
 {
-    elfImage* image;
-    int sizeBytes;
-    const char* type;
+    // TODO For OpenGL textures, we need to flip the image
+    //      Might need to fix this here or in the texture class
+    //      if its not already done somewhere.
 
-    type = strrchr(filePath, '.');
-    if (!type)
+    // Load with soil2
+    int width = 0;
+    int height = 0;
+    int channels = 0;
+    unsigned char* data = SOIL_load_image(filePath, &width, &height, &channels, SOIL_LOAD_AUTO);
+    if (data == nullptr)
     {
-        elfSetError(ELF_CANT_OPEN_FILE, "error: can't open file \"%s\"\n", filePath);
-        return NULL;
+        elfSetError(ELF_UNKNOWN_FORMAT, "error: can't load image \"%s\"", filePath);
+        return nullptr;
     }
 
-    // TODO Remove later
-    if ((strcmp(type, ".png") == 0))
-    {
-        image = loadPng(filePath);
-    }
-    else
-    {
-        elfSetError(ELF_UNKNOWN_FORMAT, "error: can't load image \"%s\", unknown format\n", filePath);
-        return NULL;
-    }
-    // Remove until here
-
-    /*
-    FIBITMAP* in;
-    if (strcmp(type, ".jpg") == 0)
-        in = FreeImage_Load(FIF_JPEG, filePath, JPEG_ACCURATE);
-    else if (strcmp(type, ".png") == 0)
-        in = FreeImage_Load(FIF_PNG, filePath, 0);
-    else if (strcmp(type, ".tga") == 0)
-        in = FreeImage_Load(FIF_TARGA, filePath, 0);
-    else if (strcmp(type, ".pcx") == 0)
-        in = FreeImage_Load(FIF_PCX, filePath, 0);
-    else if (strcmp(type, ".bmp") == 0)
-        in = FreeImage_Load(FIF_BMP, filePath, 0);
-    else if (strcmp(type, ".dds") == 0)
-        in = FreeImage_Load(FIF_DDS, filePath, 0);
-    else
-    {
-        elfSetError(ELF_UNKNOWN_FORMAT, "error: can't load image \"%s\", unknown format\n", filePath);
-        return NULL;
-    }
-
-    if (!in)
-    {
-        elfSetError(ELF_CANT_OPEN_FILE, "error: can't open file \"%s\"\n", filePath);
-        return NULL;
-    }
-
-    image = elfCreateImage();
-
-    image->width = FreeImage_GetWidth(in);
-    image->height = FreeImage_GetHeight(in);
-    image->bpp = FreeImage_GetBPP(in);
+    elfImage* image = elfCreateImage();
+    image->width = width;
+    image->height = height;
+    // 1 channel = 8 bits
+    image->bpp = channels * 8;
 
     if (image->width == 0 || image->height == 0)
     {
         elfSetError(ELF_INVALID_SIZE, "error: \"%s\" has invalid size\n", filePath);
-        FreeImage_Unload(in);
+        SOIL_free_image_data(data);
         elfDestroyImage(image);
         return 0;
     }
 
-    sizeBytes = image->width * image->height * (image->bpp / 8);
-
+    // Copy image data
+    int sizeBytes = image->width * image->height * (image->bpp / 8);
     image->data = (unsigned char*)malloc(sizeBytes);
-
-    FreeImage_ConvertToRawBits((BYTE*)image->data, in, image->width * (image->bpp / 8), image->bpp, FI_RGBA_RED_MASK,
-                               FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, FALSE);
-
-    FreeImage_Unload(in);
-
-    */
+    memcpy(image->data, data, sizeBytes);
+    SOIL_free_image_data(data);
 
     return image;
 }
@@ -218,58 +151,33 @@ bool elfSaveImageData(const char* filePath, int width, int height, unsigned char
     if (width < 1 || height < 1 || bpp % 8 != 0 || bpp > 32 || data == nullptr)
         return false;
 
-    // Temporary solution for png support remove later
+    // Default
+    int imageType = SOIL_SAVE_TYPE_JPG;
+
+    // Supported types
+    // TODO PCX no longer supported
     const char* type = strrchr(filePath, '.');
-    if (strcmp(type, ".png") == 0)
-        return lodepng::encode(filePath, (unsigned char*)data, width, height, LCT_RGBA, 8) == 0;
+    if (strcmp(type, ".bmp") == 0)
+        imageType = SOIL_SAVE_TYPE_BMP;
+    else if (strcmp(type, ".tga") == 0)
+        imageType = SOIL_SAVE_TYPE_TGA;
+    else if (strcmp(type, ".jpg") == 0)
+        imageType = SOIL_SAVE_TYPE_JPG;
+    else if (strcmp(type, ".png") == 0)
+        imageType = SOIL_SAVE_TYPE_PNG;
+    else if (strcmp(type, ".dds") == 0)
+        imageType = SOIL_SAVE_TYPE_DDS;
     else
     {
         elfSetError(ELF_UNKNOWN_FORMAT, "error: can't save image \"%s\", unknown format\n", filePath);
         return false;
     }
-    // Remove until here
 
-    /*
-    FIBITMAP* out = FreeImage_ConvertFromRawBits((BYTE*)data, width, height, width * (bpp / 8), bpp, FI_RGBA_RED_MASK,
-                                       FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, FALSE);
-
-    // the jpg freeimage plugin can't save a 32 bit map, and who knows what other
-    // plugins can't, so for now, this should fix it...
-    if (bpp != 24)
-    {
-        FIBITMAP* temp = FreeImage_ConvertTo24Bits(out);
-        FreeImage_Unload(out);
-        out = temp;
-    }
-
-    if (!out)
+    // Save to disk
+    if (SOIL_save_image(filePath, imageType, width, height, bpp / 8, (const unsigned char*)data) == 0)
     {
         elfSetError(ELF_CANT_OPEN_FILE, "error: can't save image \"%s\"\n", filePath);
         return false;
     }
-
-    const char* type = strrchr(filePath, '.');
-    if (strcmp(type, ".bmp") == 0)
-        FreeImage_Save(FIF_BMP, out, filePath, 0);
-    else if (strcmp(type, ".tga") == 0)
-        FreeImage_Save(FIF_TARGA, out, filePath, 0);
-    else if (strcmp(type, ".jpg") == 0)
-        FreeImage_Save(FIF_JPEG, out, filePath, JPEG_QUALITYSUPERB);
-    else if (strcmp(type, ".pcx") == 0)
-        FreeImage_Save(FIF_PCX, out, filePath, 0);
-    else if (strcmp(type, ".png") == 0)
-        FreeImage_Save(FIF_PNG, out, filePath, 0);
-    else if (strcmp(type, ".dds") == 0)
-        FreeImage_Save(FIF_DDS, out, filePath, 0);
-    else
-    {
-        FreeImage_Unload(out);
-        elfSetError(ELF_UNKNOWN_FORMAT, "error: can't save image \"%s\", unknown format\n", filePath);
-        return false;
-    }
-
-    FreeImage_Unload(out);
-    */
-
     return true;
 }

@@ -14,6 +14,11 @@ struct elfImage
     //      Bit depth: 8
 
     // Bits per pixel
+    // Assumes
+    // 8 = R
+    // 16 = RG
+    // 24 = RGB
+    // 32 = RGBA
     unsigned char bpp = 0;
 
     // TODO byte type?
