@@ -9,6 +9,7 @@ A cross-platform 3d game engine based on BlendELF, written in C++ with a modern 
 Current goals are:
 * Clean project structure
 * Better / more documentation
+* Move content from old website to wiki
 * Refactoring (mostly separating definition and implementation into separate files)
 * Compile as C++ code
 * CMake / Conan build system
