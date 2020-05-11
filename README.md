@@ -2,6 +2,8 @@
 
 # NeoELF
 
+[![Build status](https://ci.appveyor.com/api/projects/status/faq9yhhcel6y2067/branch/master?svg=true)](https://ci.appveyor.com/project/redagito/neoelf/branch/master)
+
 A cross-platform 3d game engine based on BlendELF, written in C++ with a modern build system.
 
 ## Project Goal
@@ -9,11 +11,12 @@ A cross-platform 3d game engine based on BlendELF, written in C++ with a modern 
 Current goals are:
 * Clean project structure
 * Better / more documentation
-* Move content from old website to wiki
+* Organize doc, move content from old website to wiki
 * Refactoring (mostly separating definition and implementation into separate files)
 * Compile as C++ code
 * CMake / Conan build system
 * Achieve feature parity with last release of BlendELF (make sure everything still works)
+* Setup Appveyor for automatic builds
 * Unit tests
 * Separate project into lib, app and tests
 * Performance benchmarks
@@ -26,13 +29,12 @@ Current goals are:
 
 Development is currently done with
 * CMake, 3.16.0, https://cmake.org
-* Conan, 1.25.0, https://conan.io/
-* Visual Studio 2019 Community Edition, https://visualstudio.microsoft.com/vs/community/
+* Conan, 1.25.0, https://conan.io
+* Visual Studio 2019 Community Edition, https://visualstudio.microsoft.com/vs/community
 
 Conan remotes used are
 * conan-center: https://conan.bintray.com
 * bincrafters: https://api.bintray.com/conan/bincrafters/public-conan
-* int010h: https://api.bintray.com/conan/int010h/recipes
 
 Building the project should just require running CMake and the respective build command.
 
