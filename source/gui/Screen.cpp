@@ -6,16 +6,22 @@
 #include "nelf/General.h"
 #include "nelf/List.h"
 #include "nelf/Object.h"
+#include "nelf/RenderStation.h"
 #include "nelf/String.h"
-#include "nelf/Texture.h"
+#include "nelf/gfx/gfxShaderParams.h"
 #include "nelf/gui/Area.h"
 #include "nelf/gui/Button.h"
+#include "nelf/gui/CheckBox.h"
+#include "nelf/gui/Gui.h"
 #include "nelf/gui/GuiObject.h"
 #include "nelf/gui/Label.h"
 #include "nelf/gui/Picture.h"
 #include "nelf/gui/Slider.h"
 #include "nelf/gui/TextField.h"
+#include "nelf/gui/TextList.h"
+#include "nelf/gui/buttonState.h"
 #include "nelf/objectType.h"
+#include "nelf/resource/Texture.h"
 
 elfScreen* elfCreateScreen(const char* name)
 {
@@ -105,7 +111,7 @@ void elfDrawScreen(elfScreen* screen, elfArea* area, gfxShaderParams* shaderPara
     {
         elfColor col1, col2;
 
-        shaderParams->renderParams.vertexColor = GFX_TRUE;
+        shaderParams->renderParams.vertexColor = true;
         gfxSetShaderParams(shaderParams);
 
         col1.r = col1.g = col1.b = 0.10f;
@@ -121,7 +127,7 @@ void elfDrawScreen(elfScreen* screen, elfArea* area, gfxShaderParams* shaderPara
         col2.a = 1.0f;
         elfDrawHorGradient(screen->pos.x, screen->pos.y, screen->width, screen->height / 3, col1, col2);
 
-        shaderParams->renderParams.vertexColor = GFX_FALSE;
+        shaderParams->renderParams.vertexColor = false;
     }
     else
     {
@@ -176,7 +182,7 @@ void elfDrawScreen(elfScreen* screen, elfArea* area, gfxShaderParams* shaderPara
 
         elfSetOrtho(area->pos.x, area->pos.y, area->size.x, area->size.y, shaderParams);
 
-        shaderParams->renderParams.vertexColor = GFX_TRUE;
+        shaderParams->renderParams.vertexColor = true;
         gfxSetColor(&shaderParams->materialParams.diffuseColor, screen->color.r, screen->color.g, screen->color.b,
                     screen->color.a);
         gfxSetShaderParams(shaderParams);
@@ -187,7 +193,7 @@ void elfDrawScreen(elfScreen* screen, elfArea* area, gfxShaderParams* shaderPara
         col2.a = 1.0f;
         elfDrawHorGradientBorder(screen->pos.x, screen->pos.y, screen->width, screen->height, col1, col2);
 
-        shaderParams->renderParams.vertexColor = GFX_FALSE;
+        shaderParams->renderParams.vertexColor = false;
     }
 }
 

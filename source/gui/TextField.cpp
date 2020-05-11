@@ -6,11 +6,14 @@
 #include "nelf/Font.h"
 #include "nelf/General.h"
 #include "nelf/Object.h"
+#include "nelf/RenderStation.h"
 #include "nelf/String.h"
-#include "nelf/Texture.h"
+#include "nelf/gfx/gfxShaderParams.h"
 #include "nelf/gui/Area.h"
+#include "nelf/gui/Gui.h"
 #include "nelf/gui/GuiObject.h"
 #include "nelf/objectType.h"
+#include "nelf/resource/Texture.h"
 
 elfTextField* elfCreateTextField(const char* name)
 {
@@ -90,7 +93,7 @@ void elfDrawTextField(elfTextField* textField, elfArea* area, gfxShaderParams* s
     {
         elfColor col1, col2;
 
-        shaderParams->renderParams.vertexColor = GFX_TRUE;
+        shaderParams->renderParams.vertexColor = true;
         gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 1.0f, 1.0f, 1.0f);
         gfxSetShaderParams(shaderParams);
 
@@ -106,7 +109,7 @@ void elfDrawTextField(elfTextField* textField, elfArea* area, gfxShaderParams* s
         col2.a = 1.0f;
         elfDrawHorGradientBorder(textField->pos.x, textField->pos.y, textField->width, textField->height, col1, col2);
 
-        shaderParams->renderParams.vertexColor = GFX_FALSE;
+        shaderParams->renderParams.vertexColor = false;
     }
     else
     {

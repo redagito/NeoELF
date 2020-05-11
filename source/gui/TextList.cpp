@@ -7,7 +7,9 @@
 #include "nelf/General.h"
 #include "nelf/List.h"
 #include "nelf/Object.h"
+#include "nelf/RenderStation.h"
 #include "nelf/String.h"
+#include "nelf/gfx/gfxShaderParams.h"
 #include "nelf/gui/Area.h"
 #include "nelf/gui/GuiObject.h"
 #include "nelf/objectType.h"
@@ -104,7 +106,7 @@ void elfDrawTextList(elfTextList* textList, elfArea* area, gfxShaderParams* shad
         if (i == textList->selection)
         {
             shaderParams->textureParams[0].texture = NULL;
-            shaderParams->renderParams.vertexColor = GFX_TRUE;
+            shaderParams->renderParams.vertexColor = true;
             gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 1.0f, 1.0f, 1.0f);
             gfxSetShaderParams(shaderParams);
             col1.r = col1.g = col1.b = 0.35f;
@@ -117,7 +119,7 @@ void elfDrawTextList(elfTextList* textList, elfArea* area, gfxShaderParams* shad
         else
         {
             shaderParams->textureParams[0].texture = NULL;
-            shaderParams->renderParams.vertexColor = GFX_TRUE;
+            shaderParams->renderParams.vertexColor = true;
             gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 1.0f, 1.0f, 1.0f);
             gfxSetShaderParams(shaderParams);
             col1.r = col1.g = col1.b = 0.17f;
@@ -130,7 +132,7 @@ void elfDrawTextList(elfTextList* textList, elfArea* area, gfxShaderParams* shad
 
         light = !light;
 
-        shaderParams->renderParams.vertexColor = GFX_FALSE;
+        shaderParams->renderParams.vertexColor = false;
         gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 1.0f, 1.0f, 0.6f);
         elfDrawString(textList->font, strObj->str, textList->pos.x, textList->pos.y + textList->height - offset,
                       shaderParams);

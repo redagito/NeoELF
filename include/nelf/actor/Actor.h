@@ -117,11 +117,9 @@ elfJoint* elfGetActorJoint(elfActor* actor, const char* name);
 
 elfJoint* elfGetActorJointByIndex(elfActor* actor, int idx);
 
-unsigned char elfRemoveActorJoint(elfActor* actor, const char* name);
-
-unsigned char elfRemoveActorJointByIndex(elfActor* actor, int idx);
-
-unsigned char elfRemoveActorJointByObject(elfActor* actor, elfJoint* joint);
+bool elfRemoveActorJoint(elfActor* actor, const char* name);
+bool elfRemoveActorJointByIndex(elfActor* actor, int idx);
+bool elfRemoveActorJointByObject(elfActor* actor, elfJoint* joint);
 
 // IPO
 

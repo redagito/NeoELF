@@ -20,7 +20,7 @@ struct elfKeyEvent
 {
     ELF_OBJECT_HEADER;
     int key = 0;
-    unsigned char state = 0;
+    bool state = false;
 };
 
 elfKeyEvent* elfCreateKeyEvent();
@@ -29,8 +29,8 @@ void elfDestroyKeyEvent(void* data);
 struct elfCharEvent
 {
     ELF_OBJECT_HEADER;
-    int code;
-    unsigned char state;
+    int code = 0;
+    bool state = false;
 };
 
 elfCharEvent* elfCreateCharEvent();

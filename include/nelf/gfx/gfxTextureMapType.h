@@ -1,6 +1,6 @@
 #pragma once
 
-using GfxMapType = int;
+using GfxTextureMapType = int;
 
 // Bitfield
 #define GFX_COLOR_MAP 0x0001

@@ -5,10 +5,12 @@
 
 #include "nelf/General.h"
 #include "nelf/Object.h"
+#include "nelf/RenderStation.h"
 #include "nelf/String.h"
-#include "nelf/Texture.h"
+#include "nelf/gfx/gfxShaderParams.h"
 #include "nelf/gui/GuiObject.h"
 #include "nelf/objectType.h"
+#include "nelf/resource/Texture.h"
 
 elfSlider* elfCreateSlider(const char* name)
 {
@@ -61,7 +63,7 @@ void elfDrawSlider(elfSlider* slider, gfxShaderParams* shaderParams)
     {
         elfColor col1, col2;
 
-        shaderParams->renderParams.vertexColor = GFX_TRUE;
+        shaderParams->renderParams.vertexColor = true;
         gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 1.0f, 1.0f, 1.0f);
         gfxSetShaderParams(shaderParams);
 
@@ -115,7 +117,7 @@ void elfDrawSlider(elfSlider* slider, gfxShaderParams* shaderParams)
             elfDrawHorGradient(slider->pos.x - 2, slider->pos.y + slider->height * slider->value - 4, 8, 4, col1, col2);
         }
         // TODO Bug?
-        shaderParams->renderParams.vertexColor = GFX_FALSE;
+        shaderParams->renderParams.vertexColor = false;
     }
     else
     {

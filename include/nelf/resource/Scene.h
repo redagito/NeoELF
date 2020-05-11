@@ -216,7 +216,9 @@ bool elfRemoveSceneSpriteByObject(elfScene* scene, elfSprite* sprite);
 bool elfRemoveSceneActorByObject(elfScene* scene, elfActor* actor);
 
 // TODO Was commented out, investigate later
+/*
 void elfDrawSceneDeferred(elfScene* scene);
+*/
 
 // TODO Draw method should NOT be in the scene
 //      Scene should only manage objects and provide culling and updates

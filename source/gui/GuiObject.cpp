@@ -1,20 +1,22 @@
 #include "nelf/gui/GuiObject.h"
 
+#include <cstring>
+
+#include "nelf/Context.h"
 #include "nelf/List.h"
 #include "nelf/Object.h"
-#include "nelf/gui/Gui.h"
-#include "nelf/gui/buttonState.h"
-#include "nelf/objectType.h"
-
-// For recalc
-#include "nelf/gui/Button.h"
+#include "nelf/gfx/gfxTransform.h"
+#include "nelf/gui/Button.h"  // For recalc
 #include "nelf/gui/CheckBox.h"
+#include "nelf/gui/Gui.h"
 #include "nelf/gui/Label.h"
 #include "nelf/gui/Picture.h"
 #include "nelf/gui/Screen.h"
 #include "nelf/gui/Slider.h"
 #include "nelf/gui/TextField.h"
 #include "nelf/gui/TextList.h"
+#include "nelf/gui/buttonState.h"
+#include "nelf/objectType.h"
 
 const char* elfGetGuiObjectName(elfGuiObject* object) { return object->name; }
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "nelf/gfx/gfxShaderParams.h"
 #include "nelf/gui/guiObjectHeader.h"
 
 struct elfFont;
@@ -17,7 +18,7 @@ struct elfGui
     elfGuiObject* target = nullptr;
     elfTextField* activeTextField = nullptr;
     elfScreen* focusScreen = nullptr;
-    unsigned char dragging;
+    bool dragging = false;
     char* dragContent = nullptr;
     elfGuiObject* dragObject = nullptr;
 

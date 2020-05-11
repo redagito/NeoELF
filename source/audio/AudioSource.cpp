@@ -5,11 +5,11 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "nelf/Actor.h"
-#include "nelf/Entity.h"
 #include "nelf/General.h"
 #include "nelf/List.h"
 #include "nelf/Object.h"
+#include "nelf/actor/Actor.h"
+#include "nelf/actor/Entity.h"
 #include "nelf/audio/soundFileType.h"
 #include "nelf/audio/streamChunkSize.h"
 #include "nelf/objectType.h"

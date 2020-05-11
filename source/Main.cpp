@@ -26,14 +26,17 @@ int main(int argc, char** argv)
     }
 
     // Load startup script
-    // TODO Should probably be changeable iin config
-    //      Maybe this is what "start" is supposed to be?
+    // TODO Should probably be changeable in config
     elfScript* script = elfCreateScriptFromFile("Init", "init.lua");
 
     // Either execute script or just start engine
+    // TODO Its a very BAD idea to have the script run the main loop
+    //      This will impact performance severely, better have callbacks on frame etc..
+    //      Needs to be changed!
     if (script != nullptr)
     {
         // TODO Why manually manage references?
+        //      Should these not be set by elfCreateScriptFromFile?
         elfIncRef((elfObject*)script);
         elfRunScript(script);
         elfDecRef((elfObject*)script);

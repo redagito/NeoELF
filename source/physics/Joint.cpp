@@ -6,15 +6,16 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "nelf/Actor.h"
 #include "nelf/General.h"
 #include "nelf/Object.h"
-#include "nelf/Scene.h"
 #include "nelf/String.h"
+#include "nelf/actor/Actor.h"
+#include "nelf/gfx/gfxMath.h"
 #include "nelf/objectType.h"
 #include "nelf/physics/PhysicsObject.h"
 #include "nelf/physics/PhysicsWorld.h"
 #include "nelf/physics/jointType.h"
+#include "nelf/resource/Scene.h"
 
 elfJoint* elfCreateJoint()
 {

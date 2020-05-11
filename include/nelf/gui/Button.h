@@ -13,6 +13,7 @@ struct elfButton
     elfFont* font = nullptr;
     // TODO Override setting with active flag?
     //      Basically always off if inactive
+    // ButtonState
     unsigned char state = 0;
     elfTexture* off = nullptr;
     elfTexture* over = nullptr;
@@ -27,7 +28,8 @@ void elfDrawButton(elfButton* button, gfxShaderParams* shaderParams);
 
 void elfRecalcButton(elfButton* button);
 
-bool elfGetButtonState(elfButton* button);
+// ButtonState
+unsigned char elfGetButtonState(elfButton* button);
 const char* elfGetButtonText(elfButton* button);
 elfFont* elfGetButtonFont(elfButton* button);
 elfVec2i elfGetButtonSize(elfButton* button);

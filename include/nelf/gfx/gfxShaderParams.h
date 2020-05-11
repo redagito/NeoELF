@@ -50,7 +50,7 @@ struct gfxRenderParams
     unsigned char cullFaceMode;
     unsigned char frontFace;
     unsigned char wireframe;
-    unsigned char vertexColor;
+    bool vertexColor = false;
     bool multisample = false;
 };
 

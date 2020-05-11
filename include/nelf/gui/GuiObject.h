@@ -3,6 +3,8 @@
 #include "nelf/Vector.h"
 #include "nelf/gui/guiObjectHeader.h"
 
+struct gfxShaderParams;
+
 struct elfGuiObject
 {
     ELF_GUI_OBJECT_HEADER;

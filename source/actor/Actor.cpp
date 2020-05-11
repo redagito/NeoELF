@@ -1,21 +1,29 @@
-#include "nelf/Actor.h"
+#include "nelf/actor/Actor.h"
 
 #include <cmath>
 #include <cstring>
 
 #include "nelf/Engine.h"
-#include "nelf/Entity.h"
 #include "nelf/FramePlayer.h"
 #include "nelf/Ipo.h"
-#include "nelf/Light.h"
 #include "nelf/List.h"
+#include "nelf/Math.h"
 #include "nelf/Object.h"
 #include "nelf/Property.h"
 #include "nelf/Scripting.h"
 #include "nelf/String.h"
+#include "nelf/actor/Entity.h"
+#include "nelf/actor/Light.h"
 #include "nelf/audio/AudioSource.h"
+#include "nelf/gfx/gfxMath.h"
+#include "nelf/gfx/gfxTransform.h"
 #include "nelf/objectType.h"
-#include "nelf/shapeType.h"
+#include "nelf/physics/Joint.h"
+#include "nelf/physics/PhysicsObject.h"
+#include "nelf/physics/PhysicsTriMesh.h"
+#include "nelf/physics/shapeType.h"
+#include "nelf/resource/Model.h"
+#include "nelf/resource/Scene.h"
 
 void elfActorIpoCallback(elfFramePlayer* player)
 {
@@ -607,7 +615,7 @@ void elfSetActorBoundingLengths(elfActor* actor, float x, float y, float z)
     actor->pbbLengths.z = z;
 
     if (actor->object)
-        elfSetActorPhysics(actor, ELF_TRUE);
+        elfSetActorPhysics(actor, true);
 }
 
 void elfSetActorBoundingOffset(elfActor* actor, float x, float y, float z)
@@ -849,7 +857,7 @@ elfJoint* elfGetActorJoint(elfActor* actor, const char* name)
 
 elfJoint* elfGetActorJointByIndex(elfActor* actor, int idx) { return (elfJoint*)elfGetListObject(actor->joints, idx); }
 
-unsigned char elfRemoveActorJoint(elfActor* actor, const char* name)
+bool elfRemoveActorJoint(elfActor* actor, const char* name)
 {
     elfJoint* joint;
 
@@ -866,10 +874,10 @@ unsigned char elfRemoveActorJoint(elfActor* actor, const char* name)
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
-unsigned char elfRemoveActorJointByIndex(elfActor* actor, int idx)
+bool elfRemoveActorJointByIndex(elfActor* actor, int idx)
 {
     elfJoint* joint;
     int i;
@@ -888,10 +896,10 @@ unsigned char elfRemoveActorJointByIndex(elfActor* actor, int idx)
         }
     }
 
-    return ELF_FALSE;
+    return false;
 }
 
-unsigned char elfRemoveActorJointByObject(elfActor* actor, elfJoint* joint)
+bool elfRemoveActorJointByObject(elfActor* actor, elfJoint* joint)
 {
     if (elfGetJointActorA(joint) == actor)
         elfRemoveListObject(elfGetJointActorB(joint)->joints, (elfObject*)joint);
@@ -940,9 +948,9 @@ float elfGetActorIpoSpeed(elfActor* actor) { return elfGetFramePlayerSpeed(actor
 
 float elfGetActorIpoFrame(elfActor* actor) { return elfGetFramePlayerFrame(actor->ipoPlayer); }
 
-unsigned char elfIsActorIpoPlaying(elfActor* actor) { return elfIsFramePlayerPlaying(actor->ipoPlayer); }
+bool elfIsActorIpoPlaying(elfActor* actor) { return elfIsFramePlayerPlaying(actor->ipoPlayer); }
 
-unsigned char elfIsActorIpoPaused(elfActor* actor) { return elfIsFramePlayerPaused(actor->ipoPlayer); }
+bool elfIsActorIpoPaused(elfActor* actor) { return elfIsFramePlayerPaused(actor->ipoPlayer); }
 
 int elfGetActorCollisionCount(elfActor* actor)
 {

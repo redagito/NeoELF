@@ -7,11 +7,13 @@
 #include "nelf/Font.h"
 #include "nelf/General.h"
 #include "nelf/Object.h"
+#include "nelf/RenderStation.h"
 #include "nelf/String.h"
-#include "nelf/Texture.h"
+#include "nelf/gfx/gfxShaderParams.h"
 #include "nelf/gui/GuiObject.h"
 #include "nelf/gui/buttonState.h"
 #include "nelf/objectType.h"
+#include "nelf/resource/Texture.h"
 
 elfButton* elfCreateButton(const char* name)
 {
@@ -83,7 +85,7 @@ void elfDrawButton(elfButton* button, gfxShaderParams* shaderParams)
         col2.r = col2.g = col2.b = col2.a = 1.0f;
 
         // TODO Bug?
-        shaderParams->renderParams.vertexColor = ELF_TRUE;
+        shaderParams->renderParams.vertexColor = true;
         gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 1.0f, 1.0f, 1.0f);
         gfxSetShaderParams(shaderParams);
 
@@ -157,7 +159,7 @@ void elfDrawButton(elfButton* button, gfxShaderParams* shaderParams)
         }
         elfDrawHorGradientBorder(button->pos.x, button->pos.y, button->width, button->height, col1, col2);
 
-        shaderParams->renderParams.vertexColor = ELF_FALSE;
+        shaderParams->renderParams.vertexColor = false;
         if (button->active)
             gfxSetColor(&shaderParams->materialParams.diffuseColor, button->textColor.r, button->textColor.g,
                         button->textColor.b, button->textColor.a);
@@ -199,7 +201,7 @@ void elfDrawButton(elfButton* button, gfxShaderParams* shaderParams)
         }
         if (button->text)
         {
-            shaderParams->renderParams.vertexColor = ELF_FALSE;
+            shaderParams->renderParams.vertexColor = false;
             gfxSetColor(&shaderParams->materialParams.diffuseColor, button->textColor.r, button->textColor.g,
                         button->textColor.b, button->textColor.a);
             gfxSetShaderParams(shaderParams);

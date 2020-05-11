@@ -541,7 +541,7 @@ void elfDrawParticles(elfParticles* particles, elfCamera* camera, gfxShaderParam
     if (elfGetListLength(particles->particles) > 0)
     {
         shaderParams->renderParams.blendMode = particles->drawMode;
-        shaderParams->renderParams.vertexColor = GFX_TRUE;
+        shaderParams->renderParams.vertexColor = true;
         gfxMatrix4SetIdentity(shaderParams->modelviewMatrix);
         if (particles->texture)
             shaderParams->textureParams->texture = particles->texture->texture;

@@ -1,9 +1,13 @@
 #include "nelf/pak/Pak.h"
 
+#include <SOIL2/SOIL2.h>
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/Config.h"
+#include "nelf/Engine.h"
 #include "nelf/General.h"
 #include "nelf/Ipo.h"
 #include "nelf/List.h"
@@ -20,6 +24,18 @@
 #include "nelf/actor/Particles.h"
 #include "nelf/actor/Sprite.h"
 #include "nelf/errorCode.h"
+#include "nelf/gfx/gfxAttributeType.h"
+#include "nelf/gfx/gfxFormatType.h"
+#include "nelf/gfx/gfxMath.h"
+#include "nelf/gfx/gfxObject.h"
+#include "nelf/gfx/gfxTexture.h"
+#include "nelf/gfx/gfxTextureFilterType.h"
+#include "nelf/gfx/gfxTextureFormat.h"
+#include "nelf/gfx/gfxTextureWrapMode.h"
+#include "nelf/gfx/gfxVertexArray.h"
+#include "nelf/gfx/gfxVertexData.h"
+#include "nelf/gfx/gfxVertexDataType.h"
+#include "nelf/gfx/gfxVertexIndex.h"
 #include "nelf/objectType.h"
 #include "nelf/pak/PakIndex.h"
 #include "nelf/pak/nameLength.h"
@@ -29,6 +45,7 @@
 #include "nelf/resource/Armature.h"
 #include "nelf/resource/Material.h"
 #include "nelf/resource/Model.h"
+#include "nelf/resource/Resource.h"
 #include "nelf/resource/Resources.h"
 #include "nelf/resource/Scene.h"
 #include "nelf/resource/Script.h"
@@ -1161,7 +1178,7 @@ elfModel* elfCreateModelFromPak(FILE* file, const char* name, elfScene* scene)
             model->bbMax.z = vertexBuffer[i + 2];
     }
 
-    model->vertexArray = gfxCreateVertexArray(GFX_TRUE);
+    model->vertexArray = gfxCreateVertexArray(true);
     gfxIncRef((gfxObject*)model->vertexArray);
 
     gfxSetVertexArrayData(model->vertexArray, GFX_VERTEX, model->vertices);
@@ -1173,7 +1190,7 @@ elfModel* elfCreateModelFromPak(FILE* file, const char* name, elfScene* scene)
     {
         if (model->areas[i].indiceCount > 0)
         {
-            model->areas[i].vertexIndex = gfxCreateVertexIndex(GFX_TRUE, model->areas[i].index);
+            model->areas[i].vertexIndex = gfxCreateVertexIndex(true, model->areas[i].index);
             gfxIncRef((gfxObject*)model->areas[i].vertexIndex);
         }
     }
@@ -1352,10 +1369,7 @@ elfSprite* elfCreateSpriteFromPak(FILE* file, const char* name, elfScene* scene)
 elfTexture* elfCreateTextureFromPak(FILE* file, const char* name, elfScene* scene)
 {
     elfTexture* texture;
-    FIMEMORY* fiMem;
-    FIBITMAP* fiBitmap;
-    char* mem;
-    FREE_IMAGE_FORMAT fiFormat;
+    unsigned char* mem;
     int magic;
     char rname[ELF_NAME_LENGTH];
     unsigned char type;
@@ -1366,7 +1380,7 @@ elfTexture* elfCreateTextureFromPak(FILE* file, const char* name, elfScene* scen
     int format;
     int internalFormat;
     int dataFormat;
-    unsigned char* data;
+    unsigned char* data = nullptr;
 
     fread((char*)&magic, sizeof(int), 1, file);
 
@@ -1384,23 +1398,13 @@ elfTexture* elfCreateTextureFromPak(FILE* file, const char* name, elfScene* scen
     {
         fread((char*)&length, sizeof(int), 1, file);
 
-        mem = (char*)malloc(length);
-        fread(mem, sizeof(char), length, file);
+        mem = (unsigned char*)malloc(length);
+        fread(mem, sizeof(unsigned char), length, file);
 
-        fiMem = FreeImage_OpenMemory((BYTE*)mem, length);
-        fiFormat = FreeImage_GetFileTypeFromMemory(fiMem, 0);
-        fiBitmap = FreeImage_LoadFromMemory(fiFormat, fiMem, 0);
+        int channels = 0;
+        data = SOIL_load_image_from_memory(mem, length, &width, &height, &channels, SOIL_LOAD_AUTO);
 
-        width = FreeImage_GetWidth(fiBitmap);
-        height = FreeImage_GetHeight(fiBitmap);
-        bpp = FreeImage_GetBPP(fiBitmap);
-
-        data = (unsigned char*)malloc(sizeof(char) * width * height * (bpp / 8));
-        FreeImage_ConvertToRawBits((BYTE*)data, fiBitmap, width * (bpp / 8), bpp, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK,
-                                   FI_RGBA_BLUE_MASK, FALSE);
-
-        FreeImage_Unload(fiBitmap);
-        FreeImage_CloseMemory(fiMem);
+        bpp = channels * 8;
 
         free(mem);
     }
@@ -1466,18 +1470,17 @@ elfTexture* elfCreateTextureFromPak(FILE* file, const char* name, elfScene* scen
 
 elfScene* elfCreateSceneFromPak(const char* name, elfPak* pak)
 {
-    elfScene* scene;
-    elfCamera* camera;
-    elfEntity* entity;
-    elfLight* light;
-    elfSprite* sprite;
-    elfParticles* particles;
-    elfPakIndex* index;
-    FILE* file;
-    int magic;
+    elfScene* scene = nullptr;
+    elfCamera* camera = nullptr;
+    elfEntity* entity = nullptr;
+    elfLight* light = nullptr;
+    elfSprite* sprite = nullptr;
+    elfParticles* particles = nullptr;
+    elfPakIndex* index = nullptr;
+    FILE* file = nullptr;
+    int magic = 0;
     char rname[ELF_NAME_LENGTH];
     float ambientColor[4];
-    unsigned char sceneRead;
 
     scene = elfCreateScene(NULL);
 
@@ -1487,7 +1490,7 @@ elfScene* elfCreateSceneFromPak(const char* name, elfPak* pak)
     scene->pak = pak;
     elfIncRef((elfObject*)pak);
 
-    sceneRead = ELF_FALSE;
+    bool sceneRead = false;
     for (index = (elfPakIndex*)elfBeginList(pak->indexes); index; index = (elfPakIndex*)elfGetListNext(pak->indexes))
     {
         if (index->indexType == ELF_CAMERA)
@@ -1505,7 +1508,7 @@ elfScene* elfCreateSceneFromPak(const char* name, elfPak* pak)
             file = fopen(elfGetPakFilePath(pak), "rb");
             if (file)
             {
-                sceneRead = ELF_TRUE;
+                sceneRead = true;
                 fseek(file, elfGetPakIndexOffset(index), SEEK_SET);
 
                 fread((char*)&magic, sizeof(int), 1, file);
@@ -2313,7 +2316,7 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
         elfDecRef((elfObject*)particles);
         elfDecRef((elfObject*)sprites);
 
-        return ELF_FALSE;
+        return false;
     }
 
     offset = 0;
@@ -2382,5 +2385,5 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
     elfDecRef((elfObject*)particles);
     elfDecRef((elfObject*)sprites);
 
-    return ELF_TRUE;
+    return true;
 }

@@ -1,7 +1,10 @@
 #include "nelf/physics/MultipleRayResultCallback.h"
 
+#include <bullet/btBulletDynamicsCommon.h>
+
 #include "nelf/List.h"
 #include "nelf/Object.h"
+#include "nelf/gfx/gfxMath.h"
 #include "nelf/physics/Collision.h"
 #include "nelf/physics/PhysicsObject.h"
 

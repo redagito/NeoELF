@@ -5,10 +5,14 @@
 
 #include "nelf/General.h"
 #include "nelf/Object.h"
+#include "nelf/RenderStation.h"
 #include "nelf/String.h"
-#include "nelf/Texture.h"
+#include "nelf/gfx/gfxShaderParams.h"
+#include "nelf/gfx/gfxVertexData.h"
 #include "nelf/gui/GuiObject.h"
+#include "nelf/gui/buttonState.h"
 #include "nelf/objectType.h"
+#include "nelf/resource/Texture.h"
 
 elfCheckBox* elfCreateCheckBox(const char* name)
 {
@@ -61,7 +65,7 @@ void elfDrawCheckBox(elfCheckBox* checkBox, gfxShaderParams* shaderParams)
         elfColor col1, col2;
         float* vertexBuffer;
 
-        shaderParams->renderParams.vertexColor = GFX_TRUE;
+        shaderParams->renderParams.vertexColor = true;
         gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 1.0f, 1.0f, 1.0f);
         gfxSetShaderParams(shaderParams);
 
@@ -77,7 +81,7 @@ void elfDrawCheckBox(elfCheckBox* checkBox, gfxShaderParams* shaderParams)
         col2.a = 1.0f;
         elfDrawHorGradientBorder(checkBox->pos.x, checkBox->pos.y, checkBox->width, checkBox->height, col1, col2);
 
-        shaderParams->renderParams.vertexColor = GFX_FALSE;
+        shaderParams->renderParams.vertexColor = false;
 
         if (checkBox->state == ELF_ON)
         {

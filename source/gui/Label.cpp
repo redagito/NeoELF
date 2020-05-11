@@ -8,6 +8,7 @@
 #include "nelf/General.h"
 #include "nelf/Object.h"
 #include "nelf/String.h"
+#include "nelf/gfx/gfxShaderParams.h"
 #include "nelf/gui/GuiObject.h"
 #include "nelf/objectType.h"
 

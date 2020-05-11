@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdio>
+
 #include "nelf/objectHeader.h"
 
 struct elfList;
@@ -15,6 +17,8 @@ struct elfModel;
 struct elfParticles;
 struct elfScript;
 struct elfSprite;
+struct elfScene;
+struct elfTexture;
 
 // TODO Lazy loading / hot reloading
 // TODO Move to separate lib

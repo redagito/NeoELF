@@ -10,6 +10,7 @@
 #include "nelf/List.h"
 #include "nelf/Math.h"
 #include "nelf/Object.h"
+#include "nelf/gfx/gfxMath.h"
 #include "nelf/physics/PhysicsTriMesh.h"
 #include "nelf/physics/PhysicsWorld.h"
 #include "nelf/physics/shapeType.h"

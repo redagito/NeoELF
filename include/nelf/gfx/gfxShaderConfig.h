@@ -2,11 +2,18 @@
 
 struct gfxShaderConfig
 {
-    unsigned short int textures;
-    unsigned char light;
+    // Bitfield GfxTextureMapType
+    unsigned short int textures = 0;
+
+    bool light = false;
+
+    // GfxGBufferMode
     unsigned char gbuffer;
-    unsigned char specular;
-    unsigned char vertexColor;
-    unsigned char fog;
+
+    bool specular = false;
+    bool vertexColor = false;
+    bool fog = false;
+
+    // GfxBlendMode
     unsigned char blend;
 };

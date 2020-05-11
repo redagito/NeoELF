@@ -3,19 +3,31 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/Context.h"
 #include "nelf/Engine.h"
+#include "nelf/Font.h"
 #include "nelf/General.h"
 #include "nelf/List.h"
 #include "nelf/Object.h"
+#include "nelf/RenderStation.h"
 #include "nelf/Scripting.h"
 #include "nelf/String.h"
+#include "nelf/gfx/gfxBlendMode.h"
+#include "nelf/gui/Area.h"
 #include "nelf/gui/Button.h"
+#include "nelf/gui/CheckBox.h"
 #include "nelf/gui/GuiObject.h"
+#include "nelf/gui/Label.h"
+#include "nelf/gui/Picture.h"
+#include "nelf/gui/Screen.h"
 #include "nelf/gui/Slider.h"
 #include "nelf/gui/TextField.h"
 #include "nelf/gui/TextList.h"
+#include "nelf/gui/buttonState.h"
 #include "nelf/gui/guiEvent.h"
 #include "nelf/keyCode.h"
+#include "nelf/keyState.h"
+#include "nelf/mouseButtonCode.h"
 #include "nelf/objectType.h"
 
 elfGui* elfCreateGui()
@@ -316,7 +328,7 @@ void elfUpdateGui(elfGui* gui, float step)
                             elfDestroyString(gui->dragContent);
                         if (gui->dragObject)
                             elfDecRef((elfObject*)gui->dragObject);
-                        gui->dragging = ELF_TRUE;
+                        gui->dragging = true;
                         gui->dragContent = elfCreateString(elfGetTextListItem(textList, textList->selection));
                         gui->dragObject = (elfGuiObject*)textList;
                         elfIncRef((elfObject*)gui->dragObject);
@@ -410,7 +422,7 @@ void elfUpdateGui(elfGui* gui, float step)
             }
         }
 
-        gui->dragging = ELF_FALSE;
+        gui->dragging = false;
     }
     else if (elfGetMouseButtonState(ELF_BUTTON_LEFT) == ELF_DOWN && moved)
     {
@@ -473,7 +485,7 @@ void elfUpdateGui(elfGui* gui, float step)
             {
                 elfSendGuiKeyEvent(gui, gui->curKey);
                 gui->keyStep = gui->keyStep - 0.35f;
-                gui->keyRepeat = ELF_TRUE;
+                gui->keyRepeat = true;
             }
         }
     }
@@ -508,7 +520,7 @@ void elfUpdateGui(elfGui* gui, float step)
 
         if (event->objType == ELF_CHAR_EVENT)
         {
-            if (((elfCharEvent*)event)->state == ELF_TRUE)
+            if (((elfCharEvent*)event)->state == true)
             {
                 elfSendGuiCharEvent(gui, (char)((elfCharEvent*)event)->code);
 
@@ -519,13 +531,13 @@ void elfUpdateGui(elfGui* gui, float step)
             {
                 gui->curChar = 0;
                 gui->charStep = 0.0f;
-                gui->charRepeat = ELF_FALSE;
+                gui->charRepeat = false;
             }
         }
 
         if (event->objType == ELF_KEY_EVENT)
         {
-            if (((elfKeyEvent*)event)->state == ELF_TRUE)
+            if (((elfKeyEvent*)event)->state == true)
             {
                 elfSendGuiKeyEvent(gui, ((elfKeyEvent*)event)->key);
 
@@ -536,7 +548,7 @@ void elfUpdateGui(elfGui* gui, float step)
             {
                 gui->curKey = 0;
                 gui->keyStep = 0.0f;
-                gui->keyRepeat = ELF_FALSE;
+                gui->keyRepeat = false;
             }
         }
     }
@@ -556,9 +568,9 @@ void elfDrawGui(elfGui* gui)
     area.size.y = gui->height;
 
     gfxSetShaderParamsDefault(&gui->shaderParams);
-    gui->shaderParams.renderParams.multisample = GFX_FALSE;
-    gui->shaderParams.renderParams.depthWrite = GFX_FALSE;
-    gui->shaderParams.renderParams.depthTest = GFX_FALSE;
+    gui->shaderParams.renderParams.multisample = false;
+    gui->shaderParams.renderParams.depthWrite = false;
+    gui->shaderParams.renderParams.depthTest = false;
     gui->shaderParams.renderParams.blendMode = GFX_TRANSPARENT;
     elfSetOrtho(gui->pos.x, gui->pos.y, gui->width, gui->height, &gui->shaderParams);
 
