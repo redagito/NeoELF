@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><script src="BlendELF,%20Tutorial%202,%20Configuration%20file%20config-Dateien/analytics.js" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app56.us.archive.org';v.server_ms=1282;archive_analytics.send_pageview({});});</script><script type="text/javascript" src="BlendELF,%20Tutorial%202,%20Configuration%20file%20config-Dateien/ait-client-rewrite.js" charset="utf-8"></script>
+<script type="text/javascript">
+WB_wombat_Init("http://web.archive.org/web/", "20120213051639", "blendelf.com:80");
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%202,%20Configuration%20file%20config-Dateien/wbhack.js" charset="utf-8"></script>
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%202,%20Configuration%20file%20config-Dateien/playback.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%202,%20Configuration%20file%20config-Dateien/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%202,%20Configuration%20file%20config-Dateien/iconochive.css">
+<!-- End Wayback Rewrite JS Include -->
+
+<title>BlendELF, Tutorial 2, Configuration file config.txt</title>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%202,%20Configuration%20file%20config-Dateien/style.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="BlendELF, Compact and powerful 3D Game Engine">
+</head>
+<body><!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<style type="text/css">
+body {
+  margin-top:0 !important;
+  padding-top:0 !important;
+  /*min-width:800px !important;*/
+}
+</style>
+<div id="wm-ipp-base" style="display: block; direction: ltr;" lang="en">
+</div><div id="donato" style="position:relative;width:100%;">
+  <div id="donato-base">
+    <iframe id="donato-if" src="BlendELF,%20Tutorial%202,%20Configuration%20file%20config-Dateien/donate.html" scrolling="no" style="width:100%; height:100%" frameborder="0">
+    </iframe>
+  </div>
+</div><script type="text/javascript">
+__wm.bt(625,27,25,2,"web","http://blendelf.com/tutorial2.html","20120213051639",1996,"/_static/",["/_static/css/banner-styles.css?v=HyR5oymJ","/_static/css/iconochive.css?v=qtvMKcIJ"]);
+</script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+
+<div class="images">
+<img src="BlendELF,%20Tutorial%202,%20Configuration%20file%20config-Dateien/topbanner.jpg" alt="BlendELF is a engine written by me, an IT student at the University of Jyväskylä. I am coding the engine as my portfolio project, as a proof of my skills in 3d graphics and game logics/systems coding. I release this engine under the assumption that it could be useful for other people in making quck prototypes and small games. I reserve the right to halt the development of this engine at will, at any given time.">
+</div>
+
+<div class="links">
+<a href="http://web.archive.org/web/20120213051639/http://blendelf.com/index.html">Home</a> | 
+<a href="http://web.archive.org/web/20120213051639/http://forum.blendelf.com/">Forums</a> | 
+<a href="http://web.archive.org/web/20120213051639/http://blendelf.com/index.html#Demos">Demos</a> | 
+<a href="http://web.archive.org/web/20120213051639/http://blendelf.com/index.html#Features">Features</a> | 
+<a href="http://web.archive.org/web/20120213051639/http://blendelf.com/index.html#Devkit">Get Development Kit</a> | 
+<a href="http://web.archive.org/web/20120213051639/http://blendelf.com/index.html#Source">Source</a> | 
+<a href="http://web.archive.org/web/20120213051639/http://blendelf.com/index.html#Documentation">Documentation</a> | 
+<a href="http://web.archive.org/web/20120213051639/http://blendelf.com/index.html#License">License</a> | 
+<a href="http://web.archive.org/web/20120213051639/http://blendelf.com/index.html#IRC">IRC</a> | 
+<a href="http://web.archive.org/web/20120213051639/http://blendelf.com/index.html#Contact">Contact</a>
+</div>
+
+<div class="topic">Tutorial 2, Configuration file config.txt</div>
+<div class="info">This tutorial builds on the first tutorial, so be sure to do that first! <a href="http://web.archive.org/web/20120213051639/http://blendelf.com/tutorial1.html">[Tutorial 1, BlendELF Basics]</a>
+<br>
+<br>In this tutorial you will learn to use the BlendELF configuration file <b>config.txt</b></div>
+
+
+<div class="topic">Step 1: Creating the config.txt file</div>
+<div class="info">
+First we have to create a file <b>config.txt</b> to our root folder, the same folder where we put <b>level1.pak</b> and <b>init.lua</b> in the previous tutorial. My folder looks like this now:
+<div class="image"><img src="BlendELF,%20Tutorial%202,%20Configuration%20file%20config-Dateien/tutorial2_shot01.jpg" alt="Tutorial 2 Folder"></div>
+</div>
+
+<div class="topic">Step 2: Changing the resolution</div>
+<div class="info">
+The first thing we will be doing with our <b>config.txt</b> file, is to change the resolution. Open up the <b>config.txt</b> file in a pure text editor, like notepad in windows and gedit/kate/vim in linux. Write the following line into the <b>config.txt</b> file:
+</div>
+<div class="codebox">window_size 800 480</div>
+<div class="info">
+Now save the <b>config.txt</b> file and run blendelf (<b>BlendELF.exe</b> on windows and <b>./blendelf</b>
+ in the console for linux). If everything went right, you should see 
+that the resolution of the BlendELF window has changed. If not, then 
+check the console for errors check that you have written the <b>config.txt</b> file correctly.
+</div>
+
+<div class="topic">Step 3: More configuration options for config.txt</div>
+<div class="info">
+Here are the possible options for <b>config.txt</b>:
+<ul>
+<li><b>window_size</b> - consists of two values, the width and the 
+height of the window separated with a space, as in "window_size 800 
+600", default value is 1024 768</li>
+<li><b>fullscreen</b> - consists of one truth value, [TRUE|FALSE], as in
+ "fullscreen TRUE", requires a window size compatible with the users 
+monitor, default value is FALSE</li>
+<li><b>texture_compress</b> - consists of one truth value, [TRUE|FALSE] 
+as in "texture_compress TRUE", TRUE increases rendering speed and 
+reduces texture quality, default value is FALSE</li>
+<li><b>texture_anisotropy</b> - a floating point value between 1.0-16.0,
+ as in "texture_anisotropy 9.0", bigger value enhances texture 
+sharpness, default value is 1.0</li>
+<li><b>shadow_map_size</b> - a value between 1 - maximum texture size 
+your system supports, as in "shadow_map_size 1024", bigger shadow map 
+size enhances shadow quality, default value is 1024</li>
+<li><b>start</b> - A path to a <b>PAK</b> file that is loaded in case a <b>init.lua</b> script file isn't available in the root folder, as in "start level1.pak", default value is game.pak</li>
+<li><b>log</b> - A path to the file where the engine log should be saved</li>
+<li><b>multisamples</b> - The amount of multisampling (anti aliasing), 
+typically a value between 2 and 16 (the higher the value, the more anti 
+aliasing is applied per pixel), max value is dependant on hardware</li>
+</ul>
+And finally here is a sample <b>config.txt</b> file:
+</div>
+<div class="codebox">window_size 1280 720
+fullscreen FALSE
+texture_compress TRUE
+texture_anisotropy 16.0
+shadow_map_size 1024
+start level1.pak
+log elf.log</div>
+<div class="info">
+Thats it for the tutorial! I hope you enjoyed the it, and if you have any comments about the tutorial, please post to the <a href="http://web.archive.org/web/20120213051639/http://forum.blendelf.com/">forums</a>.
+</div>
+
+
+<div class="copyright">Copyright © 2009-2010 Samuel Anjam</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "http://web.archive.org/web/20120213051639/https://ssl." : "http://web.archive.org/web/20120213051639/http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="BlendELF,%20Tutorial%202,%20Configuration%20file%20config-Dateien/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4880379-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>
+<!--
+     FILE ARCHIVED ON 05:16:39 Feb 13, 2012 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 18:27:10 May 11, 2020.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  RedisCDXSource: 167.622
+  captures_list: 1000.786
+  CDXLines.iter: 15.657 (3)
+  LoadShardBlock: 813.176 (3)
+  exclusion.robots: 0.483
+  PetaboxLoader3.resolve: 57.834
+  load_resource: 98.662
+  esindex: 0.016
+  exclusion.robots.policy: 0.466
+  PetaboxLoader3.datanode: 827.083 (4)
+-->

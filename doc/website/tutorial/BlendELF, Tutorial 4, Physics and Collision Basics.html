@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><script src="BlendELF,%20Tutorial%204,%20Physics%20and%20Collision%20Basics-Dateien/analytics.js" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app13.us.archive.org';v.server_ms=417;archive_analytics.send_pageview({});});</script><script type="text/javascript" src="BlendELF,%20Tutorial%204,%20Physics%20and%20Collision%20Basics-Dateien/ait-client-rewrite.js" charset="utf-8"></script>
+<script type="text/javascript">
+WB_wombat_Init("http://web.archive.org/web/", "20120213051649", "blendelf.com:80");
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%204,%20Physics%20and%20Collision%20Basics-Dateien/wbhack.js" charset="utf-8"></script>
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%204,%20Physics%20and%20Collision%20Basics-Dateien/playback.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%204,%20Physics%20and%20Collision%20Basics-Dateien/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%204,%20Physics%20and%20Collision%20Basics-Dateien/iconochive.css">
+<!-- End Wayback Rewrite JS Include -->
+
+<title>BlendELF, Tutorial 4, Physics and Collision Basics</title>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%204,%20Physics%20and%20Collision%20Basics-Dateien/style.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="BlendELF, Compact and powerful 3D Game Engine">
+</head>
+<body><!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<style type="text/css">
+body {
+  margin-top:0 !important;
+  padding-top:0 !important;
+  /*min-width:800px !important;*/
+}
+</style>
+<div id="wm-ipp-base" style="display: block; direction: ltr;" lang="en">
+</div><div id="donato" style="position:relative;width:100%;">
+  <div id="donato-base">
+    <iframe id="donato-if" src="BlendELF,%20Tutorial%204,%20Physics%20and%20Collision%20Basics-Dateien/donate.html" scrolling="no" style="width:100%; height:100%" frameborder="0">
+    </iframe>
+  </div>
+</div><script type="text/javascript">
+__wm.bt(625,27,25,2,"web","http://blendelf.com/tutorial4.html","20120213051649",1996,"/_static/",["/_static/css/banner-styles.css?v=HyR5oymJ","/_static/css/iconochive.css?v=qtvMKcIJ"]);
+</script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+
+<div class="images">
+<img src="BlendELF,%20Tutorial%204,%20Physics%20and%20Collision%20Basics-Dateien/topbanner.jpg" alt="BlendELF is a engine written by me, an IT student at the University of Jyväskylä. I am coding the engine as my portfolio project, as a proof of my skills in 3d graphics and game logics/systems coding. I release this engine under the assumption that it could be useful for other people in making quck prototypes and small games. I reserve the right to halt the development of this engine at will, at any given time.">
+</div>
+
+<div class="links">
+<a href="http://web.archive.org/web/20120213051649/http://blendelf.com/index.html">Home</a> | 
+<a href="http://web.archive.org/web/20120213051649/http://forum.blendelf.com/">Forums</a> | 
+<a href="http://web.archive.org/web/20120213051649/http://blendelf.com/index.html#Demos">Demos</a> | 
+<a href="http://web.archive.org/web/20120213051649/http://blendelf.com/index.html#Features">Features</a> | 
+<a href="http://web.archive.org/web/20120213051649/http://blendelf.com/index.html#Devkit">Get Development Kit</a> | 
+<a href="http://web.archive.org/web/20120213051649/http://blendelf.com/index.html#Source">Source</a> | 
+<a href="http://web.archive.org/web/20120213051649/http://blendelf.com/index.html#Documentation">Documentation</a> | 
+<a href="http://web.archive.org/web/20120213051649/http://blendelf.com/index.html#License">License</a> | 
+<a href="http://web.archive.org/web/20120213051649/http://blendelf.com/index.html#IRC">IRC</a> | 
+<a href="http://web.archive.org/web/20120213051649/http://blendelf.com/index.html#Contact">Contact</a>
+</div>
+
+<div class="topic">Tutorial 4, Physics and Collision Basics</div>
+<div class="info">
+This tutorial builds on the first tutorial, so be sure to do that first! <a href="http://web.archive.org/web/20120213051649/http://blendelf.com/tutorial1.html">[Tutorial 1, BlendELF Basics]</a>
+<br>
+<br>
+In this tutorial you will learn how apply some physics and collision to objects.
+<br>
+<br>
+<b>NOTE:</b> there was a bug in the physics system which I fixed and 
+uploaded new builds of the BlendELF 0.9 Alpha 3 development kit, so if 
+you downloaded the development kit before this tutorial came out 
+(2010.3.13 01:15 GMT), please redownload the development kit.
+</div>
+
+<div class="topic">Step 1, Entity names</div>
+<div class="info">
+Untill now we haven't really accessed other actors in the scene besides 
+the camera. Now we will be accessing some entities so that we can set 
+some physics and collision settings for them.
+<br>
+<br>
+Actors in a scene usually have a name which you can use to refer to 
+them. The image below shows you the names of the actors (in this case, 
+entities) we will be accessing in this tutorial:
+<div class="image">
+<img src="BlendELF,%20Tutorial%204,%20Physics%20and%20Collision%20Basics-Dateien/tutorial4_shot01.txt" alt="Tutorial 4 Entity names">
+</div>
+Why is a sphere named <b>Cube.002</b> you ask? Well, its a long story and completely irrelevant to this tutorial, so for now, just accept that it is a sphere named <b>Cube.002</b>...
+<br>
+<br>
+So we will be accessing two entities, the ground entity named <b>Plane</b> and the sphere entity floating above it named <b>Cube.002</b>.
+</div>
+<div class="topic">Step 2, Collision shapes and mass</div>
+<div class="info">
+Now we will get to the code. Currently your code should look like this:
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+while elf.Run() == true do
+end</div>
+<div class="info">
+First we need get the entities we are going to modify. We can access the
+ entities only after the scene has been loaded, so we put the code lines
+ for that below the <b>elf.LoadScene</b> line. If we try to access the entities before the scene has been loaded, the code will crash because the <b>scn</b> variable (<b>scn</b> variable is set to the current scene when <b>elf.LoadScene</b> is successfully called) has not been set yet and the entities we want simply don't exist even if the <b>scn</b> variable would be set to a previous scene.
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+
+<span class="codered">ent1 = elf.GetEntityByName(scn, "Plane")</span>
+<span class="codered">ent2 = elf.GetEntityByName(scn, "Cube.002")</span>
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+The <b>elf.GetEntityByName</b> takes the scene we want to get an entity 
+from as the first argument and the name of tne entity as the second 
+argument. Now that we have the entities, we can set the physics for 
+them.
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+
+ent1 = elf.GetEntityByName(scn, "Plane")
+ent2 = elf.GetEntityByName(scn, "Cube.002")
+
+<span class="codered">elf.SetActorPhysics(ent1, elf.MESH, 0.0)</span>
+<span class="codered">elf.SetActorPhysics(ent2, elf.SPHERE, 1.0)</span>
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+The first argument <b>elf.SetActorPhysics</b> takes is the actor we want to modify. The second argument is the <b>collision shape</b> we want to set the actor to and the last argument is the mass of the actor.
+<br>
+<br>
+<b>Wait, collision shapes?</b>
+<br>
+<br>
+All actors enabled with physics must have a valid <b>collision shape</b> so that the physics engine can calculate the collisions. A <b>collision shape</b> is basically a shape which encloses the actor. Here is an overview of the available collision shapes:
+<ul>
+<li><b>elf.BOX</b> - a simple box shape
+</li><li><b>elf.SPHERE</b> - a simple sphere shape</li>
+<li><b>elf.MESH</b> - a shape consisting of the polygons of the entity, this works best for static objects</li>
+<li><b>elf.CAPSULE_X</b> - capsule along the X axis</li>
+<li><b>elf.CAPSULE_Y</b> - capsule along the Y axis</li>
+<li><b>elf.CAPSULE_Z</b> - capsule along the Z axis</li>
+<li><b>elf.CONE_X</b> - cone along the X axis</li>
+<li><b>elf.CONE_Y</b> - cone along the Y axis</li>
+<li><b>elf.CONE_Z</b> - cone along the Z axis</li>
+</ul>
+Most of the shape sizes are automatically calculated for you according 
+to the mesh of the entity (assuming that the actor we are enabling 
+physics for is an entity), so you don't have to worry about them. You 
+can however set sizes yourself with <b>elf.SetActorBoundingLengths</b>. The <b>elf.MESH</b>
+ shape doesn't need any calculation because the mesh data for an entity 
+is already loaded into BlendELF and supplied to the physics engine.
+<br>
+<br>
+<b>Okay.. but why are we setting the mass of the "Plane" entity to 0.0?</b>
+<br>
+<br>
+Because we don't want the <b>Plane</b> entity, which acts as our ground,
+ to fall down. In BlendELF, a mass of 0.0 means that the object is 
+static. Thus it only affect other entities, but forces and velocities 
+don't affect it.
+<br>
+<br>
+Try running BlendELF. You should see sphere that falls on the ground and rolls to the darkness. If you did, congratulations!
+</div>
+<div class="topic">Step 3, spicing it up</div>
+<div class="info">
+A falling sphere is a bit boring, so lets spice it up and give it a little starting velocity.
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+
+ent1 = elf.GetEntityByName(scn, "Plane")
+ent2 = elf.GetEntityByName(scn, "Cube.002")
+
+elf.SetActorPhysics(ent1, elf.MESH, 0.0)
+elf.SetActorPhysics(ent2, elf.SPHERE, 1.0)
+<span class="codered">elf.SetActorLinearVelocity(ent2, 0.0, 0.0, 6.0)</span>
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+The <b>elf.SetActorLinearVelocity</b> function takes the actor as the first argument, and the next three arguments are the velocity values for x, y and z axises.
+<br>
+<br>
+Great! Now the sphere bounces a bit before it falls down. Thats it! I 
+hope you enjoyed the tutorial, and if you have any comments about it, 
+please post to the <a href="http://web.archive.org/web/20120213051649/http://forum.blendelf.com/">forums</a>.
+</div>
+
+<div class="copyright">Copyright © 2009-2010 Samuel Anjam</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "http://web.archive.org/web/20120213051649/https://ssl." : "http://web.archive.org/web/20120213051649/http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="BlendELF,%20Tutorial%204,%20Physics%20and%20Collision%20Basics-Dateien/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4880379-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>
+<!--
+     FILE ARCHIVED ON 05:16:49 Feb 13, 2012 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 18:27:08 May 11, 2020.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  LoadShardBlock: 104.1 (3)
+  exclusion.robots: 0.246
+  PetaboxLoader3.resolve: 47.634 (2)
+  load_resource: 64.745
+  RedisCDXSource: 225.86
+  esindex: 0.014
+  exclusion.robots.policy: 0.234
+  captures_list: 345.123
+  PetaboxLoader3.datanode: 83.425 (4)
+  CDXLines.iter: 12.463 (3)
+-->

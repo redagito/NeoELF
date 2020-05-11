@@ -1,0 +1,322 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><script src="BlendELF,%20Tutorial%206,%20GUI-Dateien/analytics.js" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app58.us.archive.org';v.server_ms=528;archive_analytics.send_pageview({});});</script><script type="text/javascript" src="BlendELF,%20Tutorial%206,%20GUI-Dateien/ait-client-rewrite.js" charset="utf-8"></script>
+<script type="text/javascript">
+WB_wombat_Init("http://web.archive.org/web/", "20120430184700", "blendelf.com:80");
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%206,%20GUI-Dateien/wbhack.js" charset="utf-8"></script>
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%206,%20GUI-Dateien/playback.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%206,%20GUI-Dateien/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%206,%20GUI-Dateien/iconochive.css">
+<!-- End Wayback Rewrite JS Include -->
+
+<title>BlendELF, Tutorial 6, GUI</title>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%206,%20GUI-Dateien/style.css">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="description" content="BlendELF, Compact and powerful 3D Game Engine">
+</head>
+<body><!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<style type="text/css">
+body {
+  margin-top:0 !important;
+  padding-top:0 !important;
+  /*min-width:800px !important;*/
+}
+</style>
+<div id="wm-ipp-base" style="display: block; direction: ltr;" lang="en">
+</div><div id="donato" style="position:relative;width:100%;">
+  <div id="donato-base">
+    <iframe id="donato-if" src="BlendELF,%20Tutorial%206,%20GUI-Dateien/donate.html" scrolling="no" style="width:100%; height:100%" frameborder="0">
+    </iframe>
+  </div>
+</div><script type="text/javascript">
+__wm.bt(625,27,25,2,"web","http://blendelf.com/tutorial6.html","20120430184700",1996,"/_static/",["/_static/css/banner-styles.css?v=HyR5oymJ","/_static/css/iconochive.css?v=qtvMKcIJ"]);
+</script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+
+<div class="images">
+<img src="BlendELF,%20Tutorial%206,%20GUI-Dateien/topbanner.jpg" alt="BlendELF is a engine written by me, an IT student at the University of Jyväskylä. I am coding the engine as my portfolio project, as a proof of my skills in 3d graphics and game logics/systems coding. I release this engine under the assumption that it could be useful for other people in making quck prototypes and small games. I reserve the right to halt the development of this engine at will, at any given time.">
+</div>
+
+<div class="links">
+<a href="http://web.archive.org/web/20120430184700/http://blendelf.com/index.html">Home</a> | 
+<a href="http://web.archive.org/web/20120430184700/http://forum.blendelf.com/">Forums</a> | 
+<a href="http://web.archive.org/web/20120430184700/http://blendelf.com/index.html#Demos">Demos</a> | 
+<a href="http://web.archive.org/web/20120430184700/http://blendelf.com/index.html#Features">Features</a> | 
+<a href="http://web.archive.org/web/20120430184700/http://blendelf.com/index.html#Devkit">Get Development Kit</a> | 
+<a href="http://web.archive.org/web/20120430184700/http://blendelf.com/index.html#Source">Source</a> | 
+<a href="http://web.archive.org/web/20120430184700/http://blendelf.com/index.html#Documentation">Documentation</a> | 
+<a href="http://web.archive.org/web/20120430184700/http://blendelf.com/index.html#License">License</a> | 
+<a href="http://web.archive.org/web/20120430184700/http://blendelf.com/index.html#IRC">IRC</a> | 
+<a href="http://web.archive.org/web/20120430184700/http://blendelf.com/index.html#Contact">Contact</a>
+</div>
+
+<div class="topic">Tutorial 6, GUI</div>
+<div class="info">
+This tutorial builds on the first tutorial, so be sure to do that first! <a href="http://web.archive.org/web/20120430184700/http://blendelf.com/tutorial1.html">[Tutorial 1, BlendELF Basics]</a>. This tutorial should give you a basic idea how to use the BlendELF GUI system.
+</div>
+
+<div class="topic">Step 1: Getting the tutorial resources</div>
+<div class="info">
+<a href="http://web.archive.org/web/20120430184700/http://blendelf.com/downloads/tutorial6_resources.zip">[tutorial6_resources.zip]</a> contains the images and the font which we will be using in this tutorial.
+</div>
+
+<div class="topic">Step 2: Extracting the tutorials resources</div>
+<div class="info">
+The tutorial resource package contains a folder called <b>resources</b>. Copy and paste that folder to the folder where you have your BlendELF Developmet Kit.
+</div>
+
+<div class="topic">Step 3: Setting up init.lua</div>
+<div class="info">
+For this tutorials base <b>init.lua</b>, we will use just a simple 
+script that creates a gui and run the engine. We don't need a level in 
+this tutorial, so we don't load a one.
+</div>
+<div class="codebox">gui = elf.CreateGui()
+elf.SetGui(gui)
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+We create a regular GUI with <b>elf.CreateGui()</b> and set it as the current GUI with <b>elf.SetGui()</b>. Always remember to set the gui which you create if you want to use it.
+</div>
+
+<div class="topic">Step 4: Adding a picture</div>
+<div class="info">
+First, we will create just a picture that does nothing. Lets use the BlendELF logo for that!
+</div>
+<div class="codebox">gui = elf.CreateGui()
+elf.SetGui(gui)
+
+-- create the elf logo
+elflogotex = elf.CreateTextureFromFile("resources/elf.png")
+
+pic = elf.CreatePicture("ElfLogo")
+elf.SetPictureTexture(pic, elflogotex)
+elf.SetGuiObjectPosition(pic, elf.GetWindowWidth()-elf.GetGuiObjectSize(pic).x, 0)
+elf.AddGuiObject(gui, pic)
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+If you are wondering about the line <b>-- create elf logo</b>, it is just a comment line for documentation purposes. It doesn't get executed.
+<br>
+<br>
+First we load a texture for the picture with <b>elf.CreateTextureFromFile</b>.
+ Most GUI elements use textures, so you'll be using this function quite 
+often. Next we create the picture and set its texture. Then we set the 
+picures position with <b>elf.SetGuiObjectPosition</b> to the upper right
+ corner of the sceen. The Set/GetGuiObject* functions can be called for 
+any GUI object (label/picture/button/textfield/etc...).
+<br>
+<br>
+You might wonder what are we doing with the <b>elf.GetGuiObjectSize(pic).x</b>
+ part. We are getting the GUI object size, which is a vector of two 
+elements, x (width) and y (height). Then we get the .x element straight 
+away. Another way would be to store the size to some variable, like 
+this: <b>size = elf.GetGuiObjectSize(pic)</b> and then access the width with <b>size.x</b>, like this: <b>elf.SetGuiObjectPosition(pic, elf.GetWindowWidth()-size.x, 0)</b>, but since we aren't going to use the size anywhere else, we just accessed it straight away.
+<br>
+<br>
+Oh, and just to be sure, the <b>elf.SetGuiObjectPosition</b> takes the 
+gui object as the first argument, the x position as the second, and the y
+ position as the last. The x and y position are counted from the upper 
+left corner of the gui element.
+<br>
+<br>
+The last thing we do, is adding the picture to the gui with <b>elf.AddGuiObject</b>. <b>NOTE: REMEMBER TO ADD THE OBJECT TO A GUI.</b> Otherwise it won't display.
+<br>
+<br>
+If everything went well, you should be seeing the BlendELF logo. If not, check your code and the console/elf.log for errors.
+</div>
+
+<div class="topic">Step 5: Adding a label</div>
+<div class="info">
+Now we will add a label that displays the FPS to the GUI.
+</div>
+<div class="codebox">gui = elf.CreateGui()
+elf.SetGui(gui)
+
+-- create the elf logo
+elflogotex = elf.CreateTextureFromFile("resources/elf.png")
+
+pic = elf.CreatePicture("ElfLogo")
+elf.SetPictureTexture(pic, elflogotex)
+elf.SetGuiObjectPosition(pic, elf.GetWindowWidth()-elf.GetGuiObjectSize(pic).x, 0)
+elf.AddGuiObject(gui, pic)
+
+<span class="codered">-- add a label</span>
+<span class="codered">font = elf.CreateFontFromFile("resources/freesans.ttf", 12)</span>
+
+<span class="codered">lab = elf.CreateLabel("FPSLabel")</span>
+<span class="codered">elf.SetLabelFont(lab, font)</span>
+<span class="codered">elf.SetLabelText(lab, "FPS: 0")</span>
+<span class="codered">elf.SetGuiObjectPosition(lab, 10, 10)</span>
+
+<span class="codered">elf.AddGuiObject(gui, lab)</span>
+
+while elf.Run() == true do
+<span class="codered">    elf.SetLabelText(lab, "FPS: " .. elf.GetFps())</span>
+end</div>
+<div class="info">
+First we load the font we are going to use for the label. Only True Type
+ font's are supported at the moment. The first parameter <b>elf.CreateFontFromFile</b> is the file path to the font, and the second is the preferred size of the font.
+<br>
+<br>
+Next we create our label, set the font, set the text and set its 
+position. Then we add the label to the gui. The last thing we do, is 
+updating the text of the label on each frame in the while loop.
+</div>
+
+<div class="topic">Step 6: Some more GUI elements.</div>
+<div class="info">
+Now that you have the basic hang of GUI elements, I'll show you some 
+snippets of code for setting up more GUI elements. The codes are not 
+full <b>init.lua</b> scripts, but just small parts of the code which you can add/remove/write yourself.
+<br>
+<br>
+First some buttons.
+</div>
+<div class="codebox">-- add exit button
+exbtexoff = elf.CreateTextureFromFile("resources/dsbexitoff.png")
+exbtexover = elf.CreateTextureFromFile("resources/dsbexitover.png")
+exbtexon = elf.CreateTextureFromFile("resources/dsbexiton.png")
+
+exb = elf.CreateButton("ExitButton")
+elf.SetButtonOffTexture(exb, exbtexoff)
+elf.SetButtonOverTexture(exb, exbtexover)
+elf.SetButtonOnTexture(exb, exbtexon)
+elf.SetGuiObjectPosition(exb, 10, 30)
+
+exscr = elf.CreateScript()
+elf.SetScriptText(exscr, "elf.Quit()")
+elf.SetGuiObjectScript(exb, exscr)
+
+elf.AddGuiObject(gui, exb)</div>
+<div class="info">
+Buttons have three textures. One for when the mouse is <b>off</b> the button, one for when the mouse is <b>on</b> the button and one for when the mouse is <b>clicking</b> or <b>on</b> the button. We load all of them, create the button, set the textures and set the position of the texture.
+<br>
+<br>
+Now we would like the button to do something, so we create a script for 
+it. Then we set the script text to "elf.Quit()", the quit function in 
+the API. You could also load and external script with <b>elf.CreateScriptFromFile</b> if you wanted. We attach the script to the button and add the button to the GUI.
+
+<br>
+<br>
+Next we move to check boxes
+</div>
+<div class="codebox">-- create a check box
+cbtexoff = elf.CreateTextureFromFile("resources/dscboff.png")
+cbtexon = elf.CreateTextureFromFile("resources/dscbon.png")
+
+cb = elf.CreateCheckBox("MyCheckBox")
+elf.SetCheckBoxOffTexture(cb, cbtexoff)
+elf.SetCheckBoxOnTexture(cb, cbtexon)
+elf.SetGuiObjectPosition(cb, 52, 30)
+
+elf.AddGuiObject(gui, cb)</div>
+<div class="info">
+The check box only has on and off textures. We load the textures, create
+ the check box, set the textures, set the position and add the check box
+ to the GUI.
+<br>
+<br>
+Lastly we study some text fields.
+</div>
+<div class="codebox">-- add text field
+font = elf.CreateFontFromFile("resources/freesans.ttf", 12)
+txbxtex = elf.CreateTextureFromFile("resources/dstxbx.png")
+
+txf = elf.CreateTextField("MyTextField")
+elf.SetTextFieldFont(txf, font)
+elf.SetTextFieldTexture(txf, txbxtex)
+elf.SetTextFieldText(txf, "Some text...")
+elf.SetTextFieldOffset(txf, 4, 1)
+elf.SetGuiObjectPosition(txf, 82, 30)
+
+elf.AddGuiObject(gui, txf)</div>
+<div class="info">
+First we load the font and the background texture for the text field. 
+Then we create the text field, set its font, set its texture and text.
+<br>
+<br>
+Next we set the text field offset. Whats that? The text field offset is 
+the offset the text in the text field will be displayed against the text
+ field background. Most likely, the text won't be aligned in the center 
+of the background by default, so with the <b>elf.SetTextFieldOffset</b> function, you can adjust the offset yourself.
+<br>
+<br>
+Lastly we set the position of the text field and add it to our GUI.
+</div>
+
+<div class="topic">Step 7: GUI element scripts and events</div>
+<div class="info">
+When we created the button in an earlier step, you might have noticed 
+that we set a script for it. You can assign a script for any GUI 
+element, and the script will be called if the gui element invokes GUI 
+events. In the buttons case, the script gets called each time the button
+ is clicked. But this is not the case with some other GUI elements.
+<br>
+<br>
+Text fields invoke the script each time they are activated, a character 
+is inputted to them, and when they are deactivated. How to find out 
+which event is going on? The current event of a gui object can be 
+accessed with <b>elf.GetGuiObjectEvent</b>. For example, if a text field was clicked, and it became active, you would check for it with <b>if elf.GetGuiObjectEvent(me) == elf.GAIN_FOCUS then ... end</b> in the text fields script.
+<br>
+<br>
+Here is a list of event types for different GUI element:
+<br>
+<br>
+Buttons - <b>elf.CLICKED</b>
+<br>
+Text Fields - <b>elf.GAIN_FOCUS</b>, <b>elf.LOSE_FOCUS</b>, <b>elf.CHAR_INPUT</b>
+<br>
+Sliders - <b>elf.VALUE_CHANGED</b>
+<br>
+Text Lists - <b>elf.SELECTION_CHANGED</b>
+<br>
+Check boxes - <b>elf.STATE_CHANGED</b>
+<br>
+<br>
+Thats it! I hope you enjoyed the tutorial, and if you have any comments about it, please post to the <a href="http://web.archive.org/web/20120430184700/http://forum.blendelf.com/">forums</a>.
+</div>
+
+<div class="copyright">Copyright © 2009-2010 Samuel Anjam</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "http://web.archive.org/web/20120430184700/https://ssl." : "http://web.archive.org/web/20120430184700/http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="BlendELF,%20Tutorial%206,%20GUI-Dateien/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4880379-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>
+<!--
+     FILE ARCHIVED ON 18:47:00 Apr 30, 2012 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 18:27:10 May 11, 2020.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  PetaboxLoader3.datanode: 219.147 (4)
+  CDXLines.iter: 14.054 (3)
+  exclusion.robots.policy: 0.323
+  PetaboxLoader3.resolve: 76.635
+  exclusion.robots: 0.337
+  captures_list: 379.704
+  LoadShardBlock: 182.099 (3)
+  esindex: 0.018
+  RedisCDXSource: 179.631
+  load_resource: 134.364
+-->

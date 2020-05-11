@@ -15,7 +15,7 @@ struct elfConfig
     float textureAnisotropy = 1.f;
     int shadowMapSize = 1024;
 
-    // TODO What is this?
+    // Name of the .pak file to load on startup
     char* start = nullptr;
 
     char* logPath = nullptr;
@@ -26,39 +26,24 @@ struct elfConfig
 };
 
 elfConfig* elfCreateConfig();
-
 void elfDestroyConfig(void* data);
 
 elfConfig* elfReadConfig(const char* filePath);
 
 void elfSetConfigWindowSize(elfConfig* config, int width, int height);
-
 void elfSetConfigMultisamples(elfConfig* config, int multisamples);
-
 void elfSetConfigFullscreen(elfConfig* config, bool fullscreen);
-
 void elfSetConfigTextureCompress(elfConfig* config, bool textureCompress);
-
 void elfSetConfigTextureAnisotropy(elfConfig* config, float textureAnisotropy);
-
 void elfSetConfigShadowMapSize(elfConfig* config, int shadowMapSize);
-
 void elfSetConfigStart(elfConfig* config, const char* start);
-
 void elfSetConfigLogPath(elfConfig* config, const char* logPath);
 
 elfVec2i elfGetConfigWindowSize(elfConfig* config);
-
 int elfGetConfigMultisamples(elfConfig* config);
-
 bool elfGetConfigFullscreen(elfConfig* config);
-
 bool elfGetConfigTextureCompress(elfConfig* config);
-
 float elfGetConfigTextureAnisotropy(elfConfig* config);
-
 int elfGetConfigShadowMapSize(elfConfig* config);
-
 const char* elfGetConfigStart(elfConfig* config);
-
 const char* elfGetConfigLogPath(elfConfig* config);

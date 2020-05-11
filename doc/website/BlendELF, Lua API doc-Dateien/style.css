@@ -1,0 +1,170 @@
+body {
+	background-color: #000;
+	color: #bbbbbb;
+	font-family: sans-serif;
+	text-align: center;
+	line-height: 125%;
+}
+
+a:link {color: #fff; text-decoration: underline; }
+a:active {color: #fff; text-decoration: underline; }
+a:visited {color: #fff; text-decoration: underline; }
+a:hover {color: #fff; text-decoration: none; }
+
+img
+{
+	border-style: none;
+}
+
+.links
+{
+	margin: 0 auto 1em auto;
+	font-size: 85%;
+	width: 800px;
+	text-align: center;
+}
+
+.topic
+{
+	display: block;
+	margin: 0 auto;
+	width: 800px;
+	font-size: 125%;
+	font-weight: bold;
+	border-style: solid;
+	border-width: 0 0 1px 0;
+	text-align: left;
+}
+
+.subtopic
+{
+	display: block;
+	margin: 0 auto;
+	width: 800px;
+	font-size: 100%;
+	border-style: solid;
+	border-width: 0 0 1px 0;
+	text-align: left;
+}
+
+.info
+{
+	margin: 1em auto;
+	width: 800px;
+	font-size: 85%;
+	text-align: left;
+}
+
+.image
+{
+	margin: 1em auto;
+	width: 800px;
+	font-size: 85%;
+	text-align: left;
+}
+
+.codebox
+{
+	font-family: monospace;
+	background-color: #333;
+	color: #fff;
+	line-height: 115%;
+	border: 1px solid #fff;
+	margin: 0em auto;
+	padding: 2px;
+	width: 796px;
+	font-size: 100%;
+	text-align: left;
+	white-space: pre;
+}
+
+.codered
+{
+	color: #f44;
+}
+
+.apitopic
+{
+	display: block;
+	background-color: #444;
+	padding: 2px 0 2px 5px;
+	color: #ccc;
+	margin: 1em auto;
+	width: 795px;
+	font-size: 125%;
+	font-weight: bold;
+	text-align: left;
+}
+
+.apiinfo
+{
+	margin: 1.5em auto;
+	width: 800px;
+	font-size: 85%;
+	text-align: left;
+}
+
+.apidefine
+{
+	display: block;
+	background-color: #222;
+	color: #999;
+	margin: 0 auto;
+	border-width: 0 0 1px 0;
+	border-style: solid;
+	border-color: #444;
+	width: 800px;
+	text-align: left;
+}
+
+.apifunc
+{
+	display: block;
+	background-color: #222;
+	color: #bbb;
+	margin: 0 auto;
+	border-width: 0 0 1px 0;
+	border-style: solid;
+	border-color: #444;
+	width: 800px;
+	text-align: left;
+}
+
+.apiobjtype
+{
+	color: #f42;
+}
+
+.apikeytype
+{
+	color: #47f;
+}
+
+.copyright
+{
+	margin: 2em auto;
+	font-size: 70%;
+}
+
+
+/*
+     FILE ARCHIVED ON 23:05:01 Feb 07, 2011 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 18:29:00 May 11, 2020.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  RedisCDXSource: 618.959
+  captures_list: 985.039
+  CDXLines.iter: 13.008 (3)
+  LoadShardBlock: 349.284 (3)
+  exclusion.robots: 0.217
+  PetaboxLoader3.resolve: 121.712 (2)
+  load_resource: 153.533
+  esindex: 0.012
+  exclusion.robots.policy: 0.204
+  PetaboxLoader3.datanode: 321.846 (4)
+*/

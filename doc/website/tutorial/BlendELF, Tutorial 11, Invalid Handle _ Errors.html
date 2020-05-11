@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><script src="BlendELF,%20Tutorial%2011,%20Invalid%20Handle%20_%20Errors-Dateien/analytics.js" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app12.us.archive.org';v.server_ms=427;archive_analytics.send_pageview({});});</script><script type="text/javascript" src="BlendELF,%20Tutorial%2011,%20Invalid%20Handle%20_%20Errors-Dateien/ait-client-rewrite.js" charset="utf-8"></script>
+<script type="text/javascript">
+WB_wombat_Init("http://web.archive.org/web/", "20120213051634", "blendelf.com:80");
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%2011,%20Invalid%20Handle%20_%20Errors-Dateien/wbhack.js" charset="utf-8"></script>
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%2011,%20Invalid%20Handle%20_%20Errors-Dateien/playback.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%2011,%20Invalid%20Handle%20_%20Errors-Dateien/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%2011,%20Invalid%20Handle%20_%20Errors-Dateien/iconochive.css">
+<!-- End Wayback Rewrite JS Include -->
+
+<title>BlendELF, Tutorial 11, Invalid Handle / Errors</title>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%2011,%20Invalid%20Handle%20_%20Errors-Dateien/style.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="BlendELF, Compact and powerful 3D Game Engine">
+</head>
+<body><!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<style type="text/css">
+body {
+  margin-top:0 !important;
+  padding-top:0 !important;
+  /*min-width:800px !important;*/
+}
+</style>
+<div id="wm-ipp-base" style="display: block; direction: ltr;" lang="en">
+</div><div id="donato" style="position:relative;width:100%;">
+  <div id="donato-base">
+    <iframe id="donato-if" src="BlendELF,%20Tutorial%2011,%20Invalid%20Handle%20_%20Errors-Dateien/donate.html" scrolling="no" style="width:100%; height:100%" frameborder="0">
+    </iframe>
+  </div>
+</div><script type="text/javascript">
+__wm.bt(625,27,25,2,"web","http://blendelf.com/tutorial11.html","20120213051634",1996,"/_static/",["/_static/css/banner-styles.css?v=HyR5oymJ","/_static/css/iconochive.css?v=qtvMKcIJ"]);
+</script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+
+<div class="images">
+<img src="BlendELF,%20Tutorial%2011,%20Invalid%20Handle%20_%20Errors-Dateien/topbanner.jpg" alt="BlendELF is a engine written by me, an IT student at the University of Jyväskylä. I am coding the engine as my portfolio project, as a proof of my skills in 3d graphics and game logics/systems coding. I release this engine under the assumption that it could be useful for other people in making quck prototypes and small games. I reserve the right to halt the development of this engine at will, at any given time.">
+</div>
+
+<div class="links">
+<a href="http://web.archive.org/web/20120213051634/http://blendelf.com/index.html">Home</a> | 
+<a href="http://web.archive.org/web/20120213051634/http://forum.blendelf.com/">Forums</a> | 
+<a href="http://web.archive.org/web/20120213051634/http://blendelf.com/index.html#Demos">Demos</a> | 
+<a href="http://web.archive.org/web/20120213051634/http://blendelf.com/index.html#Features">Features</a> | 
+<a href="http://web.archive.org/web/20120213051634/http://blendelf.com/index.html#Devkit">Get Development Kit</a> | 
+<a href="http://web.archive.org/web/20120213051634/http://blendelf.com/index.html#Source">Source</a> | 
+<a href="http://web.archive.org/web/20120213051634/http://blendelf.com/index.html#Documentation">Documentation</a> | 
+<a href="http://web.archive.org/web/20120213051634/http://blendelf.com/index.html#License">License</a> | 
+<a href="http://web.archive.org/web/20120213051634/http://blendelf.com/index.html#IRC">IRC</a> | 
+<a href="http://web.archive.org/web/20120213051634/http://blendelf.com/index.html#Contact">Contact</a>
+</div>
+
+<div class="topic">Tutorial 11, Invalid Handle / Errors</div>
+<div class="info">
+This tutorial builds on the first tutorial, so be sure to do that first! <a href="http://web.archive.org/web/20120213051634/http://blendelf.com/tutorial1.html">[Tutorial 1, BlendELF Basics]</a>
+<br>
+<br>
+In this tutorial you will learn how to deal with errors.</div>
+
+
+<div class="topic">Step 1: Invalid handle error</div>
+<div class="info">
+Probably the most common error that you will encounter with BlendELF is 
+the "invalid handle" error. This happens when you are passing an invalid
+ handle to a function. One example would be, if you are trying to load a
+ scene with <b>elf.LoadScene()</b> and passed an invalid path to it, in 
+which case the load would fail. The function would still return an 
+handle to you, but the handle would be empty. You can check if the 
+handle contains something with elf.IsObject(). Here is an example:
+</div>
+<div class="codebox">scn = elf.LoadScene("levels/level1.pak")
+if elf.IsObject(scn) == false then
+    print("error: could not load level!")
+end
+</div>
+<div class="info">
+Also the invalid handle error happens when you are passing an handle of 
+the wrong type to an function. For example, you can't pass an handle of 
+type <b>light</b> to <b>elf.AddCameraToScene</b>. This kind of errors are less common, but you can still check for an object type with <b>elf.GetObjectType()</b>. The types are listed in the <a href="http://web.archive.org/web/20120213051634/http://blendelf.com/api_doc.html">API DOC</a>.
+</div>
+
+<div class="topic">Step 2: Parameter errors</div>
+<div class="info">
+Sometimes you may run into some parameter errors. A BlendELF function may report that it was expecing an <b>handle</b> type argument, but it got <b>nil</b>
+ instead, or some other type. Due to the scripting bindings being 
+automatically generated by SWIG, BlendELF doesn't yet report the line 
+where the error happened for these kind of errors (the date when this 
+part of the tutorial was written is Jun 23 2010, things may have changed
+ afterwards). This is being worked on. For now you will just have to 
+check the code yourself. Fortunately the execution of the script ends 
+where the error has happened, so it is much easier to debug an error 
+like this.
+<br>
+<br>
+Thats it! I hope you enjoyed the tutorial, and if you have any comments about it, please post to the <a href="http://web.archive.org/web/20120213051634/http://forum.blendelf.com/">forums</a>.
+</div>
+
+<div class="copyright">Copyright © 2009-2010 Samuel Anjam</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "http://web.archive.org/web/20120213051634/https://ssl." : "http://web.archive.org/web/20120213051634/http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="BlendELF,%20Tutorial%2011,%20Invalid%20Handle%20_%20Errors-Dateien/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4880379-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>
+<!--
+     FILE ARCHIVED ON 05:16:34 Feb 13, 2012 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 18:27:13 May 11, 2020.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  PetaboxLoader3.resolve: 36.378
+  CDXLines.iter: 13.379 (3)
+  captures_list: 328.349
+  esindex: 0.008
+  exclusion.robots: 0.318
+  RedisCDXSource: 210.505
+  exclusion.robots.policy: 0.304
+  LoadShardBlock: 101.759 (3)
+  load_resource: 88.89
+  PetaboxLoader3.datanode: 82.294 (4)
+-->

@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><script src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/analytics.js" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app12.us.archive.org';v.server_ms=612;archive_analytics.send_pageview({});});</script><script type="text/javascript" src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/ait-client-rewrite.js" charset="utf-8"></script>
+<script type="text/javascript">
+WB_wombat_Init("http://web.archive.org/web/", "20120101195443", "blendelf.com:80");
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/wbhack.js" charset="utf-8"></script>
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/playback.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/iconochive.css">
+<!-- End Wayback Rewrite JS Include -->
+
+<title>BlendELF, Tutorial 5, Blender Exporter</title>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/style.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="BlendELF, Compact and powerful 3D Game Engine">
+</head>
+<body><!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<style type="text/css">
+body {
+  margin-top:0 !important;
+  padding-top:0 !important;
+  /*min-width:800px !important;*/
+}
+</style>
+<div id="wm-ipp-base" style="display: block; direction: ltr;" lang="en">
+</div><div id="donato" style="position:relative;width:100%;">
+  <div id="donato-base">
+    <iframe id="donato-if" src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/donate.html" scrolling="no" style="width:100%; height:100%" frameborder="0">
+    </iframe>
+  </div>
+</div><script type="text/javascript">
+__wm.bt(625,27,25,2,"web","http://blendelf.com/tutorial5.html","20120101195443",1996,"/_static/",["/_static/css/banner-styles.css?v=HyR5oymJ","/_static/css/iconochive.css?v=qtvMKcIJ"]);
+</script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+
+<div class="images">
+<img src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/topbanner.jpg" alt="BlendELF is a engine written by me, an IT student at the University of Jyväskylä. I am coding the engine as my portfolio project, as a proof of my skills in 3d graphics and game logics/systems coding. I release this engine under the assumption that it could be useful for other people in making quck prototypes and small games. I reserve the right to halt the development of this engine at will, at any given time.">
+</div>
+
+<div class="links">
+<a href="http://web.archive.org/web/20120101195443/http://blendelf.com/index.html">Home</a> | 
+<a href="http://web.archive.org/web/20120101195443/http://forum.blendelf.com/">Forums</a> | 
+<a href="http://web.archive.org/web/20120101195443/http://blendelf.com/index.html#Demos">Demos</a> | 
+<a href="http://web.archive.org/web/20120101195443/http://blendelf.com/index.html#Features">Features</a> | 
+<a href="http://web.archive.org/web/20120101195443/http://blendelf.com/index.html#Devkit">Get Development Kit</a> | 
+<a href="http://web.archive.org/web/20120101195443/http://blendelf.com/index.html#Source">Source</a> | 
+<a href="http://web.archive.org/web/20120101195443/http://blendelf.com/index.html#Documentation">Documentation</a> | 
+<a href="http://web.archive.org/web/20120101195443/http://blendelf.com/index.html#License">License</a> | 
+<a href="http://web.archive.org/web/20120101195443/http://blendelf.com/index.html#IRC">IRC</a> | 
+<a href="http://web.archive.org/web/20120101195443/http://blendelf.com/index.html#Contact">Contact</a>
+</div>
+
+<div class="topic">Tutorial 5, Blender Exporter</div>
+<div class="info">
+In this tutorial you will learn to export scenes from blender to BlendELF <b>PAK</b>
+ format. I will not be showing how to build a scene in blender, because 
+there are a lot of better tutorials for that online (google!). I assume 
+that you somewhat know how to use blender already. Also note that we 
+will be using blender <b>2.49</b> for this tutorial. However, the 
+blender 2.5 exporter is available in the same folder as the 2.49 and 
+works as an add blender 2.5 add on. Google for how to install and use 
+blender 2.5 add ons.
+</div>
+
+<div class="topic">Step 1, Getting the tutorial resources</div>
+<div class="info">
+I assume you have already gotten yourself the BlendELF Development Kit, but if not, then head to <a href="http://web.archive.org/web/20120101195443/http://blendelf.com/">http://blendelf.com</a> and get yourself a one! The BlendELF Development Kit contains the blender export script we will be using in this tutorial.
+</div>
+
+<div class="topic">Step 2, Finding the export script</div>
+<div class="info">
+The export script is located in the <b>tools</b> folder of the development kit. The file name of the export script is <b>blender_pak_exporter_fast.py</b>.
+ The more experienced blender users might notice that you can just drop 
+the export script to the scripts folder of blender and it will show up 
+in the export menu, but for the beginners, I will just show how to open 
+up the script in blender and run it, since sometimes it is a pain to 
+find blenders scripts folder on your OS.
+</div>
+
+<div class="topic">Step 3, Running the script in Blender</div>
+<div class="info">
+First we need to open up blenders text editor. You can find it in the Window Types menu:
+<div class="image">
+<img src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/tutorial5_shot01.jpg" alt="Window Types menu">
+</div>
+Next we need to open up the <b>blender_pak_exporter_fast.py</b> export script in the text editor:
+<div class="image">
+<img src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/tutorial5_shot02.jpg" alt="Opening the script">
+</div>
+Now we can run the script.
+<div class="image">
+<img src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/tutorial5_shot03.jpg" alt="Running the script">
+</div>
+The script will open up a file browser for you so that you can save the <b>PAK</b> file to the preferred location. <b>NOTE:</b> The default file extension will be <b>.blend</b> in the file dialog, but you will have to rename it to <b>.pak</b> for blendelf to detect the file when you open it with <b>elf.LoadScene</b>.
+<div class="image">
+<img src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/tutorial5_shot04.jpg" alt="Saving the file">
+</div>
+Also bear in mind that if you don't have atleast one camera in the 
+scene, the you will have to create the camera yourself in a script. 
+Othervise BlendELF won't render anything. So just to save you some 
+effort, go ahead and create camera to your scene if you don't already 
+have a one in it, and BlendELF will automatically assign the first 
+camera it finds in the scene to the active camera.
+</div>
+
+<div class="topic">Step 4, Defining physics and collision for BlendELF</div>
+<div class="info">
+The blender 2.49 python API doesn't allow access to the physics and 
+collision setting of an object, so we have to specify them with 
+properties.
+<br>
+<br>
+First you have to find the Logic buttons in blender:
+<div class="image">
+<img src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/tutorial5_shot05.jpg" alt="Logic buttons">
+</div>
+You see the big <b>Add Property</b> button there? Needless to say, you 
+can add an property to the currently selected object with it. Lets set 
+the shape for our object with it.
+<div class="image">
+<img src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/tutorial5_shot06.jpg" alt="Adding shape">
+</div>
+We just defined a poperty of type <b>String</b> with the name <b>shape</b> and value <b>BOX</b>. The exporter will detect this and set the objects shape to <b>elf.BOX</b>. Since we didn't define the <b>mass</b> property, our object will be static because the default mass is 0.0. Here are the available properties and values for them:
+<ul>
+<li><b>shape</b> - type <b>String</b>, available values [BOX|SPHERE|MESH|CAPSULE_X|CAPSULE_Y|CAPSULE_Z|CONE_X|CONE_Y|CONE_Z]</li>
+<li><b>mass</b> - type <b>Float</b>, a positive floating point value</li>
+<li><b>lin_damp</b> - type <b>Float</b>, a positive floating point value</li>
+<li><b>ang_damp</b> - type <b>Float</b>, a positive floating point value</li>
+</ul>
+</div>
+
+<div class="topic">Step 5, Using normal and displacement maps</div>
+<div class="info">
+Here is a self descriptive picture of the texture settings you have to enable for normal mapping and displacement mapping:
+<div class="image">
+<img src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/tutorial5_shot07.jpg" alt="Normal and Displacement maps">
+</div>
+Also if you want to use a specular map, enable the <b>Spec</b> button 
+for it. Note that all specularity will go through the specular map in 
+BlendELF and not like in blender which combines the normal specularity 
+and the specular map by default.
+</div>
+
+<div class="topic">Step 6, Defining scripts for objects for BlendELF</div>
+<div class="info">
+First we have to create script in blender. Go to the text editor and click on Text -&gt; New. <b>NOTE: ALL SCRIPTS MUST END WITH ".lua".</b> Othervise the exporter won't recognize it as a lua script.
+<div class="image">
+<img src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/tutorial5_shot08.jpg" alt="Creating a new script">
+</div>
+Then we have to name the script, lets name it <b>myscript.lua</b>
+<div class="image">
+<img src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/tutorial5_shot09.jpg" alt="Naming a script">
+</div>
+Next we just have to create a property called <b>script</b> of the type <b>String</b> and set its value to the name of the script.
+<div class="image">
+<img src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/tutorial5_shot10.jpg" alt="Creating the script property">
+</div>
+Thats all about scripts. If you did it right, the script will be 
+exported to BlendELF, and it will run on each frame for the specified 
+node (camera, entity, light) ;).
+</div>
+
+<div class="topic">Step 7, Armatures</div>
+<div class="info">
+When exporting armature from blender to BlendELF, there is only one 
+thing you have to take into account. The position and the orientation of
+ the armature <b>MUST BE EXACTLY THE SAME</b> with the entity the armature is deforming. Otherwise the animations won't look right.
+<br>
+<br>
+Thats it! I hope you enjoyed the tutorial, and if you have any comments about it, please post to the <a href="http://web.archive.org/web/20120101195443/http://forum.blendelf.com/">forums</a>.
+</div>
+
+<div class="copyright">Copyright © 2009-2010 Samuel Anjam</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "http://web.archive.org/web/20120101195443/https://ssl." : "http://web.archive.org/web/20120101195443/http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="BlendELF,%20Tutorial%205,%20Blender%20Exporter-Dateien/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4880379-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>
+<!--
+     FILE ARCHIVED ON 19:54:43 Jan 01, 2012 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 18:27:09 May 11, 2020.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  PetaboxLoader3.resolve: 48.04
+  CDXLines.iter: 11.162 (3)
+  captures_list: 398.902
+  esindex: 0.012
+  exclusion.robots: 0.434
+  RedisCDXSource: 346.762
+  exclusion.robots.policy: 0.418
+  LoadShardBlock: 38.142 (3)
+  load_resource: 202.81
+  PetaboxLoader3.datanode: 136.251 (4)
+-->

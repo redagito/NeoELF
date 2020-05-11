@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><script src="BlendELF,%20Tutorial%208,%20C++%20SDK-Dateien/analytics.js" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app56.us.archive.org';v.server_ms=1724;archive_analytics.send_pageview({});});</script><script type="text/javascript" src="BlendELF,%20Tutorial%208,%20C++%20SDK-Dateien/ait-client-rewrite.js" charset="utf-8"></script>
+<script type="text/javascript">
+WB_wombat_Init("http://web.archive.org/web/", "20111112193944", "www.blendelf.com:80");
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%208,%20C++%20SDK-Dateien/wbhack.js" charset="utf-8"></script>
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%208,%20C++%20SDK-Dateien/playback.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%208,%20C++%20SDK-Dateien/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%208,%20C++%20SDK-Dateien/iconochive.css">
+<!-- End Wayback Rewrite JS Include -->
+
+<title>BlendELF, Tutorial 8, C++ SDK</title>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%208,%20C++%20SDK-Dateien/style.css">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="description" content="BlendELF, Compact and powerful 3D Game Engine">
+</head>
+<body><!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<style type="text/css">
+body {
+  margin-top:0 !important;
+  padding-top:0 !important;
+  /*min-width:800px !important;*/
+}
+</style>
+<div id="wm-ipp-base" style="display: block; direction: ltr;" lang="en">
+</div><div id="donato" style="position:relative;width:100%;">
+  <div id="donato-base">
+    <iframe id="donato-if" src="BlendELF,%20Tutorial%208,%20C++%20SDK-Dateien/donate.html" scrolling="no" style="width:100%; height:100%" frameborder="0">
+    </iframe>
+  </div>
+</div><script type="text/javascript">
+__wm.bt(625,27,25,2,"web","http://www.blendelf.com/tutorial8.html","20111112193944",1996,"/_static/",["/_static/css/banner-styles.css?v=HyR5oymJ","/_static/css/iconochive.css?v=qtvMKcIJ"]);
+</script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+
+<div class="images">
+<img src="BlendELF,%20Tutorial%208,%20C++%20SDK-Dateien/topbanner.jpg" alt="BlendELF is a engine written by me, an IT student at the University of Jyväskylä. I am coding the engine as my portfolio project, as a proof of my skills in 3d graphics and game logics/systems coding. I release this engine under the assumption that it could be useful for other people in making quck prototypes and small games. I reserve the right to halt the development of this engine at will, at any given time.">
+</div>
+
+<div class="links">
+<a href="http://web.archive.org/web/20111112193944/http://www.blendelf.com/index.html">Home</a> | 
+<a href="http://web.archive.org/web/20111112193944/http://forum.blendelf.com/">Forums</a> | 
+<a href="http://web.archive.org/web/20111112193944/http://www.blendelf.com/index.html#Demos">Demos</a> | 
+<a href="http://web.archive.org/web/20111112193944/http://www.blendelf.com/index.html#Features">Features</a> | 
+<a href="http://web.archive.org/web/20111112193944/http://www.blendelf.com/index.html#Devkit">Get Development Kit</a> | 
+<a href="http://web.archive.org/web/20111112193944/http://www.blendelf.com/index.html#Source">Source</a> | 
+<a href="http://web.archive.org/web/20111112193944/http://www.blendelf.com/index.html#Documentation">Documentation</a> | 
+<a href="http://web.archive.org/web/20111112193944/http://www.blendelf.com/index.html#License">License</a> | 
+<a href="http://web.archive.org/web/20111112193944/http://www.blendelf.com/index.html#IRC">IRC</a> | 
+<a href="http://web.archive.org/web/20111112193944/http://www.blendelf.com/index.html#Contact">Contact</a>
+</div>
+
+<div class="topic">Tutorial 8, C++ SDK</div>
+<div class="info">
+This tutorial should give you the basic idea of how to use the BlendELF 
+C++ API. Note that this tutorial is meant for only those that want to 
+use BlendELF with C++. The C++ API for BlendELF is by no means any more 
+complete than the Lua API, so the C++ is by no means to be considered 
+"the advanced API". The APIs are almost identical as you can see from 
+this tutorial.
+</div>
+
+<div class="topic">Step 1: Getting the tutorial resources</div>
+<div class="info">
+Only thing needed is the BlendELF Development Kit. Download it from <a href="http://web.archive.org/web/20111112193944/http://blendelf.com/">http://blendelf.com</a> if you haven't already.
+</div>
+
+<div class="topic">Step 2: Setting up Visual Studio Express 2008</div>
+<div class="info">
+Here is a short description how to setup VSE 2008 for BlendELF SDK. 
+Pardon me for the briefness of this part. Might rework it with pictures 
+and all when I find to time to do that ;).
+<ul>
+<li>Create a new <b>Console Project</b> in Visual Studio</li>
+<li>Go to the project settings (probably in Project -&gt; Project Properties)</li>
+<li>Go to <b>C++ -&gt; General</b> (before Visual Studio lets you into 
+the C++ section of the settings, you must have a .cpp file in your 
+project) and add a path pointing to the <b>cppsdk</b> folder to <b>Additional Include Directories</b> so that the include file <b>blendelf.h</b> will be found</li>
+<li>Go to <b>Linker -&gt; General</b> and add a path pointing to the <b>cppsdk</b> folder to <b>Additional Library Directories</b> so that the library file <b>BlendELF_DLL.lib</b> will be found
+</li><li>Go to <b>Linker -&gt; Input</b> and add a the library <b>BlendELF_DLL.lib</b> to the <b>Additional Dependencies</b> so that the library will be linked to your executable</li>
+<li>Copy <b>BlendELF_DLL.dll</b> file into the folder where you run the compiled .exe from (typically <b>Debug</b> or <b>Release</b> folder inside your project folder). The .exe will complain of not finding the file if you do not do so.</li>
+<li>Just like in the previous step, please copy all of the .dll files 
+found in the BlendELF Development Kit root folder to where your .exe is,
+ BlendELF_DLL.dll needs to find them.</li>
+<ul>
+</ul></ul></div>
+
+<div class="topic">Step 3: Compiling on linux</div>
+<div class="info">
+If you are compiling with linux and using g++ for that, you might want to add the option "<b>-Wl,-rpath,./</b>"
+ to your compile. This way you can just drop libblendelf.so into your 
+projects root folder and the binary will find it. So your command for 
+compiling an application with blendelf would probably become something 
+like this:
+<br>
+<br>
+<b>g++ main.cpp -Wl,-rpath,./ -L. -lblendelf</b>
+<br>
+<br>
+Also take into account that you have to tell the compiler where <b>blendelf.h</b> and <b>libblendelf.os</b>
+ are. In the upper example I assumed that both of them are in the same 
+folder that main.cpp is. You can specify separate include paths and 
+library paths with <b>-I</b> and <b>-L</b> flags. The following line: <b>-I/home/myname/blendelf/cppsdk</b> would tell the compiler to search for include files at <b>/home/myname/blendelf/cppsdk</b> . 
+</div>
+
+<div class="topic">Step 4: Sample C++ program</div>
+<div class="info">
+The C++ API of BlendELF is almost identical with the Lua API, so the API
+ doc of Lua api is pretty much the API doc of C++ too. There are a few 
+easy to remember
+differences between the C++ and Lua APIs. Lets take a look at a sample 
+BlendELF C++ program.
+</div>
+<div class="codebox">#include "blendelf.h"
+
+int main()
+{
+    elfInitWithConfig("config.txt");
+
+    elf_handle scn = elfLoadScene("level1.pak");
+    elf_handle cam = elfGetCameraByName(scn, "Camera");
+
+    elfHideMouse(true);
+
+    while(elfRun())
+    {
+        if(elfGetKeyState(ELF_KEY_W) == ELF_DOWN) elfMoveActorLocal(cam, 0.0, 0.0, -12.0); 
+        if(elfGetKeyState(ELF_KEY_S) == ELF_DOWN) elfMoveActorLocal(cam, 0.0, 0.0, 12.0);
+        if(elfGetKeyState(ELF_KEY_A) == ELF_DOWN) elfMoveActorLocal(cam, -12.0, 0.0, 0.0);
+        if(elfGetKeyState(ELF_KEY_D) == ELF_DOWN) elfMoveActorLocal(cam, 12.0, 0.0, 0.0);
+
+        elf_vec2i mf = elfGetMouseForce();
+        elfRotateActor(cam, 0.0, 0.0, -mf.x*10.0);
+        elfRotateActorLocal(cam, -mf.y*10.0, 0.0, 0.0); 
+
+        if(elfGetKeyState(ELF_KEY_ESC) == ELF_PRESSED) elfQuit();
+    }
+
+    elfDeinit();
+
+    return 0;
+}</div>
+<div class="info">
+Now the first difference that you notice is probably the first function we call, <b>elfInitWithConfig</b>.
+ In Lua we didn't call any init functions, but in C++ we have to since 
+the init function isn't called for us. The next difference is that there
+ is no dot between <b>elf</b> and the name of the function. So <b>elf.GetFps</b> becomes <b>elfGetFps</b>. Also the flags don't have the dot either, and the <b>elf</b> is capitalised. So <b>elf.KEY_W</b> becomes <b>ELF_KEY_W</b>. The variables in C++ have types, so <b>scn = elf.LoadScene("level1.pak")</b> becomes <b>elf_handle scn = elfLoadScene("level1.pak");</b>. Also <b>mf = elf.GetMouseForce()</b> becomes <b>elf_vec2i mf = elfGetMouseForce();</b>, etc... Finally, in C++ programs we have to call <b>elfDeinit</b> manually at the end of our program, because like with <b>elfInitWithConfig</b>, this function isn't called for us.
+<br>
+<br>
+Thats it! I hope you enjoyed the tutorial, and if you have any comments about it, please post to the <a href="http://web.archive.org/web/20111112193944/http://forum.blendelf.com/">forums</a>.
+</div>
+
+<div class="copyright">Copyright © 2009-2010 Samuel Anjam</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "http://web.archive.org/web/20111112193944/https://ssl." : "http://web.archive.org/web/20111112193944/http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="BlendELF,%20Tutorial%208,%20C++%20SDK-Dateien/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4880379-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>
+<!--
+     FILE ARCHIVED ON 19:39:44 Nov 12, 2011 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 18:27:11 May 11, 2020.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  RedisCDXSource: 195.021
+  captures_list: 1323.807
+  CDXLines.iter: 12.408 (3)
+  LoadShardBlock: 1111.982 (3)
+  exclusion.robots: 1.048
+  PetaboxLoader3.resolve: 78.847
+  load_resource: 392.595
+  esindex: 0.012
+  exclusion.robots.policy: 1.037
+  PetaboxLoader3.datanode: 1319.19 (4)
+-->

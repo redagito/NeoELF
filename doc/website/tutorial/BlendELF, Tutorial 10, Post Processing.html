@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><script src="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/analytics.js" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app100.us.archive.org';v.server_ms=1640;archive_analytics.send_pageview({});});</script><script type="text/javascript" src="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/ait-client-rewrite.js" charset="utf-8"></script>
+<script type="text/javascript">
+WB_wombat_Init("http://web.archive.org/web/", "20120213051629", "blendelf.com:80");
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/wbhack.js" charset="utf-8"></script>
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/playback.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/iconochive.css">
+<!-- End Wayback Rewrite JS Include -->
+
+<title>BlendELF, Tutorial 10, Post Processing</title>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/style.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="BlendELF, Compact and powerful 3D Game Engine">
+</head>
+<body><!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<style type="text/css">
+body {
+  margin-top:0 !important;
+  padding-top:0 !important;
+  /*min-width:800px !important;*/
+}
+</style>
+<div id="wm-ipp-base" style="display: block; direction: ltr;" lang="en">
+</div><div id="donato" style="position:relative;width:100%;">
+  <div id="donato-base">
+    <iframe id="donato-if" src="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/donate.html" scrolling="no" style="width:100%; height:100%" frameborder="0">
+    </iframe>
+  </div>
+</div><script type="text/javascript">
+__wm.bt(625,27,25,2,"web","http://blendelf.com/tutorial10.html","20120213051629",1996,"/_static/",["/_static/css/banner-styles.css?v=HyR5oymJ","/_static/css/iconochive.css?v=qtvMKcIJ"]);
+</script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+
+<div class="images">
+<img src="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/topbanner.jpg" alt="BlendELF is a engine written by me, an IT student at the University of Jyväskylä. I am coding the engine as my portfolio project, as a proof of my skills in 3d graphics and game logics/systems coding. I release this engine under the assumption that it could be useful for other people in making quck prototypes and small games. I reserve the right to halt the development of this engine at will, at any given time.">
+</div>
+
+<div class="links">
+<a href="http://web.archive.org/web/20120213051629/http://blendelf.com/index.html">Home</a> | 
+<a href="http://web.archive.org/web/20120213051629/http://forum.blendelf.com/">Forums</a> | 
+<a href="http://web.archive.org/web/20120213051629/http://blendelf.com/index.html#Demos">Demos</a> | 
+<a href="http://web.archive.org/web/20120213051629/http://blendelf.com/index.html#Features">Features</a> | 
+<a href="http://web.archive.org/web/20120213051629/http://blendelf.com/index.html#Devkit">Get Development Kit</a> | 
+<a href="http://web.archive.org/web/20120213051629/http://blendelf.com/index.html#Source">Source</a> | 
+<a href="http://web.archive.org/web/20120213051629/http://blendelf.com/index.html#Documentation">Documentation</a> | 
+<a href="http://web.archive.org/web/20120213051629/http://blendelf.com/index.html#License">License</a> | 
+<a href="http://web.archive.org/web/20120213051629/http://blendelf.com/index.html#IRC">IRC</a> | 
+<a href="http://web.archive.org/web/20120213051629/http://blendelf.com/index.html#Contact">Contact</a>
+</div>
+
+<div class="topic">Tutorial 10, Post Processing</div>
+<div class="info">
+This tutorial builds on the first tutorial, so be sure to do that first! <a href="http://web.archive.org/web/20120213051629/http://blendelf.com/tutorial1.html">[Tutorial 1, BlendELF Basics]</a>
+<br>
+<br>
+In this tutorial you will learn to use the BlendELF Post Processing system.</div>
+
+
+<div class="topic">Step 1: Getting the tutorial resources</div>
+<div class="info">
+I assume you have already gotten yourself the BlendELF Development Kit, but if not, then head to <a href="http://web.archive.org/web/20120213051629/http://blendelf.com/">http://blendelf.com</a>
+ and get yourself a one! The BlendELF Development Kit contains the 
+engine executables and the level files we will be using for this 
+tutorial.
+</div>
+
+<div class="topic">Step 2: Setting up the camera position</div>
+<div class="info">
+Here is our <b>init.lua</b> from Tutorial 1:
+</div>
+<div class="codebox">elf.LoadScene("level1.pak")
+while elf.Run() == true do
+end</div>
+<div class="info">
+Lets set up our camera position in a way that it will be easy for us to preview all of the effects.
+</div>
+<div class="codebox"><span class="codered">scn = elf.LoadScene("level1.pak")</span>
+
+<span class="codered">cam = elf.GetSceneActiveCamera(scn)</span>
+<span class="codered">elf.SetActorPosition(cam, 0.5, 24.0, 5.0)</span>
+<span class="codered">elf.SetActorRotation(cam, 75.0, 0.0, -180.0)</span>
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+Try running the code, you should see something like this:
+</div>
+<div class="image">
+<img src="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/tutorial10_shot01.jpg">
+</div>
+
+<div class="topic">Step 3: Adding some bloom</div>
+<div class="info">
+Lets add some bloom to our scene.
+</div>
+<div class="codebox"><span class="codered">elf.SetBloom(0.35)</span>
+
+scn = elf.LoadScene("level1.pak")
+
+cam = elf.GetSceneActiveCamera(scn)
+elf.SetActorPosition(cam, 0.5, 24.0, 5.0)
+elf.SetActorRotation(cam, 75.0, 0.0, -180.0)
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+The reason why we set the bloom before doing anything else in the code 
+is because doing it first will let the post processing buffers have the 
+fastest memory available on the GPU.
+<br>
+<br>
+The function <b>elf.SetBloom</b> takes one parameter, which is the 
+threshold for what how much color gets through to the blooming pass. The
+ smaller the value, the more bloom you get. The minimum of the value is 
+0.0001 and the maximum is 1.0.
+<br>
+<br>
+Try running the code, you should see something like this:
+</div>
+<div class="image">
+<img src="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/tutorial10_shot02.jpg">
+</div>
+
+<div class="topic">Step 3: Adding some Depth of Field</div>
+<div class="info">
+Lets add some depth of field!
+</div>
+<div class="codebox">elf.SetBloom(0.35)
+<span class="codered">elf.SetDof(5.0, 18.0)</span>
+
+scn = elf.LoadScene("level1.pak")
+
+cam = elf.GetSceneActiveCamera(scn)
+elf.SetActorPosition(cam, 0.5, 24.0, 5.0)
+elf.SetActorRotation(cam, 75.0, 0.0, -180.0)
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+The first parameter of <b>elf.SetDof</b> is the range of the sharp area 
+of the depth of field, meaning, the larger this value is, the more 
+objects with be in the sharp area. The second parameter is the distance 
+from the camera to the hotspot of the depth of field. Play with these 
+values to see what exaclty they do ;).
+<br>
+<br>
+Try running the code, you should see something like this:
+</div>
+<div class="image">
+<img src="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/tutorial10_shot03.jpg">
+</div>
+
+<div class="topic">Step 3: Adding some Light Shafts</div>
+<div class="info">
+Lets add some light shafts. For this we need to create a new light behind the entities so that the effect would look cooler ;).
+</div>
+<div class="codebox">elf.SetBloom(0.35)
+elf.SetDof(5.0, 18.0)
+<span class="codered">elf.SetLightShafts(1.0)</span>
+
+scn = elf.LoadScene("level1.pak")
+
+<span class="codered">lig = elf.CreateLight("ShaftLight")</span>
+<span class="codered">elf.SetActorPosition(lig, 0.0, -20.0, 0.0)</span>
+<span class="codered">elf.SetLightColor(lig, 0.25, 0.5, 1.0, 0.0)</span>
+<span class="codered">elf.SetLightShaft(lig, 4.0, 1.0, 0.1)</span>
+<span class="codered">elf.AddLightToScene(scn, lig) </span>
+
+cam = elf.GetSceneActiveCamera(scn)
+elf.SetActorPosition(cam, 0.5, 24.0, 5.0)
+elf.SetActorRotation(cam, 75.0, 0.0, -180.0)
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+First we set light shafts on with <b>elf.SetLightShafts</b> which takes 
+one parameter: the global intensity of the light shafts. Then we create a
+ light, set its position behind the scene geometry, set its color to 
+blue, set the light shaft settings and finally add the light to the 
+scene. The <b>elf.SetLightShaft</b> function takes four parameters: the 
+ligth we want to modify, the size of the lights beacon, the intensity of
+ the light shaft and the fade off. The larger size of the beacon, the 
+more shafts you get. The stronger intensity, the brighter the shafts 
+are. The smaller fade off, the longer shafts you get.
+<br>
+<br>
+Try running the code, you should see something like this:
+</div>
+<div class="image">
+<img src="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/tutorial10_shot04.jpg">
+</div>
+<div class="info">
+Nice eh? ;)
+<br>
+<br>
+Thats it! I hope you enjoyed the tutorial, and if you have any comments about it, please post to the <a href="http://web.archive.org/web/20120213051629/http://forum.blendelf.com/">forums</a>.
+</div>
+
+<div class="copyright">Copyright © 2009-2010 Samuel Anjam</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "http://web.archive.org/web/20120213051629/https://ssl." : "http://web.archive.org/web/20120213051629/http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="BlendELF,%20Tutorial%2010,%20Post%20Processing-Dateien/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4880379-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>
+<!--
+     FILE ARCHIVED ON 05:16:29 Feb 13, 2012 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 18:27:13 May 11, 2020.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  esindex: 0.016
+  LoadShardBlock: 417.079 (3)
+  exclusion.robots: 0.351
+  PetaboxLoader3.datanode: 1172.755 (4)
+  exclusion.robots.policy: 0.335
+  CDXLines.iter: 13.672 (3)
+  captures_list: 496.056
+  RedisCDXSource: 61.683
+  PetaboxLoader3.resolve: 78.14
+  load_resource: 1136.852
+-->

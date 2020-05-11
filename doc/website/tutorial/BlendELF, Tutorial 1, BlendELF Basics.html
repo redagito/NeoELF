@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><script src="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/analytics.js" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app57.us.archive.org';v.server_ms=784;archive_analytics.send_pageview({});});</script><script type="text/javascript" src="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/ait-client-rewrite.js" charset="utf-8"></script>
+<script type="text/javascript">
+WB_wombat_Init("http://web.archive.org/web/", "20120430191049", "blendelf.com:80");
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/wbhack.js" charset="utf-8"></script>
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/playback.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/iconochive.css">
+<!-- End Wayback Rewrite JS Include -->
+
+<title>BlendELF, Tutorial 1, BlendELF Basics</title>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/style.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="BlendELF, Compact and powerful 3D Game Engine">
+</head>
+<body><!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<style type="text/css">
+body {
+  margin-top:0 !important;
+  padding-top:0 !important;
+  /*min-width:800px !important;*/
+}
+</style>
+<div id="wm-ipp-base" style="display: block; direction: ltr;" lang="en">
+</div><div id="donato" style="position:relative;width:100%;">
+  <div id="donato-base">
+    <iframe id="donato-if" src="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/donate.html" scrolling="no" style="width:100%; height:100%" frameborder="0">
+    </iframe>
+  </div>
+</div><script type="text/javascript">
+__wm.bt(625,27,25,2,"web","http://blendelf.com/tutorial1.html","20120430191049",1996,"/_static/",["/_static/css/banner-styles.css?v=HyR5oymJ","/_static/css/iconochive.css?v=qtvMKcIJ"]);
+</script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+
+<div class="images">
+<img src="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/topbanner.jpg" alt="BlendELF is a engine written by me, an IT student at the University of Jyväskylä. I am coding the engine as my portfolio project, as a proof of my skills in 3d graphics and game logics/systems coding. I release this engine under the assumption that it could be useful for other people in making quck prototypes and small games. I reserve the right to halt the development of this engine at will, at any given time.">
+</div>
+
+<div class="links">
+<a href="http://web.archive.org/web/20120430191049/http://blendelf.com/index.html">Home</a> | 
+<a href="http://web.archive.org/web/20120430191049/http://forum.blendelf.com/">Forums</a> | 
+<a href="http://web.archive.org/web/20120430191049/http://blendelf.com/index.html#Demos">Demos</a> | 
+<a href="http://web.archive.org/web/20120430191049/http://blendelf.com/index.html#Features">Features</a> | 
+<a href="http://web.archive.org/web/20120430191049/http://blendelf.com/index.html#Devkit">Get Development Kit</a> | 
+<a href="http://web.archive.org/web/20120430191049/http://blendelf.com/index.html#Source">Source</a> | 
+<a href="http://web.archive.org/web/20120430191049/http://blendelf.com/index.html#Documentation">Documentation</a> | 
+<a href="http://web.archive.org/web/20120430191049/http://blendelf.com/index.html#License">License</a> | 
+<a href="http://web.archive.org/web/20120430191049/http://blendelf.com/index.html#IRC">IRC</a> | 
+<a href="http://web.archive.org/web/20120430191049/http://blendelf.com/index.html#Contact">Contact</a>
+</div>
+
+<div class="topic">Tutorial 1, BlendELF Basics</div>
+<div class="info">This tutorial should give you a basic idea how to use BlendELF to develop games and applications.</div>
+
+<div class="topic">Step 1: Getting the tutorial resources</div>
+<div class="info">
+I assume you have already gotten yourself the BlendELF Development Kit, but if not, then head to <a href="http://web.archive.org/web/20120430191049/http://blendelf.com/">http://blendelf.com</a>
+ and get yourself a one! The BlendELF Development Kit contains the 
+engine executables and the level files we will be using for this 
+tutorial.
+</div>
+
+<div class="topic">Step 2: Extracting the development kit</div>
+<div class="info">
+First extract the developmet kit zip to a folder of your choice, preferably an empty one. My folder now looks like this:
+<div class="image">
+<img src="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/tutorial1_shot01.jpg" alt="Folder Step 2">
+</div>
+Your folder might look a bit different, depending on what operating 
+system you are using (I'm using Ubuntu 10.04 in the screen shot) and 
+what version of blendelf you are using, but the point is that you have 
+the necessary files in there. Also sometimes your operating system wont 
+display the file extensions of the files (.exe/.dll/etc), but that 
+shouldn't be a big problem either. Here is a little overview of the 
+files in the development kit:
+<ul>
+<li><b>BlendELF.exe</b> and the <b>DLL</b> files are used to execute the windows version of the engine</li>
+<li><b>blendelf</b> and the files in <b>linux_libraries</b> folder are used to execute the linux version of the engine</li>
+<li><b>LICENSE.txt</b> file contains the license of BlendELF and the licenses of the libraries that it uses</li>
+<li><b>tools</b> folder contains the blender scene exporter</li>
+<li><b>docs</b> folder contains the (Lua) API doc of BlendELF</li>
+<li><b>cppsdk</b> folder contains the C++ software development kit of BlendELF</li>
+<li><b>dotnetsdk</b> folder contains the .NET software development kit of BlendELF</li>
+<li><b>levels</b> folder contains sample levels for BlendELF</li>
+</ul>
+</div>
+
+<div class="topic">Step 3: Grabbing the level file</div>
+<div class="info">
+The <b>levels</b> folder should contain a file name <b>level1.pak</b>. <b>PAK</b>
+ files are the BlendELF scene files. They contain all of the 
+textures/models/entities/cameras/lights/armatures/etc of a single scene.
+ Put the <b>level1.pak</b> file into the same folder where <b>BlendELF.exe</b> or <b>blendelf</b> files are.
+<br>
+<br>
+My folder now looks like this:
+<div class="image">
+<img src="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/tutorial1_shot02.jpg" alt="Folder Step 3">
+</div>
+You see that I added the <b>level1.pak</b> file there? Great! Now we have everything we need to load up a scene in BlendELF.
+</div>
+
+<div class="topic">Step 4: Creating the init.lua script</div>
+<div class="info">
+Go ahead and create a text file called <b>init.lua</b> into the folder 
+you extracted the development kit to. Don't worry if your operating 
+system warns you about the .lua extension. You can still open the file 
+in a pure text editor like <b>notepad</b> in windows or <b>gedit/kate/vim</b> on linux.
+<br>
+<br>
+My folder now looks like this:
+<div class="image">
+<img src="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/tutorial1_shot03.jpg" alt="Folder Step 4">
+</div>
+<b>Wait a second! Whats init.lua??</b>
+<br>
+<br>
+I'm glad you asked! Let me explain. <b>init.lua</b> is a Lua script file and most of the time, it will be the heart of your game. You will write the <b>main loop</b> of your game into the <b>init.lua</b> script file. The <b>main loop</b> will keep your game running as long as you don't quit the game. <b>NOTE:
+ it is really important that you put the init.lua script file into the 
+same directory where BlendELF.exe/blendelf files are.</b> Otherwise BlendELF wont find it.
+<br>
+<br>
+<b>Lua? Never heard of it...</b>
+<br>
+<br>
+Lua is a very light, portable and simple scripting language that is 
+widely used in the game industry. For more information, please visit <a href="http://web.archive.org/web/20120430191049/http://lua.org/">lua.org</a>. Due to its simplicity, it is very easy to pick up, even for beginners. So lets get our hands dirty and put BlendELF to work!
+</div>
+
+<div class="topic">Step 5: The very simple init.lua script</div>
+<div class="info">
+Open up your <b>init.lua</b> script in a pure text editor, like notepad 
+on windows and gedit/kate/vim on linux. First we need to load a scene. 
+We can do that with the <b>elf.LoadScene</b> function which takes a single parameter, which is the file path to the <b>PAK</b> file you want to load. Lets write our first line:
+</div>
+<div class="codebox">elf.LoadScene("level1.pak")</div>
+<div class="info">
+Ok so now our script loads the scene, now we need our <b>main loop</b>. Lets write it after we loaded the scene:
+</div>
+<div class="codebox">elf.LoadScene("level1.pak")
+while elf.Run() == true do
+end</div>
+<div class="info">
+Thats our whole init.lua script file! But before we run it, lets see what we did there...
+<br>
+<br>
+We made a <b>while</b> loop for our <b>main loop</b>. Each time the while loop is ran, it checks if the elf.Run() function returns true, and if it does, it continues running. The <b>do</b> keyword is just to indicate that we are done with testing and we are good to go to the execution part of the loop. The <b>end</b> keyword on the third line indicates that we can go back to testing if we should still run the while loop.
+<br>
+<br>
+The <b>elf.Run</b> function runs the whole engine for one frame (renders
+ the scene and runs audio, physics and game logics) and returns true if 
+everything was fine. If you by any chance call <b>elf.Quit</b> at any point of your game/application, then the <b>elf.Run</b>
+ function will automatically detect that you did so, and next time it 
+will return false and you application exits. The same happens if you 
+close the engine window.
+</div>
+
+<div class="topic">Step 6: Running BlendELF</div>
+<div class="info">
+So we finally get to run the engine! On windows, double click <b>BlendELF.exe</b>. On linux, double click <b>blendelf</b> or run it from the console.
+<br>
+<br>
+<b>Help, it doesn't run!</b>
+<br>
+<br>
+That could be because your computer doesn't support at least OpenGL 2.0, or because your <b>init.lua</b> script contains an error. BlendELF prints errors to the <b>console</b> and saves them to <b>elf.log</b> file in the same directory as your BlendELF executable (<b>BlendELF.exe</b> or <b>blendelf</b>), so check either one for errors. The only type of error that BlendELF doesn't store to <b>elf.log</b> is an invalid handle error. That is because the invalid handle error doesn't stop the execution of a script, so writing it to <b>elf.log</b> several times during one frame could potentially slow the engine down too much. So check the <b>console</b> for those.
+<br>
+<br>
+If everything goes well, you should see something like this:
+<div class="image"><img src="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/tutorial1_shot04.jpg" alt="Tutorial 1 Final"></div>
+Congratulations if you did! I hope you enjoyed the tutorial, and if you have any comments about it, please post to the <a href="http://web.archive.org/web/20120430191049/http://forum.blendelf.com/">forums</a>.
+</div>
+
+<div class="copyright">Copyright © 2009-2010 Samuel Anjam</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "http://web.archive.org/web/20120430191049/https://ssl." : "http://web.archive.org/web/20120430191049/http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="BlendELF,%20Tutorial%201,%20BlendELF%20Basics-Dateien/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4880379-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>
+<!--
+     FILE ARCHIVED ON 19:10:49 Apr 30, 2012 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 18:27:08 May 11, 2020.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  exclusion.robots.policy: 0.266
+  RedisCDXSource: 200.696
+  CDXLines.iter: 14.334 (3)
+  esindex: 0.017
+  exclusion.robots: 0.277
+  PetaboxLoader3.datanode: 256.756 (4)
+  PetaboxLoader3.resolve: 254.316
+  LoadShardBlock: 104.68 (3)
+  captures_list: 324.18
+  load_resource: 447.672
+-->

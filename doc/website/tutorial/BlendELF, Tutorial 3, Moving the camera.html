@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><script src="BlendELF,%20Tutorial%203,%20Moving%20the%20camera-Dateien/analytics.js" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app58.us.archive.org';v.server_ms=714;archive_analytics.send_pageview({});});</script><script type="text/javascript" src="BlendELF,%20Tutorial%203,%20Moving%20the%20camera-Dateien/ait-client-rewrite.js" charset="utf-8"></script>
+<script type="text/javascript">
+WB_wombat_Init("http://web.archive.org/web/", "20120213051644", "blendelf.com:80");
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%203,%20Moving%20the%20camera-Dateien/wbhack.js" charset="utf-8"></script>
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%203,%20Moving%20the%20camera-Dateien/playback.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%203,%20Moving%20the%20camera-Dateien/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%203,%20Moving%20the%20camera-Dateien/iconochive.css">
+<!-- End Wayback Rewrite JS Include -->
+
+<title>BlendELF, Tutorial 3, Moving the camera</title>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%203,%20Moving%20the%20camera-Dateien/style.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="BlendELF, Compact and powerful 3D Game Engine">
+</head>
+<body><!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<style type="text/css">
+body {
+  margin-top:0 !important;
+  padding-top:0 !important;
+  /*min-width:800px !important;*/
+}
+</style>
+<div id="wm-ipp-base" style="display: block; direction: ltr;" lang="en">
+</div><div id="donato" style="position:relative;width:100%;">
+  <div id="donato-base">
+    <iframe id="donato-if" src="BlendELF,%20Tutorial%203,%20Moving%20the%20camera-Dateien/donate.html" scrolling="no" style="width:100%; height:100%" frameborder="0">
+    </iframe>
+  </div>
+</div><script type="text/javascript">
+__wm.bt(625,27,25,2,"web","http://blendelf.com/tutorial3.html","20120213051644",1996,"/_static/",["/_static/css/banner-styles.css?v=HyR5oymJ","/_static/css/iconochive.css?v=qtvMKcIJ"]);
+</script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+
+<div class="images">
+<img src="BlendELF,%20Tutorial%203,%20Moving%20the%20camera-Dateien/topbanner.jpg" alt="BlendELF is a engine written by me, an IT student at the University of Jyväskylä. I am coding the engine as my portfolio project, as a proof of my skills in 3d graphics and game logics/systems coding. I release this engine under the assumption that it could be useful for other people in making quck prototypes and small games. I reserve the right to halt the development of this engine at will, at any given time.">
+</div>
+
+<div class="links">
+<a href="http://web.archive.org/web/20120213051644/http://blendelf.com/index.html">Home</a> | 
+<a href="http://web.archive.org/web/20120213051644/http://forum.blendelf.com/">Forums</a> | 
+<a href="http://web.archive.org/web/20120213051644/http://blendelf.com/index.html#Demos">Demos</a> | 
+<a href="http://web.archive.org/web/20120213051644/http://blendelf.com/index.html#Features">Features</a> | 
+<a href="http://web.archive.org/web/20120213051644/http://blendelf.com/index.html#Devkit">Get Development Kit</a> | 
+<a href="http://web.archive.org/web/20120213051644/http://blendelf.com/index.html#Source">Source</a> | 
+<a href="http://web.archive.org/web/20120213051644/http://blendelf.com/index.html#Documentation">Documentation</a> | 
+<a href="http://web.archive.org/web/20120213051644/http://blendelf.com/index.html#License">License</a> | 
+<a href="http://web.archive.org/web/20120213051644/http://blendelf.com/index.html#IRC">IRC</a> | 
+<a href="http://web.archive.org/web/20120213051644/http://blendelf.com/index.html#Contact">Contact</a>
+</div>
+
+<div class="topic">Tutorial 3, Moving the camera</div>
+<div class="info">
+This tutorial builds on the first tutorial, so be sure to do that first! <a href="http://web.archive.org/web/20120213051644/http://blendelf.com/tutorial1.html">[Tutorial 1, BlendELF Basics]</a>
+<br>
+<br>In this tutorial you will learn how to make a simple fly through camera</div>
+
+
+<div class="topic">Step 1, WSAD</div>
+<div class="info">
+First we will modify the <b>init.lua</b> script file <b>main loop</b>. Here is how the <b>init.lua</b> script should look now:
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+while elf.Run() == true do
+end</div>
+<div class="info">
+<b>Hey! Whats that "scn" variable there before elf.LoadScene? I didn't see it in the first tutorial!</b>
+<br>
+<br>
+Yeah, we didn't need it in the first tutorial. In addition to loading the scene, <b>elf.LoadScene</b> also returns a handle to the loaded scene so that we can access the objects in the scene with it.
+<br>
+<br>
+So the first thing we have to do is to gain access to the currently active camera. Lets write a line that does that for us.
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+cam = elf.GetSceneActiveCamera(scn)
+while elf.Run() == true do
+end</div>
+<div class="info">
+We pass the <b>scn</b> variable we just got from <b>elf.LoadScene</b> to <b>elf.GetSceneActiveCamera</b> to get the active camera in that particular scene.
+<br>
+<br>
+So now we have our camera stored in the <b>cam</b> variable, what then? 
+Well, now we will check on each frame (inside our while loop) if the 
+user is pressing a certain button, and if he/she is, we will move the 
+camera accordingly. Lets check for the <b>W</b> (we go forward with <b>W</b>) button first.
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+cam = elf.GetSceneActiveCamera(scn)
+while elf.Run() == true do
+    if elf.GetKeyState(elf.KEY_W) == elf.DOWN then
+        elf.MoveActorLocal(cam, 0.0, 0.0, -12.0)
+    end
+end</div>
+<div class="info">
+The <b>elf.GetKeyState</b> function returns the current state of the key passed to it. In this case we pass <b>elf.KEY_W</b>, meaning the <b>W</b> key, to it. Here is a overview of the possible button states that <b>elf.GetKeyState</b> returns:
+<ul>
+<li><b>elf.UP</b> - the button is up</li>
+<li><b>elf.PRESSED</b> - the button has been pressed on the current frame</li>
+<li><b>elf.DOWN</b> - the buttons is being pressed but wasn't just pressed on the current frame</li>
+<li><b>elf.RELEASED</b> - the buttons has been released on the current frame</li>
+</ul>
+So why do we have two states for a pressed button, <b>elf.PRESSED</b> and <b>elf.DOWN</b>? Basically when you press a button, its state changes to <b>elf.PRESSED</b> for the current frame. After that, if the button is still pressed, the state changes to <b>elf.DOWN</b>. The <b>elf.PRESSED</b> is useful if you want to, for example shoot a gun a single time. If you used <b>elf.DOWN</b> for that, you would be firing a bullet on every frame assuming that the button is still pressed. The <b>elf.DOWN</b> is useful for continuous movement. If you would use <b>elf.PRESSED</b> for that, your actor would move just for the instant the button is pressed and not when its down.
+<br>
+<br>
+We use <b>elf.MoveActorLocal</b> to move our camera. The actor functions can be performed on any actor. That is <b>cameras</b>, <b>entities</b>, <b>lights</b> and <b>particles</b>. And what does <b>Local</b> stand for in <b>elf.MoveActorLocal</b>? That means that you are moving the actor according to its local orientation. For example, if you would use just <b>elf.MoveActor</b>,
+ it would move according to the global x/y/z axises instead of moving 
+according to the models local x/y/z axises. Yes, the three floating 
+point values we pass to <b>elf.MoveActorLocal</b> represent the amount 
+of movement in 3D space during one second. Since we are moving a camera,
+ we want to move it locally every time we are moving it front, back, 
+left or right. That being said, there are many situations where you will
+ want to move an actor according to the global axises, and you will most
+ likely know when to do that.
+<br>
+<br>
+<b>Hey! Why are we moving the camera -12.0 to the Z direction, is that really moving to the front?</b>
+<br>
+<br>
+Yes it is. Why is that? Well the camera coordinate system is different 
+from the coordinate systems of other actors. For a camera, negative Z is
+ front, positive Y is up and positive X is right. Just remember that and
+ you are good to go ;). Also remember that this only applies when moving
+ the camera locally. When you are moving the camera with <b>elf.MoveActor</b> or any other globally moving function, it works just like with other actors.
+<br>
+<br>
+Try out the code so far, if it works right, it should make the camera go forward when you press <b>W</b>. If it doesn't work, please check the <b>console</b> or <b>elf.log</b> for errors.
+<br>
+<br>
+Now, lets add the code for <b>S</b>, <b>A</b> and <b>D</b>.
+</div>
+<div class="codebox">elf.LoadScene("level1.pak")
+cam = elf.GetSceneActiveCamera(scn)
+while elf.Run() == true do
+    if elf.GetKeyState(elf.KEY_W) == elf.DOWN then
+        elf.MoveActorLocal(cam, 0.0, 0.0, -12.0)
+    end
+
+    if elf.GetKeyState(elf.KEY_S) == elf.DOWN then
+        elf.MoveActorLocal(cam, 0.0, 0.0, 12.0)
+    end
+
+    if elf.GetKeyState(elf.KEY_A) == elf.DOWN then
+        elf.MoveActorLocal(cam, -12.0, 0.0, 0.0)
+    end
+
+    if elf.GetKeyState(elf.KEY_D) == elf.DOWN then
+        elf.MoveActorLocal(cam, 12.0, 0.0, 0.0)
+    end
+end</div>
+<div class="info">
+Again, go ahead and test your code. Be sure to test your code a lot and 
+often. If it works, you should be able to move the camera forward, back,
+ left and right. If the code doesn't work, check the <b>console</b> or <b>elf.log</b> for errors.
+</div>
+<div class="topic">Step 2, Rotating the camera with the mouse</div>
+<div class="info">
+Now we are ready to code the rotation for the camera. We are going for a
+ classic flythrough camera, so you will be able to rotate the camera 
+with the mouse.
+<br>
+<br>
+But wait, what is needed for that? First we need to make sure that the 
+mouse is inside the window all the time so that we don't get weird jumps
+ in rotation while the mouse enters the window and goes out. We can do 
+this by passing <b>true</b> to function <b>elf.HideMouse</b>. Also since now we can't close the window by clicking the <b>X</b>
+ symbol in the top right corner of the window like you usually do to 
+windows, we need an alternate way to close the window. Lets do that with
+ the <b>ESC</b> key. You can also shut down BlendELF with the <b>F10</b> button on your keyboard, but it is nice to have some backup for it. Great! Lets add the code for this:
+</div>
+<div class="codebox"><span class="codered">elf.HideMouse(true)</span>
+scn = elf.LoadScene("level1.pak")
+cam = elf.GetSceneActiveCamera(scn)
+while elf.Run() == true do
+
+    if elf.GetKeyState(elf.KEY_W) == elf.DOWN then
+        elf.MoveActorLocal(cam, 0.0, 0.0, -12.0)
+    end
+
+    if elf.GetKeyState(elf.KEY_S) == elf.DOWN then
+        elf.MoveActorLocal(cam, 0.0, 0.0, 12.0)
+    end
+
+    if elf.GetKeyState(elf.KEY_A) == elf.DOWN then
+        elf.MoveActorLocal(cam, -12.0, 0.0, 0.0)
+    end
+
+    if elf.GetKeyState(elf.KEY_D) == elf.DOWN then
+        elf.MoveActorLocal(cam, 12.0, 0.0, 0.0)
+    end
+
+<span class="codered">    if elf.GetKeyState(elf.KEY_ESC) == elf.PRESSED then</span>
+<span class="codered">        elf.Quit()</span>
+<span class="codered">    end</span>
+end</div>
+<div class="info">
+For clarification, the new lines of code are marked in <span class="codered"><b>RED</b></span>.
+ Now try to run the code and see if the mouse disappears and if the ESC 
+button works. If not, don't worry, you can still close the window with <b>F10</b> or <b>ALT + F4</b> so that you can come back to fix your code.
+<br>
+<br>
+So now we can move to camera rotation. For this, we need to know how 
+much the mouse has moved during the current and the last frame. You 
+could store the previous frames mouse position and calculate the 
+differece between it and the current frames mouse position, but BlendELF
+ already does this. You can access the difference with <b>elf.GetMouseForce</b>. The rest is just using the values we get from that:
+</div>
+
+<div class="codebox">elf.HideMouse(true)
+elf.LoadScene("level1.pak")
+while elf.Run() == true do
+    cam = elf.GetSceneActiveCamera(scn)
+
+    if elf.GetKeyState(elf.KEY_W) == elf.DOWN then
+        elf.MoveActorLocal(cam, 0.0, 0.0, -12.0)
+    end
+
+    if elf.GetKeyState(elf.KEY_S) == elf.DOWN then
+        elf.MoveActorLocal(cam, 0.0, 0.0, 12.0)
+    end
+
+    if elf.GetKeyState(elf.KEY_A) == elf.DOWN then
+        elf.MoveActorLocal(cam, -12.0, 0.0, 0.0)
+    end
+
+    if elf.GetKeyState(elf.KEY_D) == elf.DOWN then
+        elf.MoveActorLocal(cam, 12.0, 0.0, 0.0)
+    end
+
+<span class="codered">    mf = elf.GetMouseForce()</span>
+<span class="codered">    elf.RotateActor(cam, 0.0, 0.0, -mf.x*10.0)</span>
+<span class="codered">    elf.RotateActorLocal(cam, -mf.y*10.0, 0.0, 0.0)</span>
+
+    if elf.GetKeyState(elf.KEY_ESC) == elf.PRESSED then
+        elf.Quit()
+    end
+end</div>
+<div class="info">
+Because the mouse and 3d space coordinate systems are different, we use 
+the negatives of the force as you can see. Also you can notice that we 
+used just <b>elf.RotateActor</b> for the Z rotation instead of <b>elf.RotateActorLocal</b>.
+ That is because unless you are writing a flight simulator, you don't 
+want the camera to turn around Z according to its own orientation. That 
+would make the user "stand tilted". You can try <b>elf.RotateActorLocal</b>
+ on the Z rotation if you want to see the effect. Also keep in mind that
+ the rotations we input are in degrees, not radians. Pretty much all 
+rotation related functions in BlendELF use degrees.
+<br>
+<br>
+If everything went right, you should be able to fly around the level now:
+<div class="image">
+<img src="BlendELF,%20Tutorial%203,%20Moving%20the%20camera-Dateien/tutorial3_shot01.jpg" alt="Tutorial 3 Flying around the level">
+</div>
+Thats it! I hope you enjoyed the tutorial, and if you have any comments about it, please post to the <a href="http://web.archive.org/web/20120213051644/http://forum.blendelf.com/">forums</a>.
+</div>
+
+<div class="copyright">Copyright © 2009-2010 Samuel Anjam</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "http://web.archive.org/web/20120213051644/https://ssl." : "http://web.archive.org/web/20120213051644/http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="BlendELF,%20Tutorial%203,%20Moving%20the%20camera-Dateien/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4880379-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>
+<!--
+     FILE ARCHIVED ON 05:16:44 Feb 13, 2012 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 18:27:07 May 11, 2020.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  PetaboxLoader3.datanode: 112.986 (4)
+  CDXLines.iter: 11.627 (3)
+  exclusion.robots.policy: 0.292
+  PetaboxLoader3.resolve: 31.379
+  exclusion.robots: 0.304
+  captures_list: 633.256
+  LoadShardBlock: 101.329 (3)
+  esindex: 0.007
+  RedisCDXSource: 517.847
+  load_resource: 74.315
+-->

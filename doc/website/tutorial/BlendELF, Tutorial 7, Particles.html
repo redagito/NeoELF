@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><script src="BlendELF,%20Tutorial%207,%20Particles-Dateien/analytics.js" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app31.us.archive.org';v.server_ms=886;archive_analytics.send_pageview({});});</script><script type="text/javascript" src="BlendELF,%20Tutorial%207,%20Particles-Dateien/ait-client-rewrite.js" charset="utf-8"></script>
+<script type="text/javascript">
+WB_wombat_Init("http://web.archive.org/web/", "20120213051654", "blendelf.com:80");
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%207,%20Particles-Dateien/wbhack.js" charset="utf-8"></script>
+<script type="text/javascript">
+__wbhack.init('http://web.archive.org/web');
+</script>
+<script type="text/javascript" src="BlendELF,%20Tutorial%207,%20Particles-Dateien/playback.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%207,%20Particles-Dateien/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%207,%20Particles-Dateien/iconochive.css">
+<!-- End Wayback Rewrite JS Include -->
+
+<title>BlendELF, Tutorial 7, Particles</title>
+<link rel="stylesheet" type="text/css" href="BlendELF,%20Tutorial%207,%20Particles-Dateien/style.css">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="description" content="BlendELF, Compact and powerful 3D Game Engine">
+</head>
+<body><!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<style type="text/css">
+body {
+  margin-top:0 !important;
+  padding-top:0 !important;
+  /*min-width:800px !important;*/
+}
+</style>
+<div id="wm-ipp-base" style="display: block; direction: ltr;" lang="en">
+</div><div id="donato" style="position:relative;width:100%;">
+  <div id="donato-base">
+    <iframe id="donato-if" src="BlendELF,%20Tutorial%207,%20Particles-Dateien/donate.html" scrolling="no" style="width:100%; height:100%" frameborder="0">
+    </iframe>
+  </div>
+</div><script type="text/javascript">
+__wm.bt(625,27,25,2,"web","http://blendelf.com/tutorial7.html","20120213051654",1996,"/_static/",["/_static/css/banner-styles.css?v=HyR5oymJ","/_static/css/iconochive.css?v=qtvMKcIJ"]);
+</script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+
+<div class="images">
+<img src="BlendELF,%20Tutorial%207,%20Particles-Dateien/topbanner.jpg" alt="BlendELF is a engine written by me, an IT student at the University of Jyväskylä. I am coding the engine as my portfolio project, as a proof of my skills in 3d graphics and game logics/systems coding. I release this engine under the assumption that it could be useful for other people in making quck prototypes and small games. I reserve the right to halt the development of this engine at will, at any given time.">
+</div>
+
+<div class="links">
+<a href="http://web.archive.org/web/20120213051654/http://blendelf.com/index.html">Home</a> | 
+<a href="http://web.archive.org/web/20120213051654/http://forum.blendelf.com/">Forums</a> | 
+<a href="http://web.archive.org/web/20120213051654/http://blendelf.com/index.html#Demos">Demos</a> | 
+<a href="http://web.archive.org/web/20120213051654/http://blendelf.com/index.html#Features">Features</a> | 
+<a href="http://web.archive.org/web/20120213051654/http://blendelf.com/index.html#Devkit">Get Development Kit</a> | 
+<a href="http://web.archive.org/web/20120213051654/http://blendelf.com/index.html#Source">Source</a> | 
+<a href="http://web.archive.org/web/20120213051654/http://blendelf.com/index.html#Documentation">Documentation</a> | 
+<a href="http://web.archive.org/web/20120213051654/http://blendelf.com/index.html#License">License</a> | 
+<a href="http://web.archive.org/web/20120213051654/http://blendelf.com/index.html#IRC">IRC</a> | 
+<a href="http://web.archive.org/web/20120213051654/http://blendelf.com/index.html#Contact">Contact</a>
+</div>
+
+<div class="topic">Tutorial 7, Particles</div>
+<div class="info">
+This tutorial builds on the first tutorial, so be sure to do that first! <a href="http://web.archive.org/web/20120213051654/http://blendelf.com/tutorial1.html">[Tutorial 1, BlendELF Basics]</a>. This tutorial should give you a basic idea how to use the BlendELF GUI system.
+</div>
+
+<div class="topic">Step 1: Getting the tutorial resources</div>
+<div class="info">
+<a href="http://web.archive.org/web/20120213051654/http://blendelf.com/downloads/tutorial7_resources.zip">[tutorial7_resources.zip]</a> contains the particle sprite we are going to use in this tutorial.
+</div>
+
+<div class="topic">Step 2: Extracting the tutorials resources</div>
+<div class="info">
+The tutorial resource package contains a folder called <b>resources</b>. Copy and paste that folder to the folder where you have your BlendELF Developmet Kit.
+</div>
+
+<div class="topic">Step 3: Simple particle system</div>
+<div class="info">
+For this tutorials base <b>init.lua</b>, we will start with a simple script that loads a level (the same as in Tutorial 1) and runs the engine.
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+All good so far. Now we will create a simple particle system.
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+
+par = elf.CreateParticles("MyParticles", 1000)
+elf.SetActorPosition(par, 0.0, 0.0, 3.0)
+elf.AddParticlesToScene(scn, par)
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+Try running the engine now. You should see some particles spawning above the ground.
+<br>
+<br>
+So what happened there? We created a particle system with the name 
+"MyParticles" and with the particle cap of 1000 particles. The second 
+argument of <b>elf.CreateParticles</b> is the maximum amount of 
+particles which the particle system will allow to be created. The bigger
+ the value, the more memory it takes. You can later on change the value 
+with <b>elf.SetParticlesMaxCount</b> if you want.
+<br>
+<br>
+Next me set the position of the particle system, and finally we add the particle system to the scene. Simple enough, isn't it?
+</div>
+
+<div class="topic">Step 3: Texture, Color, Size</div>
+<div class="info">
+Next we will set a texture for the particles.
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+
+<span class="codered">partex = elf.CreateTextureFromFile("resources/particle.png")</span>
+
+par = elf.CreateParticles("MyParticles", 1000)
+<span class="codered">elf.SetParticlesTexture(par, partex)</span>
+elf.SetActorPosition(par, 0.0, 0.0, 3.0)
+elf.AddParticlesToScene(scn, par)
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+Now you should see some round particles. Lets add some variable color next.
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+
+partex = elf.CreateTextureFromFile("resources/particle.png")
+
+par = elf.CreateParticles("MyParticles", 1000)
+elf.SetParticlesTexture(par, partex)
+<span class="codered">elf.SetParticlesColorMin(par, 0.5, 0.5, 0.5, 1.0)</span>
+<span class="codered">elf.SetParticlesColorMax(par, 1.0, 1.0, 1.0, 1.0)</span>
+elf.SetActorPosition(par, 0.0, 0.0, 3.0)
+elf.AddParticlesToScene(scn, par)
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+Nice, now we have some colored particles. Lets set a variable size next.
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+
+partex = elf.CreateTextureFromFile("resources/particle.png")
+
+par = elf.CreateParticles("MyParticles", 1000)
+elf.SetParticlesTexture(par, partex)
+elf.SetParticlesColorMin(par, 0.5, 0.5, 0.5, 1.0)
+elf.SetParticlesColorMax(par, 1.0, 1.0, 1.0, 1.0)
+<span class="codered">elf.SetParticlesSize(par, 0.25, 1.0)</span>
+elf.SetActorPosition(par, 0.0, 0.0, 3.0)
+elf.AddParticlesToScene(scn, par)
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+You probably noticed that the size doesn't have two functions, one for 
+min and one for max. Instead the size has only one function which sets 
+both, the min and the max of the variable size.
+</div>
+
+<div class="topic">Step 4: Velocity, Gravity, Spawn Delay</div>
+<div class="info">
+Lets say we wan't to make a fountain. First thing would be to set the variable velocity to spread the particles upwards.
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+
+partex = elf.CreateTextureFromFile("resources/particle.png")
+
+par = elf.CreateParticles("MyParticles", 1000)
+elf.SetParticlesTexture(par, partex)
+elf.SetParticlesColorMin(par, 0.5, 0.5, 0.5, 1.0)
+elf.SetParticlesColorMax(par, 1.0, 1.0, 1.0, 1.0)
+elf.SetParticlesSize(par, 0.25, 1.0)
+<span class="codered">elf.SetParticlesVelocityMin(par, -3, -3, 7.0)</span>
+<span class="codered">elf.SetParticlesVelocityMax(par, 3, 3, 7.0)</span>
+elf.SetActorPosition(par, 0.0, 0.0, 3.0)
+elf.AddParticlesToScene(scn, par)
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+Nice, now they are spreading upwards. Next we add some gravity to them.
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+
+partex = elf.CreateTextureFromFile("resources/particle.png")
+
+par = elf.CreateParticles("MyParticles", 1000)
+elf.SetParticlesTexture(par, partex)
+elf.SetParticlesColorMin(par, 0.5, 0.5, 0.5, 1.0)
+elf.SetParticlesColorMax(par, 1.0, 1.0, 1.0, 1.0)
+elf.SetParticlesSize(par, 0.25, 1.0)
+elf.SetParticlesVelocityMin(par, -3, -3, 7.0)
+elf.SetParticlesVelocityMax(par, 3, 3, 7.0)
+<span class="codered">elf.SetParticlesGravity(par, 0, 0, -20.0)</span>
+elf.SetActorPosition(par, 0.0, 0.0, 3.0)
+elf.AddParticlesToScene(scn, par)
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+Assuming that at this point, we wan't more particles, we just set the 
+spawn delay smaller. The amount of particles in existance at once can be
+ counted with life_span/spawn_delay. Lifespan can be set with <b>elf.SetParticlesLifeSpan</b>. Both the life span, spawn delay (and fade speed) are set in seconds.
+</div>
+<div class="codebox">scn = elf.LoadScene("level1.pak")
+
+partex = elf.CreateTextureFromFile("resources/particle.png")
+
+par = elf.CreateParticles("MyParticles", 1000)
+elf.SetParticlesTexture(par, partex)
+elf.SetParticlesColorMin(par, 0.5, 0.5, 0.5, 1.0)
+elf.SetParticlesColorMax(par, 1.0, 1.0, 1.0, 1.0)
+elf.SetParticlesSize(par, 0.25, 1.0)
+elf.SetParticlesVelocityMin(par, -3, -3, 7.0)
+elf.SetParticlesVelocityMax(par, 3, 3, 7.0)
+elf.SetParticlesGravity(par, 0, 0, -20.0)
+<span class="codered">elf.SetParticlesSpawnDelay(par, 0.01)</span>
+<span class="codered">elf.SetParticlesLifeSpan(par, 1.5, 2.0)</span>
+elf.SetActorPosition(par, 0.0, 0.0, 3.0)
+elf.AddParticlesToScene(scn, par)
+
+while elf.Run() == true do
+end</div>
+<div class="info">
+That should give you a REALLY shiny fountain...
+
+<br>
+<br>
+In addition to the particle parameters introducet in this tutorial, 
+there are some more of them, like fade speed and variable position. Also
+ you can set a mesh for the particle system and the particles with be 
+spawned according to the vertices of the mesh. Check the API 
+documentation for more information.
+<br>
+<br>
+Thats it! I hope you enjoyed the tutorial, and if you have any comments about it, please post to the <a href="http://web.archive.org/web/20120213051654/http://forum.blendelf.com/">forums</a>.
+</div>
+
+<div class="copyright">Copyright © 2009-2010 Samuel Anjam</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "http://web.archive.org/web/20120213051654/https://ssl." : "http://web.archive.org/web/20120213051654/http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="BlendELF,%20Tutorial%207,%20Particles-Dateien/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4880379-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>
+<!--
+     FILE ARCHIVED ON 05:16:54 Feb 13, 2012 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 18:27:10 May 11, 2020.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  exclusion.robots.policy: 0.439
+  PetaboxLoader3.datanode: 486.211 (4)
+  LoadShardBlock: 375.017 (3)
+  RedisCDXSource: 139.736
+  esindex: 0.012
+  captures_list: 533.474
+  load_resource: 342.992
+  CDXLines.iter: 15.305 (3)
+  exclusion.robots: 0.454
+  PetaboxLoader3.resolve: 86.059
+-->

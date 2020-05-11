@@ -20,7 +20,7 @@ struct elfEngine
     // Active config
     elfConfig* config = nullptr;
 
-    // TODO ?
+    // Current working directory
     std::string cwd;
 
     int fps = 0;
@@ -40,7 +40,8 @@ struct elfEngine
 
     elfScene* scene = nullptr;
     elfGui* gui = nullptr;
-    // Current actor?
+
+    // TODO Current actor?
     elfObject* actor = nullptr;
 };
 
