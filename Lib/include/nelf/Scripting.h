@@ -1,23 +1,10 @@
 #pragma once
 
-#include <lua.hpp>
-
 #include "nelf/objectHeader.h"
 
 struct elfScript;
 
-struct elfScripting
-{
-    ELF_OBJECT_HEADER;
-    lua_State* L = nullptr;
-};
-
-// Global script engine
-extern elfScripting* scr;
-
-elfScripting* elfCreateScripting();
-void elfDestroyScripting(void* data);
-
+// Global scripting engine
 bool elfInitScripting();
 void elfUpdateScripting();
 void elfDeinitScripting();

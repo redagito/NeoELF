@@ -12,9 +12,27 @@
 #include "nelf/objectType.h"
 #include "nelf/resource/Script.h"
 
-elfScripting* scr = NULL;
+struct elfScripting
+{
+    ELF_OBJECT_HEADER;
+    lua_State* L = nullptr;
+};
 
-elfScripting* elfCreateScripting()
+static elfScripting* scr = NULL;
+
+static void elfDestroyScripting(void* data)
+{
+    elfScripting* scripting = (elfScripting*)data;
+
+    if (scripting->L)
+        lua_close(scripting->L);
+
+    free(scripting);
+
+    elfDecObj(ELF_SCRIPTING);
+}
+
+static elfScripting* elfCreateScripting()
 {
     elfScripting* scripting;
 
@@ -38,18 +56,6 @@ elfScripting* elfCreateScripting()
     elfIncObj(ELF_SCRIPTING);
 
     return scripting;
-}
-
-void elfDestroyScripting(void* data)
-{
-    elfScripting* scripting = (elfScripting*)data;
-
-    if (scripting->L)
-        lua_close(scripting->L);
-
-    free(scripting);
-
-    elfDecObj(ELF_SCRIPTING);
 }
 
 bool elfInitScripting()
@@ -77,21 +83,21 @@ void elfUpdateScripting()
 
 void elfDeinitScripting()
 {
-    if (!scr)
+    if (scr == nullptr)
         return;
 
     elfDecRef((elfObject*)scr);
-    scr = NULL;
+    scr = nullptr;
 }
 
 bool elfRunString(const char* str)
 {
-    int err;
-
-    if (!scr || !str)
+    if (scr == nullptr)
+        return false;
+    if (str == nullptr)
         return false;
 
-    err = luaL_dostring(scr->L, str);
+    int err = luaL_dostring(scr->L, str);
     if (err)
     {
         elfSetError(ELF_CANT_RUN_STRING, "error: can't run string \"%s\"\n%s\n", str, lua_tostring(scr->L, -1));
@@ -103,12 +109,16 @@ bool elfRunString(const char* str)
 
 bool elfRunScript(elfScript* script)
 {
-    int err;
-
-    if (!scr || !script->text || script->error)
+    if (scr == nullptr)
+        return false;
+    if (script == nullptr)
+        return false;
+    if (script->text == nullptr)
+        return false;
+    if (script->error)
         return false;
 
-    err = luaL_dostring(scr->L, script->text);
+    int err = luaL_dostring(scr->L, script->text);
     if (err)
     {
         elfSetError(ELF_CANT_RUN_SCRIPT, "error: can't run script \"%s\"\n%s\n", script->name,

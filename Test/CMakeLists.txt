@@ -11,7 +11,7 @@ file(GLOB_RECURSE SOURCE_FILES
 add_executable (${TEST_NAME} ${SOURCE_FILES})
 add_test (${TEST_NAME} ${TEST_NAME})
 
-set_target_properties (${PROJECT_NAME} PROPERTIES 
+set_target_properties (${TEST_NAME} PROPERTIES 
 	CXX_STANDARD 17
 )
 
@@ -24,9 +24,12 @@ conan_cmake_run(REQUIRES
 
 target_link_libraries(${TEST_NAME}
 	PRIVATE ${PROJECT_NAME}Lib
-	PRIVTAE CONAN_PKG::catch2
+	PRIVATE CONAN_PKG::catch2
 )
 
 target_include_directories(${TEST_NAME} 
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source
 )
+
+# Copy runtime data
+file (COPY ${CMAKE_CURRENT_SOURCE_DIR}/data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
