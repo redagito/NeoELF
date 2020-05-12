@@ -12,8 +12,11 @@ struct elfTextField
     ELF_GUI_OBJECT_HEADER;
     elfTexture* texture = nullptr;
     elfFont* font = nullptr;
-    int offsetX = 0;
-    int offsetY = 0;
+
+    // Default offset
+    int offsetX = 2;
+    int offsetY = 2;
+
     elfColor textColor = colorBlack;
     int cursorPos = 0;
     int drawPos = 0;
@@ -22,6 +25,8 @@ struct elfTextField
 };
 
 elfTextField* elfCreateTextField(const char* name);
+elfTextField* elfCreateTextField(elfGuiObject* parent, const char* name, int x, int y, int width, const char* text);
+
 void elfDestroyTextField(void* data);
 
 void elfDrawTextField(elfTextField* textField, elfArea* area, gfxShaderParams* shaderParams);

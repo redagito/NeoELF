@@ -13,6 +13,8 @@ struct elfLabel
 };
 
 elfLabel* elfCreateLabel(const char* name);
+// Creates and sets parent, name, position and text
+elfLabel* elfCreateLabel(elfGuiObject* parent, const char* name, int x, int y, const char* text);
 
 void elfDestroyLabel(void* data);
 

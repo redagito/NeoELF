@@ -35,6 +35,17 @@ elfCheckBox* elfCreateCheckBox(const char* name)
     return checkBox;
 }
 
+elfCheckBox* elfCreateCheckBox(elfGuiObject* parent, const char* name, int x, int y, unsigned char state)
+{
+    auto checkBox = elfCreateCheckBox(name);
+
+    elfAddGuiObject(parent, (elfGuiObject*)checkBox);
+    elfSetGuiObjectPosition((elfGuiObject*)checkBox, x, y);
+    elfSetCheckBoxState(checkBox, state);
+
+    return checkBox;
+}
+
 void elfDestroyCheckBox(void* data)
 {
     elfCheckBox* checkBox = (elfCheckBox*)data;

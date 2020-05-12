@@ -13,6 +13,7 @@ struct elfPicture
 };
 
 elfPicture* elfCreatePicture(const char* name);
+elfPicture* elfCreatePicture(elfGuiObject* parent, const char* name, int x, int y, const char* path);
 void elfDestroyPicture(void* data);
 
 void elfDrawPicture(elfPicture* picture, gfxShaderParams* shaderParams);

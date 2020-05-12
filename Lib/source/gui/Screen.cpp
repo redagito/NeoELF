@@ -51,6 +51,17 @@ elfScreen* elfCreateScreen(const char* name)
     return screen;
 }
 
+elfScreen* elfCreateScreen(elfGuiObject* parent, const char* name, int x, int y, int width, int height)
+{
+    auto screen = elfCreateScreen(name);
+
+    elfAddGuiObject(parent, (elfGuiObject*)screen);
+    elfSetGuiObjectPosition((elfGuiObject*)screen, x, y);
+    elfSetScreenSize(screen, width, height);
+
+    return screen;
+}
+
 void elfDestroyScreen(void* data)
 {
     elfScreen* screen = (elfScreen*)data;

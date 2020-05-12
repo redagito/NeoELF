@@ -22,6 +22,8 @@ struct elfButton
 };
 
 elfButton* elfCreateButton(const char* name);
+elfButton* elfCreateButton(elfGuiObject* parent, const char* name, int x, int y, int width, int height,
+                           const char* text);
 void elfDestroyButton(void* data);
 
 void elfDrawButton(elfButton* button, gfxShaderParams* shaderParams);

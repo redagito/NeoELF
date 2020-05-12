@@ -38,6 +38,18 @@ elfTextField* elfCreateTextField(const char* name)
     return textField;
 }
 
+elfTextField* elfCreateTextField(elfGuiObject* parent, const char* name, int x, int y, int width, const char* text)
+{
+    auto textField = elfCreateTextField(name);
+
+    elfAddGuiObject(parent, (elfGuiObject*)textField);
+    elfSetGuiObjectPosition((elfGuiObject*)textField, x, y);
+    elfSetTextFieldWidth(textField, width);
+    elfSetTextFieldText(textField, text);
+
+    return textField;
+}
+
 void elfDestroyTextField(void* data)
 {
     elfTextField* textField = (elfTextField*)data;

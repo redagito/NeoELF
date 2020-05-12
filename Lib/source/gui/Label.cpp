@@ -28,8 +28,18 @@ elfLabel* elfCreateLabel(const char* name)
         label->name = elfCreateString(name);
 
     elfSetLabelFont(label, eng->guiFont);
-
     elfIncObj(ELF_LABEL);
+
+    return label;
+}
+
+elfLabel* elfCreateLabel(elfGuiObject* parent, const char* name, int x, int y, const char* text)
+{
+    auto label = elfCreateLabel(name);
+
+    elfAddGuiObject(parent, (elfGuiObject*)label);
+    elfSetGuiObjectPosition((elfGuiObject*)label, x, y);
+    elfSetLabelText(label, text);
 
     return label;
 }

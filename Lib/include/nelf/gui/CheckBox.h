@@ -14,6 +14,7 @@ struct elfCheckBox
 };
 
 elfCheckBox* elfCreateCheckBox(const char* name);
+elfCheckBox* elfCreateCheckBox(elfGuiObject* parent, const char* name, int x, int y, unsigned char state);
 void elfDestroyCheckBox(void* data);
 
 void elfDrawCheckBox(elfCheckBox* checkBox, gfxShaderParams* shaderParams);

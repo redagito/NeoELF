@@ -34,11 +34,9 @@ struct elfGui
 };
 
 elfGui* elfCreateGui();
-
 void elfDestroyGui(void* data);
 
 void elfSendGuiCharEvent(elfGui* gui, char chr);
-
 void elfSendGuiKeyEvent(elfGui* gui, int key);
 
 void elfUpdateGui(elfGui* gui, float step);
@@ -46,15 +44,10 @@ void elfUpdateGui(elfGui* gui, float step);
 void elfDrawGui(elfGui* gui);
 
 elfGuiObject* elfGetGuiTrace(elfGui* gui);
-
 elfGuiObject* elfGetGuiFocus(elfGui* gui);
-
 elfGuiObject* elfGetGuiActiveTextField(elfGui* gui);
-
 unsigned char elfGetGuiDragging(elfGui* gui);
-
 elfGuiObject* elfGetGuiDragObject(elfGui* gui);
-
 const char* elfGetGuiDragContent(elfGui* gui);
 
 void elfEmptyGui(elfGui* gui);

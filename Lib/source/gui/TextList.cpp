@@ -41,6 +41,17 @@ elfTextList* elfCreateTextList(const char* name)
     return textList;
 }
 
+elfTextList* elfCreateTextList(elfGuiObject* parent, const char* name, int x, int y, int rows, int width)
+{
+    auto textList = elfCreateTextList(name);
+
+    elfAddGuiObject(parent, (elfGuiObject*)textList);
+    elfSetGuiObjectPosition((elfGuiObject*)textList, x, y);
+    elfSetTextListSize(textList, rows, width);
+
+    return textList;
+}
+
 void elfDestroyTextList(void* data)
 {
     elfTextList* textList = (elfTextList*)data;

@@ -20,6 +20,7 @@ struct elfTextList
 };
 
 elfTextList* elfCreateTextList(const char* name);
+elfTextList* elfCreateTextList(elfGuiObject* parent, const char* name, int x, int y, int rows, int width);
 void elfDestroyTextList(void* data);
 
 void elfDrawTextList(elfTextList* textList, elfArea* area, gfxShaderParams* shaderParams);

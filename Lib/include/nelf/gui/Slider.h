@@ -14,6 +14,7 @@ struct elfSlider
 };
 
 elfSlider* elfCreateSlider(const char* name);
+elfSlider* elfCreateSlider(elfGuiObject* parent, const char* name, int x, int y, int width, int height, float value);
 void elfDestroySlider(void* data);
 
 void elfDrawSlider(elfSlider* slider, gfxShaderParams* shaderParams);

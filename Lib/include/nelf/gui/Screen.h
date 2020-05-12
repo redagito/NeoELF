@@ -15,6 +15,7 @@ struct elfScreen
 };
 
 elfScreen* elfCreateScreen(const char* name);
+elfScreen* elfCreateScreen(elfGuiObject* parent, const char* name, int x, int y, int width, int height);
 void elfDestroyScreen(void* data);
 
 void elfDrawScreen(elfScreen* screen, elfArea* area, gfxShaderParams* shaderParams);

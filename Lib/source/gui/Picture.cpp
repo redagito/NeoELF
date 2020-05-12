@@ -10,6 +10,7 @@
 #include "nelf/gfx/gfxShaderParams.h"
 #include "nelf/gui/GuiObject.h"
 #include "nelf/objectType.h"
+#include "nelf/resource/Resources.h"
 #include "nelf/resource/Texture.h"
 
 elfPicture* elfCreatePicture(const char* name)
@@ -29,6 +30,19 @@ elfPicture* elfCreatePicture(const char* name)
         picture->name = elfCreateString(name);
 
     elfIncObj(ELF_PICTURE);
+
+    return picture;
+}
+
+elfPicture* elfCreatePicture(elfGuiObject* parent, const char* name, int x, int y, const char* path)
+{
+    auto picture = elfCreatePicture(name);
+
+    elfAddGuiObject(parent, (elfGuiObject*)picture);
+    elfSetGuiObjectPosition((elfGuiObject*)picture, x, y);
+    auto texture = elfGetOrLoadResourcesTexture(path, NULL);
+    if (texture)
+        elfSetPictureTexture(picture, texture);
 
     return picture;
 }

@@ -34,6 +34,18 @@ elfSlider* elfCreateSlider(const char* name)
     return slider;
 }
 
+elfSlider* elfCreateSlider(elfGuiObject* parent, const char* name, int x, int y, int width, int height, float value)
+{
+    auto slider = elfCreateSlider(name);
+
+    elfAddGuiObject(parent, (elfGuiObject*)slider);
+    elfSetGuiObjectPosition((elfGuiObject*)slider, x, y);
+    elfSetSliderSize(slider, width, height);
+    elfSetSliderValue(slider, value);
+
+    return slider;
+}
+
 void elfDestroySlider(void* data)
 {
     elfSlider* slider = (elfSlider*)data;

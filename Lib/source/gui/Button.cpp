@@ -47,6 +47,19 @@ elfButton* elfCreateButton(const char* name)
     return button;
 }
 
+elfButton* elfCreateButton(elfGuiObject* parent, const char* name, int x, int y, int width, int height,
+                           const char* text)
+{
+    auto button = elfCreateButton(name);
+
+    elfAddGuiObject(parent, (elfGuiObject*)button);
+    elfSetGuiObjectPosition((elfGuiObject*)button, x, y);
+    elfSetButtonSize(button, width, height);
+    elfSetButtonText(button, text);
+
+    return button;
+}
+
 void elfDestroyButton(void* data)
 {
     elfButton* button = (elfButton*)data;

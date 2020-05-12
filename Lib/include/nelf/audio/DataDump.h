@@ -7,18 +7,16 @@ struct elfDataChunk
     void* data = nullptr;
 };
 
+elfDataChunk* elfCreateDataChunk();
+void elfDestroyDataChunk(elfDataChunk* chunk);
+
 struct elfDataDump
 {
     elfDataChunk* first = nullptr;
     int offset = 0;
 };
 
-elfDataChunk* elfCreateDataChunk();
-
-void elfDestroyDataChunk(elfDataChunk* chunk);
-
 elfDataDump* elfCreateDataDump();
-
 void elfDestroyDataDump(elfDataDump* dump);
 
 int elfGetDataDumpLength(elfDataDump* dump);

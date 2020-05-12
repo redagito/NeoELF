@@ -5,6 +5,7 @@
 #include "nelf/objectHeader.h"
 
 struct elfList;
+struct elfAudioDevice;
 
 struct elfAudioDevice
 {
