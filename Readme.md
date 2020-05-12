@@ -1,4 +1,4 @@
-![Screen 3](https://github.com/redagito/NeoELF/blob/master/doc/images/blendelf_engine3b.jpg)
+![Screen 3](https://github.com/redagito/NeoELF/blob/master/Doc/images/blendelf_engine3b.jpg)
 
 # NeoELF
 
@@ -61,9 +61,9 @@ The project is currently not in a usable state.
 
 These are from BlendELF, to be replaced once everything works
 
-![Screen 1](https://github.com/redagito/NeoELF/blob/master/doc/images/blendelf_engine1b.jpg)
-![Screen 2](https://github.com/redagito/NeoELF/blob/master/doc/images/blendelf_engine2b.jpg)
-![Screen 4](https://github.com/redagito/NeoELF/blob/master/doc/images/blendelf_engine4b.jpg)
+![Screen 1](https://github.com/redagito/NeoELF/blob/master/Doc/images/blendelf_engine1b.jpg)
+![Screen 2](https://github.com/redagito/NeoELF/blob/master/Doc/images/blendelf_engine2b.jpg)
+![Screen 4](https://github.com/redagito/NeoELF/blob/master/Doc/images/blendelf_engine4b.jpg)
 
 # BlendELF
 
