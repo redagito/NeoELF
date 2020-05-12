@@ -25,18 +25,32 @@ Current goals are:
 * Changes must show same or better performance
 * Demos / games
 
-## Building
+## Development Setup
 
 Development is currently done with
 * CMake, 3.16.0, https://cmake.org
 * Conan, 1.25.0, https://conan.io
 * Visual Studio 2019 Community Edition, https://visualstudio.microsoft.com/vs/community
+* clang-format 10.0.0, https://llvm.org
 
 Conan remotes used are
 * conan-center: https://conan.bintray.com
 * bincrafters: https://api.bintray.com/conan/bincrafters/public-conan
 
+Add the pre-commit hook in Util/ to the git repository for automatic code formatting.
+
+## Building
+
 Building the project should just require running CMake and the respective build command.
+
+```
+$ git clone ... NeoELF
+$ cd NeoELF
+$ cmake . ...
+$ <platform-specific-build-command>
+```
+
+Current development is done with in-source build for convenience but out-of-source builds should work.
 
 ## Project Status
 
