@@ -24,7 +24,7 @@ elfScripting* elfCreateScripting()
     scripting->objDestr = elfDestroyScripting;
 
     // scripting->L = lua_open();
-    scripting->L = lua_newstate(nullptr, nullptr);
+    scripting->L = luaL_newstate();
 
     if (!scripting->L)
     {

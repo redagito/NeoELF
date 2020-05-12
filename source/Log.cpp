@@ -34,7 +34,7 @@ void elfSetLogFilePath(const char* filePath)
         free(logFileName);
 
     logFileName = (char*)malloc(sizeof(char) * (strlen(filePath) + 1));
-    memcpy(log, filePath, sizeof(char) * strlen(filePath));
+    memcpy(logFileName, filePath, sizeof(char) * strlen(filePath));
     logFileName[strlen(filePath)] = '\0';
 }
 
@@ -47,7 +47,7 @@ void elfInitLog()
     }
 
     logFileName = (char*)malloc(sizeof(char) * 8);
-    memcpy(log, "elf.log", sizeof(char) * 7);
+    memcpy(logFileName, "elf.log", sizeof(char) * 7);
     logFileName[7] = '\0';
 }
 
