@@ -86,7 +86,7 @@ elfPak* elfCreatePakFromFile(const char* filePath)
 
     if (version < ELF_PAK_VERSION)
     {
-        elfSetError(ELF_INVALID_FILE, "error: can't load \"%s\", old .pak version\n", filePath);
+        elfSetError(ELF_INVALID_FILE, "error: can't load \"%s\", old .pak version %i\n", filePath, version);
         fclose(file);
         return NULL;
     }
