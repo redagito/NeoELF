@@ -5,15 +5,21 @@
 
 void elfIncRef(elfObject* obj)
 {
-    gen->refCount++;
-    gen->refTable[obj->objType]++;
+    if (gen != nullptr)
+    {
+        gen->refCount++;
+        gen->refTable[obj->objType]++;
+    }
     obj->objRefCount++;
 }
 
 void elfDecRef(elfObject* obj)
 {
-    gen->refCount--;
-    gen->refTable[obj->objType]--;
+    if (gen != nullptr)
+    {
+        gen->refCount--;
+        gen->refTable[obj->objType]--;
+    }
     obj->objRefCount--;
 
     if (obj->objRefCount < 1)

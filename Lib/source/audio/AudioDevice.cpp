@@ -65,34 +65,46 @@ bool elfInitAudio()
     audioDevice = elfCreateAudioDevice();
     elfIncRef((elfObject*)audioDevice);
 
+    // Device
     audioDevice->device = alcOpenDevice(NULL);
-    if (!audioDevice->device)
+    if (audioDevice->device == nullptr)
     {
         elfLogWrite("warning: could not create audio device\n");
         elfDeinitAudio();
         return false;
     }
 
-    audioDevice->context = alcCreateContext(audioDevice->device, NULL);
+    // Context
+    audioDevice->context = alcCreateContext(audioDevice->device, nullptr);
     if (!audioDevice->context)
     {
         elfLogWrite("warning: could not create audio context\n");
         alcCloseDevice(audioDevice->device);
-        audioDevice->device = NULL;
+        audioDevice->device = nullptr;
         elfDeinitAudio();
         return false;
     }
 
-    alcMakeContextCurrent(audioDevice->context);
-
-    alGetError();
+    // Make current (for multi threading?)
+    if (!alcMakeContextCurrent(audioDevice->context))
+    {
+        elfLogWrite("warning: could not make audio context current\n");
+        alcCloseDevice(audioDevice->device);
+        audioDevice->device = nullptr;
+        elfDeinitAudio();
+        return false;
+    }
 
     alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
-    alListener3f(AL_DIRECTION, 0.0f, 0.0f, -1.0f);
-
+    alListener3f(AL_VELOCITY, 0, 0, 0);
+    // 2x 3d vectors
+    // 1. is at
+    // 2. is up
+    ALfloat listenerOri[] = {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f};
+    alListenerfv(AL_ORIENTATION, listenerOri);
     alListenerf(AL_GAIN, 1.0f);
 
-    return false;
+    return alGetError() == AL_NO_ERROR;
 }
 
 void elfDeinitAudio()
@@ -102,12 +114,12 @@ void elfDeinitAudio()
 
     elfDecRef((elfObject*)audioDevice);
 
-    audioDevice = NULL;
+    audioDevice = nullptr;
 }
 
 void elfUpdateAudio()
 {
-    elfAudioSource* source;
+    elfAudioSource* source = nullptr;
 
     for (source = (elfAudioSource*)elfBeginList(audioDevice->sources); source;
          source = (elfAudioSource*)elfGetListNext(audioDevice->sources))

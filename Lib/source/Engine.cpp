@@ -115,13 +115,13 @@ bool elfInitEngine()
 
     // TODO Load from data directory
     // Default font
-    file = fopen("deffont.ttf", "r");
+    file = fopen("data/deffont.ttf", "r");
     if (!file)
         elfLogWrite("warning: can't open default font \"deffont.ttf\"\n");
     else
     {
         fclose(file);
-        eng->guiFont = elfCreateFontFromFile("deffont.ttf", 12);
+        eng->guiFont = elfCreateFontFromFile("data/deffont.ttf", 12);
         if (eng->guiFont)
             elfIncRef((elfObject*)eng->guiFont);
     }

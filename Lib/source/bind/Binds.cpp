@@ -3,6 +3,9 @@
 #include <cstring>
 #include <lua.hpp>
 
+#include "bind/BindAudio.h"
+#include "bind/BindObject.h"
+#include "bind/BindUtil.h"
 #include "nelf/Color.h"
 #include "nelf/Config.h"
 #include "nelf/Context.h"
@@ -61,23 +64,6 @@
 #include "nelf/resource/Script.h"
 #include "nelf/resource/Texture.h"
 
-#define LUA_ELF_USERDATA_HEADER unsigned char type
-#define LUA_ELF_OBJECT 0x0001
-#define LUA_ELF_VEC2I 0x0002
-#define LUA_ELF_VEC2F 0x0002
-#define LUA_ELF_VEC3F 0x0003
-#define LUA_ELF_VEC4F 0x0004
-#define LUA_ELF_COLOR 0x0005
-
-struct lua_elf_userdata
-{
-    LUA_ELF_USERDATA_HEADER;
-};
-struct lua_elfObject
-{
-    LUA_ELF_USERDATA_HEADER;
-    elfObject* object;
-};
 struct lua_elfVec2i
 {
     LUA_ELF_USERDATA_HEADER;
@@ -104,55 +90,18 @@ struct lua_elfColor
     elfColor val;
 };
 
-static int lua_fail_with_backtrace(lua_State* L, const char* fmt, ...)
+void lua_create_elfObject(lua_State* L, elfObject* obj)
 {
-    va_list argp;
-    lua_Debug ar;
-    int i;
-    int j;
-
-    va_start(argp, fmt);
-
-    i = 1;
-    j = 0;
-    while (lua_getstack(L, i, &ar))
-    {
-        if (j > 0)
-        {
-            lua_pushfstring(L, "\n");
-            j += 1;
-        }
-        lua_getinfo(L, "Sl", &ar);
-        if (ar.currentline > 0)
-        {
-            if (j == 0)
-            {
-                lua_pushfstring(L, "%s:%d: ", ar.short_src, ar.currentline);
-                lua_pushvfstring(L, fmt, argp);
-                j += 1;
-            }
-            else
-            {
-                lua_pushfstring(L, "%s:%d ", ar.short_src, ar.currentline);
-            }
-        }
-        else
-        {
-            lua_pushliteral(L, ""); /* else, no information available... */
-        }
-
-        i += 1;
-        j += 1;
-    }
-
-    va_end(argp);
-
-    lua_concat(L, j);
-
-    return lua_error(L);
+    lua_elfObject* ud;
+    ud = (lua_elfObject*)lua_newuserdata(L, sizeof(lua_elfObject));
+    ud->type = LUA_ELF_OBJECT;
+    ud->object = obj;
+    elfIncRef(ud->object);
+    luaL_getmetatable(L, "lua_elfObject_mt");
+    lua_setmetatable(L, -2);
 }
 
-static int lua_elfObject__gc(lua_State* L)
+int lua_elfObject__gc(lua_State* L)
 {
     lua_elfObject* obj = (lua_elfObject*)lua_touserdata(L, 1);
     elfDecRef(obj->object);
@@ -440,88 +389,7 @@ void lua_create_elfColor(lua_State* L, elfColor col)
     luaL_getmetatable(L, "lua_elfColor_mt");
     lua_setmetatable(L, -2);
 }
-void lua_create_elfObject(lua_State* L, elfObject* obj)
-{
-    lua_elfObject* ud;
-    ud = (lua_elfObject*)lua_newuserdata(L, sizeof(lua_elfObject));
-    ud->type = LUA_ELF_OBJECT;
-    ud->object = obj;
-    elfIncRef(ud->object);
-    luaL_getmetatable(L, "lua_elfObject_mt");
-    lua_setmetatable(L, -2);
-}
-int lua_fail_arg_count(lua_State* L, const char* func_name, int a, int b)
-{
-    return lua_fail_with_backtrace(L, "%s: Got %d arguments instead of %d", func_name, a, b);
-}
-int lua_fail_arg(lua_State* L, const char* func_name, int idx, const char* etype)
-{
-    return lua_fail_with_backtrace(L, "%s: Argument %d should be of type %s", func_name, idx, etype);
-}
-static int lua_IncRef(lua_State* L)
-{
-    elfObject* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "IncRef", lua_gettop(L), 1);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT)
-    {
-        return lua_fail_arg(L, "IncRef", 1, "elfObject");
-    }
-    arg0 = (elfObject*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    elfIncRef(arg0);
-    return 0;
-}
-static int lua_DecRef(lua_State* L)
-{
-    elfObject* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "DecRef", lua_gettop(L), 1);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT)
-    {
-        return lua_fail_arg(L, "DecRef", 1, "elfObject");
-    }
-    arg0 = (elfObject*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    elfDecRef(arg0);
-    return 0;
-}
-static int lua_GetObjectType(lua_State* L)
-{
-    int result;
-    elfObject* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "GetObjectType", lua_gettop(L), 1);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT)
-    {
-        return lua_fail_arg(L, "GetObjectType", 1, "elfObject");
-    }
-    arg0 = (elfObject*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    result = elfGetObjectType(arg0);
-    lua_pushnumber(L, (lua_Number)result);
-    return 1;
-}
-static int lua_GetObjectRefCount(lua_State* L)
-{
-    int result;
-    elfObject* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "GetObjectRefCount", lua_gettop(L), 1);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT)
-    {
-        return lua_fail_arg(L, "GetObjectRefCount", 1, "elfObject");
-    }
-    arg0 = (elfObject*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    result = elfGetObjectRefCount(arg0);
-    lua_pushnumber(L, (lua_Number)result);
-    return 1;
-}
+
 static int lua_GetGlobalRefCount(lua_State* L)
 {
     int result;
@@ -533,6 +401,7 @@ static int lua_GetGlobalRefCount(lua_State* L)
     lua_pushnumber(L, (lua_Number)result);
     return 1;
 }
+
 static int lua_GetGlobalObjCount(lua_State* L)
 {
     int result;
@@ -544,40 +413,7 @@ static int lua_GetGlobalObjCount(lua_State* L)
     lua_pushnumber(L, (lua_Number)result);
     return 1;
 }
-static int lua_IsActor(lua_State* L)
-{
-    unsigned char result;
-    elfObject* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "IsActor", lua_gettop(L), 1);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT)
-    {
-        return lua_fail_arg(L, "IsActor", 1, "elfObject");
-    }
-    arg0 = (elfObject*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    result = elfIsActor(arg0);
-    lua_pushboolean(L, result);
-    return 1;
-}
-static int lua_IsGuiObject(lua_State* L)
-{
-    unsigned char result;
-    elfObject* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "IsGuiObject", lua_gettop(L), 1);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT)
-    {
-        return lua_fail_arg(L, "IsGuiObject", 1, "elfObject");
-    }
-    arg0 = (elfObject*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    result = elfIsGuiObject(arg0);
-    lua_pushboolean(L, result);
-    return 1;
-}
+
 static int lua_CreateList(lua_State* L)
 {
     elfList* result;
@@ -13409,362 +13245,7 @@ static int lua_RunScript(lua_State* L)
     lua_pushboolean(L, result);
     return 1;
 }
-static int lua_SetAudioVolume(lua_State* L)
-{
-    float arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "SetAudioVolume", lua_gettop(L), 1);
-    }
-    if (!lua_isnumber(L, 1))
-    {
-        return lua_fail_arg(L, "SetAudioVolume", 1, "number");
-    }
-    arg0 = (float)lua_tonumber(L, 1);
-    elfSetAudioVolume(arg0);
-    return 0;
-}
-static int lua_GetAudioVolume(lua_State* L)
-{
-    float result;
-    if (lua_gettop(L) != 0)
-    {
-        return lua_fail_arg_count(L, "GetAudioVolume", lua_gettop(L), 0);
-    }
-    result = elfGetAudioVolume();
-    lua_pushnumber(L, (lua_Number)result);
-    return 1;
-}
-static int lua_SetAudioRolloff(lua_State* L)
-{
-    float arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "SetAudioRolloff", lua_gettop(L), 1);
-    }
-    if (!lua_isnumber(L, 1))
-    {
-        return lua_fail_arg(L, "SetAudioRolloff", 1, "number");
-    }
-    arg0 = (float)lua_tonumber(L, 1);
-    elfSetAudioRolloff(arg0);
-    return 0;
-}
-static int lua_GetAudioRolloff(lua_State* L)
-{
-    float result;
-    if (lua_gettop(L) != 0)
-    {
-        return lua_fail_arg_count(L, "GetAudioRolloff", lua_gettop(L), 0);
-    }
-    result = elfGetAudioRolloff();
-    lua_pushnumber(L, (lua_Number)result);
-    return 1;
-}
-static int lua_LoadSound(lua_State* L)
-{
-    elfSound* result;
-    const char* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "LoadSound", lua_gettop(L), 1);
-    }
-    if (!lua_isstring(L, 1))
-    {
-        return lua_fail_arg(L, "LoadSound", 1, "string");
-    }
-    arg0 = lua_tostring(L, 1);
-    result = elfLoadSound(arg0);
-    if (result)
-        lua_create_elfObject(L, (elfObject*)result);
-    else
-        lua_pushnil(L);
-    return 1;
-}
-static int lua_LoadStreamedSound(lua_State* L)
-{
-    elfSound* result;
-    const char* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "LoadStreamedSound", lua_gettop(L), 1);
-    }
-    if (!lua_isstring(L, 1))
-    {
-        return lua_fail_arg(L, "LoadStreamedSound", 1, "string");
-    }
-    arg0 = lua_tostring(L, 1);
-    result = elfLoadStreamedSound(arg0);
-    if (result)
-        lua_create_elfObject(L, (elfObject*)result);
-    else
-        lua_pushnil(L);
-    return 1;
-}
-static int lua_GetSoundFileType(lua_State* L)
-{
-    int result;
-    elfSound* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "GetSoundFileType", lua_gettop(L), 1);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 1))->object) != ELF_SOUND)
-    {
-        return lua_fail_arg(L, "GetSoundFileType", 1, "elfSound");
-    }
-    arg0 = (elfSound*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    result = elfGetSoundFileType(arg0);
-    lua_pushnumber(L, (lua_Number)result);
-    return 1;
-}
-static int lua_PlaySound(lua_State* L)
-{
-    elfAudioSource* result;
-    elfSound* arg0;
-    float arg1;
-    if (lua_gettop(L) != 2)
-    {
-        return lua_fail_arg_count(L, "PlaySound", lua_gettop(L), 2);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 1))->object) != ELF_SOUND)
-    {
-        return lua_fail_arg(L, "PlaySound", 1, "elfSound");
-    }
-    if (!lua_isnumber(L, 2))
-    {
-        return lua_fail_arg(L, "PlaySound", 2, "number");
-    }
-    arg0 = (elfSound*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    arg1 = (float)lua_tonumber(L, 2);
-    result = elfPlaySound(arg0, arg1);
-    if (result)
-        lua_create_elfObject(L, (elfObject*)result);
-    else
-        lua_pushnil(L);
-    return 1;
-}
-static int lua_PlayEntitySound(lua_State* L)
-{
-    elfAudioSource* result;
-    elfEntity* arg0;
-    elfSound* arg1;
-    float arg2;
-    if (lua_gettop(L) != 3)
-    {
-        return lua_fail_arg_count(L, "PlayEntitySound", lua_gettop(L), 3);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 1))->object) != ELF_ENTITY)
-    {
-        return lua_fail_arg(L, "PlayEntitySound", 1, "elfEntity");
-    }
-    if (!lua_isuserdata(L, 2) || ((lua_elf_userdata*)lua_touserdata(L, 2))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 2))->object) != ELF_SOUND)
-    {
-        return lua_fail_arg(L, "PlayEntitySound", 2, "elfSound");
-    }
-    if (!lua_isnumber(L, 3))
-    {
-        return lua_fail_arg(L, "PlayEntitySound", 3, "number");
-    }
-    arg0 = (elfEntity*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    arg1 = (elfSound*)((lua_elfObject*)lua_touserdata(L, 2))->object;
-    arg2 = (float)lua_tonumber(L, 3);
-    result = elfPlayEntitySound(arg0, arg1, arg2);
-    if (result)
-        lua_create_elfObject(L, (elfObject*)result);
-    else
-        lua_pushnil(L);
-    return 1;
-}
-static int lua_LoopSound(lua_State* L)
-{
-    elfAudioSource* result;
-    elfSound* arg0;
-    float arg1;
-    if (lua_gettop(L) != 2)
-    {
-        return lua_fail_arg_count(L, "LoopSound", lua_gettop(L), 2);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 1))->object) != ELF_SOUND)
-    {
-        return lua_fail_arg(L, "LoopSound", 1, "elfSound");
-    }
-    if (!lua_isnumber(L, 2))
-    {
-        return lua_fail_arg(L, "LoopSound", 2, "number");
-    }
-    arg0 = (elfSound*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    arg1 = (float)lua_tonumber(L, 2);
-    result = elfLoopSound(arg0, arg1);
-    if (result)
-        lua_create_elfObject(L, (elfObject*)result);
-    else
-        lua_pushnil(L);
-    return 1;
-}
-static int lua_LoopEntitySound(lua_State* L)
-{
-    elfAudioSource* result;
-    elfEntity* arg0;
-    elfSound* arg1;
-    float arg2;
-    if (lua_gettop(L) != 3)
-    {
-        return lua_fail_arg_count(L, "LoopEntitySound", lua_gettop(L), 3);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 1))->object) != ELF_ENTITY)
-    {
-        return lua_fail_arg(L, "LoopEntitySound", 1, "elfEntity");
-    }
-    if (!lua_isuserdata(L, 2) || ((lua_elf_userdata*)lua_touserdata(L, 2))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 2))->object) != ELF_SOUND)
-    {
-        return lua_fail_arg(L, "LoopEntitySound", 2, "elfSound");
-    }
-    if (!lua_isnumber(L, 3))
-    {
-        return lua_fail_arg(L, "LoopEntitySound", 3, "number");
-    }
-    arg0 = (elfEntity*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    arg1 = (elfSound*)((lua_elfObject*)lua_touserdata(L, 2))->object;
-    arg2 = (float)lua_tonumber(L, 3);
-    result = elfLoopEntitySound(arg0, arg1, arg2);
-    if (result)
-        lua_create_elfObject(L, (elfObject*)result);
-    else
-        lua_pushnil(L);
-    return 1;
-}
-static int lua_SetSoundVolume(lua_State* L)
-{
-    elfAudioSource* arg0;
-    float arg1;
-    if (lua_gettop(L) != 2)
-    {
-        return lua_fail_arg_count(L, "SetSoundVolume", lua_gettop(L), 2);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 1))->object) != ELF_AUDIO_SOURCE)
-    {
-        return lua_fail_arg(L, "SetSoundVolume", 1, "elfAudioSource");
-    }
-    if (!lua_isnumber(L, 2))
-    {
-        return lua_fail_arg(L, "SetSoundVolume", 2, "number");
-    }
-    arg0 = (elfAudioSource*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    arg1 = (float)lua_tonumber(L, 2);
-    elfSetSoundVolume(arg0, arg1);
-    return 0;
-}
-static int lua_GetSoundVolume(lua_State* L)
-{
-    float result;
-    elfAudioSource* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "GetSoundVolume", lua_gettop(L), 1);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 1))->object) != ELF_AUDIO_SOURCE)
-    {
-        return lua_fail_arg(L, "GetSoundVolume", 1, "elfAudioSource");
-    }
-    arg0 = (elfAudioSource*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    result = elfGetSoundVolume(arg0);
-    lua_pushnumber(L, (lua_Number)result);
-    return 1;
-}
-static int lua_PauseSound(lua_State* L)
-{
-    elfAudioSource* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "PauseSound", lua_gettop(L), 1);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 1))->object) != ELF_AUDIO_SOURCE)
-    {
-        return lua_fail_arg(L, "PauseSound", 1, "elfAudioSource");
-    }
-    arg0 = (elfAudioSource*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    elfPauseSound(arg0);
-    return 0;
-}
-static int lua_ResumeSound(lua_State* L)
-{
-    elfAudioSource* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "ResumeSound", lua_gettop(L), 1);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 1))->object) != ELF_AUDIO_SOURCE)
-    {
-        return lua_fail_arg(L, "ResumeSound", 1, "elfAudioSource");
-    }
-    arg0 = (elfAudioSource*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    elfResumeSound(arg0);
-    return 0;
-}
-static int lua_StopSound(lua_State* L)
-{
-    elfAudioSource* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "StopSound", lua_gettop(L), 1);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 1))->object) != ELF_AUDIO_SOURCE)
-    {
-        return lua_fail_arg(L, "StopSound", 1, "elfAudioSource");
-    }
-    arg0 = (elfAudioSource*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    elfStopSound(arg0);
-    return 0;
-}
-static int lua_IsSoundPlaying(lua_State* L)
-{
-    unsigned char result;
-    elfAudioSource* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "IsSoundPlaying", lua_gettop(L), 1);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 1))->object) != ELF_AUDIO_SOURCE)
-    {
-        return lua_fail_arg(L, "IsSoundPlaying", 1, "elfAudioSource");
-    }
-    arg0 = (elfAudioSource*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    result = elfIsSoundPlaying(arg0);
-    lua_pushboolean(L, result);
-    return 1;
-}
-static int lua_IsSoundPaused(lua_State* L)
-{
-    unsigned char result;
-    elfAudioSource* arg0;
-    if (lua_gettop(L) != 1)
-    {
-        return lua_fail_arg_count(L, "IsSoundPaused", lua_gettop(L), 1);
-    }
-    if (!lua_isuserdata(L, 1) || ((lua_elf_userdata*)lua_touserdata(L, 1))->type != LUA_ELF_OBJECT ||
-        elfGetObjectType(((lua_elfObject*)lua_touserdata(L, 1))->object) != ELF_AUDIO_SOURCE)
-    {
-        return lua_fail_arg(L, "IsSoundPaused", 1, "elfAudioSource");
-    }
-    arg0 = (elfAudioSource*)((lua_elfObject*)lua_touserdata(L, 1))->object;
-    result = elfIsSoundPaused(arg0);
-    lua_pushboolean(L, result);
-    return 1;
-}
+
 static int lua_GetCollisionActor(lua_State* L)
 {
     elfActor* result;

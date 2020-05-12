@@ -27,7 +27,6 @@ struct elfSound
 };
 
 elfSound* elfCreateSound();
-
 void elfDestroySound(void* data);
 
 bool elfInitSoundWithOgg(elfSound* snd, const char* filePath);

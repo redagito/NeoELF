@@ -9,7 +9,7 @@ elfGeneral* gen = NULL;
 
 void elfInitGeneral()
 {
-    if (gen)
+    if (gen != nullptr)
         return;
 
     gen = (elfGeneral*)malloc(sizeof(elfGeneral));
@@ -51,18 +51,24 @@ void elfDeinitGeneral()
 
 void elfIncObj(int type)
 {
+    if (gen == nullptr)
+        return;
     gen->objCount++;
     gen->objTable[type]++;
 }
 
 void elfDecObj(int type)
 {
+    if (gen == nullptr)
+        return;
     gen->objCount--;
     gen->objTable[type]--;
 }
 
 void elfDumpRefTable()
 {
+    if (gen == nullptr)
+        return;
     int i;
 
     elfLogWrite("---------- REF COUNT TABLE ----------\n");
@@ -77,6 +83,8 @@ void elfDumpRefTable()
 
 void elfDumpObjTable()
 {
+    if (gen == nullptr)
+        return;
     int i;
 
     elfLogWrite("---------- OBJ COUNT TABLE ----------\n");
@@ -89,6 +97,16 @@ void elfDumpObjTable()
     elfLogWrite("-------------------------------------\n");
 }
 
-int elfGetGlobalRefCount() { return gen->refCount; }
+int elfGetGlobalRefCount()
+{
+    if (gen == nullptr)
+        return 0;
+    return gen->refCount;
+}
 
-int elfGetGlobalObjCount() { return gen->objCount; }
+int elfGetGlobalObjCount()
+{
+    if (gen == nullptr)
+        return 0;
+    return gen->objCount;
+}

@@ -52,7 +52,7 @@ target_link_libraries(${LIB_NAME}
 	PRIVATE CONAN_PKG::glad
 	# Should be private, refactor audio to fix
 	PUBLIC CONAN_PKG::openal
-	PRIVATE CONAN_PKG::vorbis
+	PUBLIC CONAN_PKG::vorbis
 	
 	PRIVATE CONAN_PKG::lua
 	PRIVATE CONAN_PKG::sol2
