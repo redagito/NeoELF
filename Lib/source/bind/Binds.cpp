@@ -14378,6 +14378,7 @@ static int lua_SetGuiObjectScript(lua_State* L)
     elfSetGuiObjectScript(arg0, arg1);
     return 0;
 }
+
 static int lua_CreateLabel(lua_State* L)
 {
     elfLabel* result;
@@ -14398,6 +14399,7 @@ static int lua_CreateLabel(lua_State* L)
         lua_pushnil(L);
     return 1;
 }
+
 static int lua_GetLabelFont(lua_State* L)
 {
     elfFont* result;
@@ -14419,6 +14421,7 @@ static int lua_GetLabelFont(lua_State* L)
         lua_pushnil(L);
     return 1;
 }
+
 static int lua_GetLabelText(lua_State* L)
 {
     const char* result;
@@ -14437,6 +14440,7 @@ static int lua_GetLabelText(lua_State* L)
     lua_pushstring(L, result);
     return 1;
 }
+
 static int lua_SetLabelFont(lua_State* L)
 {
     elfLabel* arg0;
@@ -14460,6 +14464,7 @@ static int lua_SetLabelFont(lua_State* L)
     elfSetLabelFont(arg0, arg1);
     return 0;
 }
+
 static int lua_SetLabelText(lua_State* L)
 {
     elfLabel* arg0;

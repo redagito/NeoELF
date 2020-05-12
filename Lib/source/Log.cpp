@@ -46,9 +46,9 @@ void elfInitLog()
         return;
     }
 
-    logFileName = (char*)malloc(sizeof(char) * 8);
-    memcpy(logFileName, "elf.log", sizeof(char) * 7);
-    logFileName[7] = '\0';
+    logFileName = (char*)malloc(sizeof(char) * 9);
+    memcpy(logFileName, "nelf.log", sizeof(char) * 8);
+    logFileName[8] = '\0';
 }
 
 void elfDeinitLog()

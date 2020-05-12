@@ -36,9 +36,9 @@ elfConfig* elfCreateConfig()
     config->start = (char*)malloc(sizeof(char));
     config->start[0] = '\0';
 
-    config->logPath = (char*)malloc(sizeof(char) * 8);
-    memset(config->logPath, 0x0, sizeof(char) * 8);
-    memcpy(config->logPath, "nelf.log", sizeof(char) * 7);
+    config->logPath = (char*)malloc(sizeof(char) * 9);
+    memset(config->logPath, 0x0, sizeof(char) * 9);
+    memcpy(config->logPath, "nelf.log", sizeof(char) * 8);
 
     return config;
 }

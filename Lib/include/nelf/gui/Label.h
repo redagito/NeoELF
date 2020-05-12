@@ -21,9 +21,7 @@ void elfDrawLabel(elfLabel* label, gfxShaderParams* shaderParams);
 void elfRecalcLabel(elfLabel* label);
 
 elfFont* elfGetLabelFont(elfLabel* label);
-
 const char* elfGetLabelText(elfLabel* label);
 
 void elfSetLabelFont(elfLabel* label, elfFont* font);
-
 void elfSetLabelText(elfLabel* label, const char* text);
