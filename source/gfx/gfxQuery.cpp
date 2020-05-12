@@ -29,7 +29,7 @@ void gfxBeginQuery(gfxQuery* query) { glBeginQuery(GL_SAMPLES_PASSED, query->id)
 
 void gfxEndQuery(gfxQuery* query) { glEndQuery(GL_SAMPLES_PASSED); }
 
-unsigned char gfxIsQueryResult(gfxQuery* query)
+bool gfxIsQueryResult(gfxQuery* query)
 {
     int result;
 

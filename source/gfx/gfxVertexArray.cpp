@@ -185,8 +185,8 @@ void gfxSetVertexArray(gfxVertexArray* vertexArray)
         {
             for (i = 0; i < GFX_MAX_TEXTURES - 1; i++)
             {
-                glActiveTexture(GL_TEXTURE0_ARB + i);
-                glClientActiveTexture(GL_TEXTURE0_ARB + i);
+                glActiveTexture(GL_TEXTURE0 + i);
+                glClientActiveTexture(GL_TEXTURE0 + i);
 
                 glDisableClientState(GL_TEXTURE_COORD_ARRAY);
             }

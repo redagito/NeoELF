@@ -186,11 +186,10 @@ bool elfInitContext(int width, int height, const char* title, int multisamples, 
     glfwSetMouseButtonCallback(ctx->window, mouseButtonCallback);
     glfwSetCursorPosCallback(ctx->window, mousePositionCallback);
 
-    glfwSetMousePosCallback(mousePositionCallback);
-    glfwSetMouseWheelCallback(mouseWheelCallback);
+    glfwSetScrollCallback(ctx->window, mouseWheelCallback);
 
-    glfwSetKeyCallback(keyCallback);
-    glfwSetCharCallback(charCallback);
+    glfwSetKeyCallback(ctx->window, keyCallback);
+    glfwSetCharCallback(ctx->window, charCallback);
 
     // TODO Video mode retrieval should be cleaned up
     int videoModeCount;
@@ -311,6 +310,8 @@ void elfSwapBuffers()
     memcpy(ctx->prvKeys, ctx->curKeys, sizeof(unsigned char) * 256);
     memcpy(ctx->prvMousePosition, ctx->mousePosition, sizeof(int) * 2);
 
+    // TODO Joysticks disabled for now
+    /*
     for (int i = 0; i < 16; i++)
     {
         if (ctx->joysticks[i].present)
@@ -318,9 +319,11 @@ void elfSwapBuffers()
             memcpy(ctx->joysticks[i].prvButs, ctx->joysticks[i].curButs, sizeof(unsigned char) * 16);
         }
     }
+    */
 
     glfwSwapBuffers(ctx->window);
 
+    /*
     for (int i = 0; i < 16; i++)
     {
         ctx->joysticks[i].present = glfwGetJoystickParam(GLFW_JOYSTICK_1 + i, GLFW_PRESENT) == GL_TRUE;
@@ -330,9 +333,10 @@ void elfSwapBuffers()
             glfwGetJoystickButtons(GLFW_JOYSTICK_1 + i, ctx->joysticks[i].curButs, 16);
         }
     }
+    */
 }
 
-void mouseButtonCallback(int button, int state)
+void mouseButtonCallback(GLFWwindow* window, int button, int state, int mods)
 {
     unsigned int elfButton;
 
@@ -354,16 +358,17 @@ void mouseButtonCallback(int button, int state)
     ctx->curMbuts[elfButton] = (state == GLFW_PRESS);
 }
 
-void mousePositionCallback(double x, double y)
+void mousePositionCallback(GLFWwindow* window, double x, double y)
 {
     // TODO Actually double, or just range 0-1 and requires multiplication with window width?
     ctx->mousePosition[0] = x;
     ctx->mousePosition[1] = y;
 }
 
-void mouseWheelCallback(int wheel) { ctx->mouseWheel = wheel; }
+// TODO Hacky, see if this actually works and cleanup
+void mouseWheelCallback(GLFWwindow* window, double xOffset, double yOffset) { ctx->mouseWheel += (int)yOffset; }
 
-void keyCallback(int key, int state)
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     unsigned int elfKey;
     elfKeyEvent* keyEvent;
@@ -531,22 +536,26 @@ void keyCallback(int key, int state)
         }
     }
 
-    ctx->curKeys[elfKey] = (state == GLFW_PRESS);
+    ctx->curKeys[elfKey] = (action == GLFW_PRESS);
 
     keyEvent = elfCreateKeyEvent();
     keyEvent->key = elfKey;
-    keyEvent->state = (state == GLFW_PRESS);
+    keyEvent->state = (action == GLFW_PRESS);
 
     elfAppendListObject(ctx->events, (elfObject*)keyEvent);
 }
 
-void charCallback(int code, int state)
+void charCallback(GLFWwindow* window, unsigned int code)
 {
+    // Acts as single event, not as a key press down and up
     elfCharEvent* charEvent;
 
     charEvent = elfCreateCharEvent();
     charEvent->code = code;
-    charEvent->state = (state == GLFW_PRESS);
+
+    // Theres no release event
+    // TODO See if this causes issues
+    charEvent->state = GLFW_PRESS;
 
     elfAppendListObject(ctx->events, (elfObject*)charEvent);
 }
@@ -573,7 +582,7 @@ elfVec2i elfGetMouseForce()
 
 void elfSetMousePosition(int x, int y)
 {
-    glfwSetMousePos(x, y);
+    glfwSetCursorPos(ctx->window, x, y);
 
     ctx->mousePosition[0] = x;
     ctx->mousePosition[1] = y;
@@ -588,21 +597,21 @@ void elfSetMousePosition(int x, int y)
         ctx->mousePosition[1] = elfGetWindowHeight();
 }
 
-void elfHideMouse(unsigned char hide)
+void elfHideMouse(bool hide)
 {
     if (hide)
     {
-        glfwDisable(GLFW_MOUSE_CURSOR);
-        ctx->hideMouse = ELF_TRUE;
+        glfwSetInputMode(ctx->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        ctx->hideMouse = true;
     }
     else
     {
-        glfwEnable(GLFW_MOUSE_CURSOR);
+        glfwSetInputMode(ctx->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         ctx->hideMouse = false;
     }
 }
 
-unsigned char elfIsMouseHidden() { return ctx->hideMouse; }
+bool elfIsMouseHidden() { return ctx->hideMouse; }
 
 int elfGetMouseWheel() { return ctx->mouseWheel; }
 

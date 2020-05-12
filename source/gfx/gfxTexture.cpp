@@ -107,7 +107,7 @@ gfxTexture* gfxCreate2dTexture(unsigned int width, unsigned int height, float an
 
     if (anisotropy > 1.0f && driver->version >= 200)
     {
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisotropy);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, anisotropy);
     }
 
     glTexImage2D(GL_TEXTURE_2D, 0, driver->textureInternalFormats[internalFormat], width, height, 0,

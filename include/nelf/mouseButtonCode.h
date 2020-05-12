@@ -1,7 +1,7 @@
 #pragma once
 
 // TODO Maybe MouseButtonType is better?
-using MouseButtonCode = int;
+using MouseButtonCode = unsigned int;
 
 // <mdoc> MOUSE BUTTON CODES <mdocc> The mouse button codes used by elf.GetMouseButtonState
 #define ELF_BUTTON_LEFT 0x0000

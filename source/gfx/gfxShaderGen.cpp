@@ -3,9 +3,15 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/gfx/gfxBlendMode.h"
+#include "nelf/gfx/gfxDriver.h"
+#include "nelf/gfx/gfxGBufferMode.h"
 #include "nelf/gfx/gfxLightType.h"
-#include "nelf/gfx/gfxMapType.h"
 #include "nelf/gfx/gfxMaxTextures.h"
+#include "nelf/gfx/gfxShaderConfig.h"
+#include "nelf/gfx/gfxShaderParams.h"
+#include "nelf/gfx/gfxShaderProgram.h"
+#include "nelf/gfx/gfxTextureMapType.h"
 
 char* gfxCreateString(const char* str)
 {

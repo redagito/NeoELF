@@ -1,7 +1,8 @@
 #include "nelf/gfx/gfxDriver.h"
 
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
+// GLAD header first
+#include <GLFW/glfw3.h>
 
 #include <cstdio>
 #include <cstdlib>

@@ -81,8 +81,7 @@ void elfDestroyContext(void* data);
 
 // From global context
 
-unsigned char elfInitContext(int width, int height, const char* title, int multisamples, unsigned char fullscreen);
-
+bool elfInitContext(int width, int height, const char* title, int multisamples, bool fullscreen);
 void elfDeinitContext();
 
 unsigned char elfResizeContext(int width, int height);
@@ -90,9 +89,7 @@ unsigned char elfResizeContext(int width, int height);
 void elfSetTitle(const char* title);
 
 int elfGetWindowWidth();
-
 int elfGetWindowHeight();
-
 int elfGetVideoModeCount();
 
 // From GLFW
@@ -102,9 +99,7 @@ elfVec2i elfGetVideoMode(int idx);
 // From global context
 
 int elfGetMultisamples();
-
 unsigned char elfIsFullscreen();
-
 const char* elfGetTitle();
 
 // GLFW Util, replace with std functions
@@ -117,15 +112,15 @@ void elfSwapBuffers();
 
 // Callbacks
 
-void mouseButtonCallback(int button, int state);
-void mousePositionCallback(double x, double y);
-void mouseWheelCallback(int wheel);
+void mouseButtonCallback(GLFWwindow* window, int button, int state, int mods);
+void mousePositionCallback(GLFWwindow* window, double x, double y);
+void mouseWheelCallback(GLFWwindow* window, double xOffset, double yOffset);
 
 // Called on keypress
-void keyCallback(int key, int state);
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 // Char event
-void charCallback(int code, int state);
+void charCallback(GLFWwindow* window, unsigned int code);
 
 // Mouse
 

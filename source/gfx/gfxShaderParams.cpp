@@ -5,10 +5,16 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/gfx/gfxBlendMode.h"
 #include "nelf/gfx/gfxCullMode.h"
 #include "nelf/gfx/gfxDepthFunc.h"
+#include "nelf/gfx/gfxDriver.h"
+#include "nelf/gfx/gfxLightType.h"
 #include "nelf/gfx/gfxMath.h"
 #include "nelf/gfx/gfxProjectionMode.h"
+#include "nelf/gfx/gfxShaderGen.h"
+#include "nelf/gfx/gfxShaderProgram.h"
+#include "nelf/gfx/gfxTexture.h"
 #include "nelf/gfx/gfxTextureMapType.h"
 #include "nelf/gfx/gfxVertexOrder.h"
 
@@ -45,7 +51,7 @@ void gfxSetShaderParamsDefault(gfxShaderParams* shaderParams)
     {
         shaderParams->textureParams[i].type = GFX_COLOR_MAP;
         shaderParams->textureParams[i].texture = NULL;
-        shaderParams->textureParams[i].projectionMode = GFX_NONE;
+        shaderParams->textureParams[i].projectionMode = GFX_PROJECTION_NONE;
         gfxMatrix4SetIdentity(shaderParams->textureParams[i].matrix);
     }
 
@@ -72,7 +78,7 @@ void gfxSetTextureParamsDefault(gfxShaderParams* shaderParams)
     {
         shaderParams->textureParams[i].type = GFX_COLOR_MAP;
         shaderParams->textureParams[i].texture = NULL;
-        shaderParams->textureParams[i].projectionMode = GFX_NONE;
+        shaderParams->textureParams[i].projectionMode = GFX_PROJECTION_NONE;
         shaderParams->textureParams[i].parallaxScale = 0.25f;
         gfxMatrix4SetIdentity(shaderParams->textureParams[i].matrix);
     }
@@ -142,7 +148,7 @@ void gfxSetShaderParams(gfxShaderParams* shaderParams)
 
         switch (shaderParams->renderParams.blendMode)
         {
-        case GFX_NONE:
+        case GFX_BLEND_NONE:
             glDisable(GL_BLEND);
             break;
         case GFX_TRANSPARENT:
@@ -250,7 +256,7 @@ void gfxSetShaderParams(gfxShaderParams* shaderParams)
 
                     if (shaderParams->textureParams[i].projectionMode == GFX_SHADOW_PROJECTION)
                     {
-                        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
+                        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
                     }
                     else
                     {
@@ -372,8 +378,8 @@ void gfxSetShaderParams(gfxShaderParams* shaderParams)
 
                     switch (shaderParams->textureParams[i].projectionMode)
                     {
-                    case GFX_NONE:
-                        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
+                    case GFX_PROJECTION_NONE:
+                        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
                         break;
                     case GFX_SHADOW_PROJECTION:
                         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);

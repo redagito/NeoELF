@@ -3,7 +3,14 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/gfx/gfxFormatType.h"
+#include "nelf/gfx/gfxObject.h"
 #include "nelf/gfx/gfxObjectType.h"
+#include "nelf/gfx/gfxRenderTarget.h"
+#include "nelf/gfx/gfxTexture.h"
+#include "nelf/gfx/gfxTextureFilterType.h"
+#include "nelf/gfx/gfxTextureFormat.h"
+#include "nelf/gfx/gfxTextureWrapMode.h"
 
 gfxGbuffer* gfxCreateGbuffer(int width, int height)
 {

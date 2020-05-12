@@ -40,6 +40,7 @@ struct gfxRenderParams
     float alphaThreshold = 0.f;
 
     unsigned char cullFace = 0;
+    // GfxBlendMode
     unsigned char blendMode = 0;
 
     float offsetScale = 0.f;
@@ -82,6 +83,7 @@ struct gfxTextureParams
 
 struct gfxLightParams
 {
+    // GfxLightType
     unsigned char type = 0;
     unsigned char mode = 0;
 

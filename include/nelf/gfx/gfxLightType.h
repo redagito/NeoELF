@@ -1,6 +1,6 @@
 #pragma once
 
-using GfxLightType = int;
+using GfxLightType = unsigned char;
 
 // TODO Renamed from GFX_NONE
 #define GFX_LIGHT_NONE 0x0000

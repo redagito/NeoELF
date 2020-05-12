@@ -7,6 +7,7 @@
 
 #include "nelf/Log.h"
 #include "nelf/gfx/gfxAttributeType.h"
+#include "nelf/gfx/gfxDriver.h"
 
 gfxShaderProgram* gfxCreateShaderProgram(const char* vertex, const char* fragment)
 {

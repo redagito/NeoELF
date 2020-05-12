@@ -6,8 +6,10 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "nelf/gfx/gfxDriver.h"
 #include "nelf/gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxObjectType.h"
+#include "nelf/gfx/gfxTexture.h"
 
 unsigned char gfxCheckRenderTarget()
 {

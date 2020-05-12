@@ -99,7 +99,7 @@ const char* elfGetSceneName(elfScene* scene);
 const char* elfGetSceneFilePath(elfScene* scene);
 
 // Has physics
-void elfSetScenePhysics(elfScene* scene, unsigned char physics);
+void elfSetScenePhysics(elfScene* scene, bool physics);
 bool elfGetScenePhysics(elfScene* scene);
 
 // Run entity scripts

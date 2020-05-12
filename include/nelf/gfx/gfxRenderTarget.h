@@ -23,6 +23,6 @@ gfxRenderTarget* gfxGetCurRenderTarget();
 void gfxSetRenderTargetColorTexture(gfxRenderTarget* renderTarget, unsigned int n, gfxTexture* color);
 void gfxSetRenderTargetDepthTexture(gfxRenderTarget* renderTarget, gfxTexture* depth);
 
-unsigned char gfxSetRenderTarget(gfxRenderTarget* renderTarget);
+bool gfxSetRenderTarget(gfxRenderTarget* renderTarget);
 
 void gfxDisableRenderTarget();
