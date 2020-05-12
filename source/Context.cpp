@@ -185,8 +185,10 @@ bool elfInitContext(int width, int height, const char* title, int multisamples, 
 
     glfwSetMouseButtonCallback(ctx->window, mouseButtonCallback);
     glfwSetCursorPosCallback(ctx->window, mousePositionCallback);
+
     glfwSetMousePosCallback(mousePositionCallback);
     glfwSetMouseWheelCallback(mouseWheelCallback);
+
     glfwSetKeyCallback(keyCallback);
     glfwSetCharCallback(charCallback);
 
@@ -297,12 +299,11 @@ double elfGetTime() { return glfwGetTime(); }
 //      Maybe physics thread with small delta time causes issues?
 void elfSleep(float time) { std::this_thread::sleep_for(std::chrono::milliseconds((int)(time * 1000.0))); }
 
-bool elfIsWindowOpened() { return !glfwWindowShouldClose(ctx->window); }
+bool elfIsWindowOpened() { return glfwWindowShouldClose(ctx->window) == GLFW_FALSE; }
 
 void elfSwapBuffers()
 {
-    int i;
-
+    // TODO This is done EVERY frame??
     elfDestroyList(ctx->events);
     ctx->events = elfCreateList();
 
@@ -310,7 +311,7 @@ void elfSwapBuffers()
     memcpy(ctx->prvKeys, ctx->curKeys, sizeof(unsigned char) * 256);
     memcpy(ctx->prvMousePosition, ctx->mousePosition, sizeof(int) * 2);
 
-    for (i = 0; i < 16; i++)
+    for (int i = 0; i < 16; i++)
     {
         if (ctx->joysticks[i].present)
         {
@@ -320,7 +321,7 @@ void elfSwapBuffers()
 
     glfwSwapBuffers(ctx->window);
 
-    for (i = 0; i < 16; i++)
+    for (int i = 0; i < 16; i++)
     {
         ctx->joysticks[i].present = glfwGetJoystickParam(GLFW_JOYSTICK_1 + i, GLFW_PRESENT) == GL_TRUE;
         if (ctx->joysticks[i].present)

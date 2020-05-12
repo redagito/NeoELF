@@ -112,17 +112,13 @@ const char* elfGetTitle();
 double elfGetTime();
 
 void elfSleep(float time);
-
 bool elfIsWindowOpened();
-
 void elfSwapBuffers();
 
 // Callbacks
 
 void mouseButtonCallback(int button, int state);
-
 void mousePositionCallback(double x, double y);
-
 void mouseWheelCallback(int wheel);
 
 // Called on keypress
@@ -134,17 +130,14 @@ void charCallback(int code, int state);
 // Mouse
 
 elfVec2i elfGetMousePosition();
-
 elfVec2i elfGetMouseForce();
 
 void elfSetMousePosition(int x, int y);
 
-void elfHideMouse(unsigned char hide);
-
-unsigned char elfIsMouseHidden();
+void elfHideMouse(bool hide);
+bool elfIsMouseHidden();
 
 int elfGetMouseWheel();
-
 int elfGetMouseButtonState(int button);
 
 // All curren key states
@@ -152,18 +145,13 @@ int elfGetKeyState(int key);
 
 // Joystick
 
-unsigned char elfGetJoystickPresent(int joy);
-
+bool elfGetJoystickPresent(int joy);
 elfVec2f elfGetJoystickAxis(int joy);
-
 int elfGetJoystickButtonState(int joy, int but);
 
 // Events
 
 int elfGetEventCount();
-
 elfObject* elfGetEvent(int idx);
-
 int elfGetKeyEventKey(elfKeyEvent* keyEvent);
-
 int elfGetKeyEventState(elfKeyEvent* keyEvent);

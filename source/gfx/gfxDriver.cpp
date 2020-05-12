@@ -10,6 +10,7 @@
 #include "nelf/Log.h"
 #include "nelf/gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxShaderProgram.h"
+#include "nelf/gfx/gfxTexture.h"
 
 gfxDriver* driver = nullptr;
 
@@ -234,11 +235,30 @@ void gfxResetVerticesDrawn()
 
 int gfxGetVerticesDrawn(unsigned int drawMode) { return driver->verticesDrawn[drawMode]; }
 
+static const char* getErrorString(GLenum error)
+{
+    switch (error)
+    {
+    case GL_NO_ERROR:
+        return "No error";
+    case GL_INVALID_OPERATION:
+        return "INVALID OPERATION";
+    case GL_INVALID_ENUM:
+        return "INVALID ENUM";
+    case GL_INVALID_VALUE:
+        return "INVALID VALUE";
+    case GL_OUT_OF_MEMORY:
+        return "OUT OF MEMORY";
+    case GL_INVALID_FRAMEBUFFER_OPERATION:
+        return "INVALID FRAMEBUFFER OPERATION";
+    default:
+        return "Unknown error";
+    }
+}
+
 void gfxPrintGLError()
 {
     GLenum err;
-
     err = glGetError();
-
-    printf("%s\n", glewGetErrorString(err));
+    printf("%s\n", getErrorString(err));
 }
