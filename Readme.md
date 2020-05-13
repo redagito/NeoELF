@@ -9,21 +9,20 @@ A cross-platform 3d game engine based on BlendELF, written in C++ with a modern 
 ## Project Goal
 
 Current goals are:
-* Clean project structure
-* Better / more documentation
-* Organize doc, move content from old website to wiki
-* Refactoring (mostly separating definition and implementation into separate files)
-* Compile as C++ code
-* CMake / Conan build system
-* Achieve feature parity with last release of BlendELF (make sure everything still works)
-* Setup Appveyor for automatic builds
-* Unit tests
-* Separate project into lib, app and tests
-* Performance benchmarks
-* Move to OOP based design
-* Replace custom implementations of common functionality with std C++ counterparts (file system, string)
-* Changes must show same or better performance
-* Demos / games
+- [x] Initial refactoring (mostly separating definition and implementation into separate files)
+- [x] Compile as C++ code
+- [x] CMake / Conan build system
+- [x] Separate project into lib, app and tests
+- [ ] Better / more documentation
+- [ ] Organize doc, move content from old website to wiki
+- [ ] Achieve feature parity with last release of BlendELF (make sure everything still works)
+- [ ] Setup Appveyor for automatic builds
+- [ ] Unit tests
+- [ ] Performance benchmarks
+- [ ] Move to OOP based design
+- [ ] Replace custom implementations of common functionality with std C++ counterparts (file system, string)
+- [ ] Changes must show same or better performance
+- [ ] Demos / games
 
 ## Development Setup
 
@@ -55,6 +54,7 @@ Current development is done with in-source build for convenience but out-of-sour
 ## Project Status
 
 Active development, no official release yet.
+
 The project is currently not in a usable state.
 
 ## Screenshots
