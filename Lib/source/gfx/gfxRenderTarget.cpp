@@ -35,9 +35,8 @@ unsigned char gfxCheckRenderTarget()
         break;
 
     case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-        // TODO I guess we just ignore this?
         printf("fbo: incomplete draw buffer\n");
-        return true;
+        break;
 
     case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
         printf("fbo: incomplete read buffer\n");
@@ -131,12 +130,12 @@ void gfxSetRenderTargetDepthTexture(gfxRenderTarget* renderTarget, gfxTexture* d
     if (depth != nullptr)
     {
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth->id, 0);
-        glFramebufferRenderbuffer(GL_RENDERBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth->id);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth->id);
     }
     else
     {
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
-        glFramebufferRenderbuffer(GL_RENDERBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0);
     }
 
     if (!driver->renderTarget)

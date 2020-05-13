@@ -1,5 +1,7 @@
 #pragma once
 
+using ObjectType = int;
+
 // <mdoc> ELF OBJECT TYPES <mdocc> The  object types returned by elf.GetObjectType
 #define ELF_TEXTURE 0x0000
 #define ELF_MATERIAL 0x0001

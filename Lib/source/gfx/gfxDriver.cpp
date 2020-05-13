@@ -97,7 +97,6 @@ static void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum
         break;
     }
     std::cout << std::endl;
-    std::cout << std::endl;
 }
 
 bool gfxInit()
@@ -213,25 +212,11 @@ bool gfxInit()
         elfLogWrite("warning: OpenGL version 1.4 not supported, npot textures will not display correctly\n");
     }
 
-    // checks for deferred rendering
-
-    /*if(!glewIsSupported("GL_ARB_texture_float"))
-    {
-            elfLogWrite("GL_ARB_texture_float not supported!\n");
-            return GFX_FALSE;
-    }
-
-    if(!glewIsSupported("GL_ARB_texture_rg"))
-    {
-            elfLogWrite("GL_ARB_texture_rg not supported!\n");
-            return GFX_FALSE;
-    }*/
-
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &driver->maxTextureSize);
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &driver->maxTextureImageUnits);
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &driver->maxDrawBuffers);
     glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &driver->maxColorAttachments);
-    // This is actualy in core since OpenGL 4.6
+    // This is actually in core since OpenGL 4.6
     glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &driver->maxAnisotropy);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

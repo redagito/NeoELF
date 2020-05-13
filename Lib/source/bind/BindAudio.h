@@ -2,7 +2,7 @@
 
 #include <lua.hpp>
 
-// Lua to C++ bindings for the Audio module
+// Lua to C++ bindings for the audio module
 
 // elfAudioDevice
 int lua_SetAudioVolume(lua_State* L);
