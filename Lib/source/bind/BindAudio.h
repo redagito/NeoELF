@@ -14,12 +14,12 @@ int lua_GetAudioRolloff(lua_State* L);
 int lua_LoadSound(lua_State* L);
 int lua_LoadStreamedSound(lua_State* L);
 int lua_GetSoundFileType(lua_State* L);
+
+// elfAudioSource
 int lua_PlaySound(lua_State* L);
 int lua_PlayEntitySound(lua_State* L);
 int lua_LoopSound(lua_State* L);
 int lua_LoopEntitySound(lua_State* L);
-
-// elfAudioSource
 int lua_SetSoundVolume(lua_State* L);
 int lua_GetSoundVolume(lua_State* L);
 int lua_PauseSound(lua_State* L);

@@ -20,19 +20,26 @@ struct elfAudioDevice
 // Global audio device
 extern elfAudioDevice* audioDevice;
 
+// Constructor, destructor
 elfAudioDevice* elfCreateAudioDevice();
-
 void elfDestroyAudioDevice(void* data);
 
+// Manage global audio device
 bool elfInitAudio();
 void elfDeinitAudio();
 void elfUpdateAudio();
 
+// LUA Api
 void elfSetAudioVolume(float volume);
 float elfGetAudioVolume();
 
 void elfSetAudioRolloff(float rolloff);
 float elfGetAudioRolloff();
 
+// Listener position in world space
 void elfSetAudioListenerPosition(float x, float y, float z);
+// Listener orientattion
+// float[6], 2x 3d vectors
+// first is the lookat direction, default (0, 0, 1)
+// second the up vector, default (0, 1, 0)
 void elfSetAudioListenerOrientation(float* params);

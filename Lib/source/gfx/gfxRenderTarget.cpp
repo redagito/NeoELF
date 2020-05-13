@@ -128,15 +128,15 @@ void gfxSetRenderTargetDepthTexture(gfxRenderTarget* renderTarget, gfxTexture* d
     if (driver->renderTarget != renderTarget)
         glBindFramebuffer(GL_FRAMEBUFFER, renderTarget->fb);
 
-    if (depth)
+    if (depth != nullptr)
     {
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth->id, 0);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth->id);
+        glFramebufferRenderbuffer(GL_RENDERBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth->id);
     }
     else
     {
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0);
+        glFramebufferRenderbuffer(GL_RENDERBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0);
     }
 
     if (!driver->renderTarget)

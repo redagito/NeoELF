@@ -39,19 +39,19 @@ gfxTexture* gfxCreate2dTexture(unsigned int width, unsigned int height, float an
     if (width == 0 || height == 0 || (int)width > gfxGetMaxTextureSize() || (int)height > gfxGetMaxTextureSize())
     {
         printf("error: invalid dimensions when creating texture\n");
-        return NULL;
+        return nullptr;
     }
 
     if (!(format >= GFX_LUMINANCE && format < GFX_MAX_TEXTURE_FORMATS))
     {
         printf("error: invalid format when creating texture\n");
-        return NULL;
+        return nullptr;
     }
 
     if (!(dataFormat >= GFX_FLOAT && dataFormat < GFX_MAX_FORMATS))
     {
         printf("error: invalid data format when creating texture\n");
-        return NULL;
+        return nullptr;
     }
 
     texture = gfxCreateTexture();
@@ -62,38 +62,23 @@ gfxTexture* gfxCreate2dTexture(unsigned int width, unsigned int height, float an
     texture->format = format;
     texture->dataFormat = dataFormat;
 
-    glActiveTexture(GL_TEXTURE0);
-    // TODO Deprecated
-    glClientActiveTexture(GL_TEXTURE0);
-
+    // New texture
     glGenTextures(1, &texture->id);
-
     glBindTexture(GL_TEXTURE_2D, texture->id);
 
-    if (data && filter != GFX_NEAREST)
-    {
-        if (driver->version >= 140)
-        {
-            glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        }
-        else
-        {
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        }
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    }
-    else if (filter != GFX_NEAREST)
-    {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    }
-    else
+    // Filtering
+    if (filter == GFX_NEAREST)
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
+    else
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    }
 
+    // Wrapping
     if (mode == GFX_REPEAT)
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -112,6 +97,12 @@ gfxTexture* gfxCreate2dTexture(unsigned int width, unsigned int height, float an
 
     glTexImage2D(GL_TEXTURE_2D, 0, driver->textureInternalFormats[internalFormat], width, height, 0,
                  driver->textureDataFormats[format], driver->formats[dataFormat], data);
+
+    // Mipmaps
+    if (data != nullptr)
+    {
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
 
     glBindTexture(GL_TEXTURE_2D, 0);
     driver->shaderParams.textureParams[0].texture = NULL;
@@ -154,11 +145,7 @@ gfxTexture* gfxCreateCubeMap(unsigned int width, unsigned int height, float anis
     texture->format = format;
     texture->dataFormat = dataFormat;
 
-    glActiveTexture(GL_TEXTURE0);
-    glClientActiveTexture(GL_TEXTURE0);
-
     glGenTextures(1, &texture->id);
-
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture->id);
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -211,10 +198,6 @@ int gfxGetTextureDataFormat(gfxTexture* texture) { return texture->dataFormat; }
 void gfxSetTexture(gfxTexture* texture, int slot)
 {
     glActiveTexture(GL_TEXTURE0 + slot);
-    glClientActiveTexture(GL_TEXTURE0 + slot);
-
-    if (driver->version < 200)
-        glEnable(GL_TEXTURE_2D);
 
     if (texture->type == GFX_2D_MAP_TEXTURE)
         glBindTexture(GL_TEXTURE_2D, texture->id);
@@ -227,12 +210,7 @@ void gfxSetTexture(gfxTexture* texture, int slot)
 void elfDisableTexture(int slot)
 {
     glActiveTexture(GL_TEXTURE0 + slot);
-    glClientActiveTexture(GL_TEXTURE0 + slot);
-
     glBindTexture(GL_TEXTURE_2D, 0);
-
-    if (driver->version < 200)
-        glDisable(GL_TEXTURE_2D);
 
     driver->shaderParams.textureParams[slot].texture = NULL;
 }

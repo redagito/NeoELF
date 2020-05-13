@@ -13,7 +13,7 @@ struct elfVertex
     elfVec2f texCoord;
 };
 
-// TODO Seriously each vertex is cosntructed and refcounted?
+// TODO Seriously each vertex is constructed and refcounted?
 elfVertex* elfCreateVertex();
 void elfDestroyVertex(void* data);
 

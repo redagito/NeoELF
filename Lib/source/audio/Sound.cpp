@@ -5,6 +5,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <vector>
 
 #include "nelf/General.h"
 #include "nelf/Log.h"
@@ -105,7 +106,8 @@ bool elfInitSoundWithOgg(elfSound* snd, const char* filePath)
 
 bool elfInitSoundWithWav(elfSound* snd, const char* filePath)
 {
-    char buf[ELF_AUDIO_STREAM_CHUNK_SIZE];
+    std::vector<char> buffer;
+    buffer.resize(ELF_AUDIO_STREAM_CHUNK_SIZE);
 
     char magic[5] = "\0\0\0\0";
     unsigned int chunkLength = 0;
@@ -182,8 +184,10 @@ bool elfInitSoundWithWav(elfSound* snd, const char* filePath)
             fread(&junkData, sizeof(unsigned short int), 1, snd->file);
             fread(&junkData, sizeof(unsigned short int), 1, snd->file);
 
+            // TODO Read but never access?
+            //      Maybe just seek instead?
             if (chunkLength - 16 > 0)
-                fread(buf, 1, chunkLength - 16, snd->file);
+                fread(buffer.data(), 1, chunkLength - 16, snd->file);
 
             if (audioFormat != 1)
             {
@@ -215,64 +219,73 @@ bool elfInitSoundWithWav(elfSound* snd, const char* filePath)
     return true;
 }
 
+static char* loadOgg(elfSound* snd)
+{
+    if (!elfInitSoundWithOgg(snd, snd->filePath))
+    {
+        elfDestroySound(snd);
+        return NULL;
+    }
+
+    elfDataDump* dump = elfCreateDataDump();
+    std::vector<char> buffer;
+    buffer.resize(ELF_AUDIO_STREAM_CHUNK_SIZE);
+
+    int bytesRead = 0;
+    do
+    {
+        int endian = 0;
+        int bitStream = 0;
+        bytesRead = ov_read(&snd->oggFile, buffer.data(), ELF_AUDIO_STREAM_CHUNK_SIZE, endian, 2, 1, &bitStream);
+
+        elfAddChunkToDataDump(dump, buffer.data(), bytesRead);
+        snd->length += bytesRead;
+    } while (bytesRead > 0);
+
+    snd->length = elfGetDataDumpLength(dump);
+    char* data = (char*)malloc(snd->length);
+    elfDataDumpToBuffer(dump, data);
+
+    elfDestroyDataDump(dump);
+    ov_clear(&snd->oggFile);
+
+    return data;
+}
+
+static char* loadWav(elfSound* snd)
+{
+    if (!elfInitSoundWithWav(snd, snd->filePath))
+    {
+        elfDestroySound(snd);
+        return nullptr;
+    }
+
+    char* data = (char*)malloc(snd->length);
+    fread(data, sizeof(char), snd->length, snd->file);
+
+    fclose(snd->file);
+    snd->file = nullptr;
+
+    return data;
+}
+
 elfSound* elfLoadSound(const char* filePath)
 {
-    elfSound* snd = NULL;
+    if (audioDevice == nullptr)
+        return nullptr;
 
-    elfDataDump* dump;
-    char buf[ELF_AUDIO_STREAM_CHUNK_SIZE];
-    int bytesRead = 0;
-    char* data;
-
-    int endian = 0;
-    int bitStream = 0;
-
-    char* type = NULL;
-
-    if (!audioDevice)
-        return NULL;
-
-    snd = elfCreateSound();
+    elfSound* snd = elfCreateSound();
     snd->filePath = elfCreateString(filePath);
 
-    type = strrchr((char*)filePath, '.');
-
+    char* data = nullptr;
+    char* type = strrchr((char*)filePath, '.');
     if (strcmp(type, ".ogg") == 0)
     {
-        if (!elfInitSoundWithOgg(snd, snd->filePath))
-        {
-            elfDestroySound(snd);
-            return NULL;
-        }
-
-        dump = elfCreateDataDump();
-        do
-        {
-            bytesRead = ov_read(&snd->oggFile, buf, ELF_AUDIO_STREAM_CHUNK_SIZE, endian, 2, 1, &bitStream);
-            elfAddChunkToDataDump(dump, buf, bytesRead);
-            snd->length += bytesRead;
-        } while (bytesRead > 0);
-
-        snd->length = elfGetDataDumpLength(dump);
-        data = (char*)malloc(snd->length);
-        elfDataDumpToBuffer(dump, data);
-
-        elfDestroyDataDump(dump);
-        ov_clear(&snd->oggFile);
+        data = loadOgg(snd);
     }
     else if (strcmp(type, ".wav") == 0)
     {
-        if (!elfInitSoundWithWav(snd, snd->filePath))
-        {
-            elfDestroySound(snd);
-            return NULL;
-        }
-
-        data = (char*)malloc(snd->length);
-        fread(data, sizeof(char), snd->length, snd->file);
-
-        fclose(snd->file);
-        snd->file = NULL;
+        data = loadWav(snd);
     }
     else
     {
@@ -281,6 +294,16 @@ elfSound* elfLoadSound(const char* filePath)
         return NULL;
     }
 
+    // No data loaded
+    if (data == nullptr)
+    {
+        // TODO Probably not the best error code
+        elfSetError(ELF_CANT_CREATE, "error: can't load \"%s\", no data loaded\n", filePath);
+        elfDestroySound(snd);
+        return nullptr;
+    }
+
+    // Load data into OpenAL
     alGenBuffers(1, &snd->buffer[0]);
     alBufferData(snd->buffer[0], snd->format, data, snd->length, snd->freq);
 

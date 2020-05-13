@@ -16,7 +16,10 @@ struct elfSound
     int freq;
     int format;
 
-    bool streamed;
+    // Sound is streamed from disk
+    // If false, the whole sound file is already loaded
+    bool streamed = false;
+
     bool streaming;
     bool eof;
     OggVorbis_File oggFile;
@@ -26,13 +29,18 @@ struct elfSound
     unsigned char oldestBuffer;
 };
 
+// Constuctor, destructor
 elfSound* elfCreateSound();
 void elfDestroySound(void* data);
 
+// Used by AudioSource
 bool elfInitSoundWithOgg(elfSound* snd, const char* filePath);
 bool elfInitSoundWithWav(elfSound* snd, const char* filePath);
 
+// Lua API
+// For small sound files, loads everything into memory
 elfSound* elfLoadSound(const char* filePath);
+// Sets the sound to be streamed form the disk
 elfSound* elfLoadStreamedSound(const char* filePath);
-
+// SoundFileType
 int elfGetSoundFileType(elfSound* sound);

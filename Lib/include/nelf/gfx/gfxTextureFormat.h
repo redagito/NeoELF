@@ -2,6 +2,7 @@
 
 using GfxTextureFormat = int;
 
+// Use GFX_R instead
 #define GFX_LUMINANCE 0x0000
 #define GFX_LUMINANCE_ALPHA 0x0001
 #define GFX_RGB 0x0002

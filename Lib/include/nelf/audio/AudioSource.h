@@ -16,6 +16,8 @@ struct elfAudioSource
     bool paused = false;
 };
 
+// Lua API
+
 elfAudioSource* elfPlaySound(elfSound* sound, float volume);
 elfAudioSource* elfPlayEntitySound(elfEntity* entity, elfSound* sound, float volume);
 

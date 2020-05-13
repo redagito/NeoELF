@@ -1,5 +1,7 @@
 #include "bind/BindUtil.h"
 
+#include "nelf/Object.h"
+
 int lua_fail_with_backtrace(lua_State* L, const char* fmt, ...)
 {
     va_list argp;
@@ -56,4 +58,22 @@ int lua_fail_arg_count(lua_State* L, const char* func_name, int a, int b)
 int lua_fail_arg(lua_State* L, const char* func_name, int idx, const char* etype)
 {
     return lua_fail_with_backtrace(L, "%s: Argument %d should be of type %s", func_name, idx, etype);
+}
+
+void lua_create_elfObject(lua_State* L, elfObject* obj)
+{
+    lua_elfObject* ud;
+    ud = (lua_elfObject*)lua_newuserdata(L, sizeof(lua_elfObject));
+    ud->type = LUA_ELF_OBJECT;
+    ud->object = obj;
+    elfIncRef(ud->object);
+    luaL_getmetatable(L, "lua_elfObject_mt");
+    lua_setmetatable(L, -2);
+}
+
+int lua_elfObject__gc(lua_State* L)
+{
+    lua_elfObject* obj = (lua_elfObject*)lua_touserdata(L, 1);
+    elfDecRef(obj->object);
+    return 0;
 }

@@ -33,3 +33,4 @@ int lua_fail_arg(lua_State* L, const char* func_name, int idx, const char* etype
 
 // TODO Implementation in Binds.cpp
 void lua_create_elfObject(lua_State* L, elfObject* obj);
+int lua_elfObject__gc(lua_State* L);

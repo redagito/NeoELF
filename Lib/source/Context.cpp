@@ -4,6 +4,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <stdexcept>
 #include <thread>
 
 #include "nelf/General.h"
@@ -152,13 +153,16 @@ bool elfInitContext(int width, int height, const char* title, int multisamples, 
         return false;
     }
 
+    // Setup error callback
+    glfwSetErrorCallback([](int code, const char* error) { throw std::runtime_error{error}; });
+
     // Setup for Opengl context
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_FALSE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    // glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     glfwWindowHint(GLFW_SAMPLES, multisamples);
 
@@ -181,7 +185,6 @@ bool elfInitContext(int width, int height, const char* title, int multisamples, 
     glfwSetInputMode(ctx->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     glfwPollEvents();
-    glfwSwapInterval(0);
 
     glfwSetMouseButtonCallback(ctx->window, mouseButtonCallback);
     glfwSetCursorPosCallback(ctx->window, mousePositionCallback);

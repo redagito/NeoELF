@@ -90,24 +90,6 @@ struct lua_elfColor
     elfColor val;
 };
 
-void lua_create_elfObject(lua_State* L, elfObject* obj)
-{
-    lua_elfObject* ud;
-    ud = (lua_elfObject*)lua_newuserdata(L, sizeof(lua_elfObject));
-    ud->type = LUA_ELF_OBJECT;
-    ud->object = obj;
-    elfIncRef(ud->object);
-    luaL_getmetatable(L, "lua_elfObject_mt");
-    lua_setmetatable(L, -2);
-}
-
-int lua_elfObject__gc(lua_State* L)
-{
-    lua_elfObject* obj = (lua_elfObject*)lua_touserdata(L, 1);
-    elfDecRef(obj->object);
-    return 0;
-}
-
 static int lua_elfVec2i__index(lua_State* L)
 {
     lua_elfVec2i* ud = (lua_elfVec2i*)lua_touserdata(L, 1);
