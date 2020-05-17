@@ -1,19 +1,25 @@
 #include "nelf/gfx/gfxObject.h"
 
+#include "gfx/gfxGeneral.h"
 #include "nelf/Log.h"
-#include "nelf/gfx/gfxGeneral.h"
 
 void gfxIncRef(gfxObject* obj)
 {
-    gfxGen->refCount++;
-    gfxGen->refTable[obj->objType]++;
+    if (gfxGen != nullptr)
+    {
+        gfxGen->refCount++;
+        gfxGen->refTable[obj->objType]++;
+    }
     obj->objRefCount++;
 }
 
 void gfxDecRef(gfxObject* obj)
 {
-    gfxGen->refCount--;
-    gfxGen->refTable[obj->objType]--;
+    if (gfxGen != nullptr)
+    {
+        gfxGen->refCount--;
+        gfxGen->refTable[obj->objType]--;
+    }
     obj->objRefCount--;
 
     if (obj->objRefCount < 1)

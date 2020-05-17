@@ -13,13 +13,16 @@ struct gfxTexture;
 
 struct gfxDriver
 {
+    // Arrays map GFX defines to GL defines
     int formatSizes[GFX_MAX_FORMATS];
     int formats[GFX_MAX_FORMATS];
     int drawModes[GFX_MAX_DRAW_MODES];
     int textureInternalFormats[GFX_MAX_TEXTURE_FORMATS];
     int textureDataFormats[GFX_MAX_TEXTURE_FORMATS];
+    // TODO This should be called buffer usage type
     int vertexDataDrawModes[GFX_MAX_VERTEX_DATA_TYPES];
 
+    // Active target, program and parameters
     gfxRenderTarget* renderTarget = nullptr;
     gfxShaderProgram* shaderPrograms = nullptr;
     gfxShaderParams shaderParams;

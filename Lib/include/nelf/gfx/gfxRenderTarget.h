@@ -7,9 +7,12 @@ struct gfxTexture;
 struct gfxRenderTarget
 {
     GFX_OBJECT_HEADER;
-    unsigned int fb;
-    unsigned int rb;
-    unsigned int width, height;
+    // Framebuffer
+    unsigned int fb = 0;
+    // Renderbuffer
+    unsigned int rb = 0;
+    unsigned int width = 0;
+    unsigned int height = 0;
     unsigned char targets[16];
 };
 

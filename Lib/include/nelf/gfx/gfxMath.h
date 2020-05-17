@@ -8,22 +8,20 @@
 
 // Vector
 
-void gfxVecToEuler(float* vec, float* euler);
-
+// vec - 3d vector
 void gfxVecNormalize(float* vec);
 
+// Dot product
 void gfxVecDotVec(float* vec1, float* vec2, float* dot);
 
+// Cross product
 void gfxVecCrossProduct(float* vec1, float* vec2, float* vec3);
 
 float gfxVecLength(float* vec);
-float gfxVecSquaredLength(float* vec);
 
 // Quaternion
 
 void gfxQuaSetIdentity(float* qua);
-
-void gfxQuaNormalize(float* qua, float* result);
 
 void gfxQuaGetInverse(float* qua, float* invqua);
 
@@ -47,13 +45,6 @@ void gfxMatrix4SetIdentity(float* mat);
 void gfxMatrix3SetIdentity(float* mat);
 
 bool gfxMatrix4GetInverse(float* mat1, float* mat2);
-bool gfxMatrix3GetInverse(float* mat1, float* mat2);
-
-void gfxMatrix4GetTranspose(float* mat1, float* mat2);
-void gfxMatrix3GetTranspose(float* mat1, float* mat2);
-
-void gfxMatrix3ToQua(float* mat, float* qua);
-void gfxMatrix4ToEuler(float* mat, float* eul);
 
 void gfxMulMatrix4Vec3(float* m1, float* vec1, float* vec2);
 void gfxMulMatrix4Vec4(float* m1, float* vec1, float* vec2);

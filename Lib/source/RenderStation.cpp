@@ -12,7 +12,6 @@
 #include "nelf/gfx/gfxDrawMode.h"
 #include "nelf/gfx/gfxFormatType.h"
 #include "nelf/gfx/gfxMath.h"
-#include "nelf/gfx/gfxMaxCircleVertices.h"
 #include "nelf/gfx/gfxObject.h"
 #include "nelf/gfx/gfxRenderTarget.h"
 #include "nelf/gfx/gfxTexture.h"
@@ -24,6 +23,8 @@
 #include "nelf/gfx/gfxVertexDataType.h"
 #include "nelf/gfx/gfxVertexIndex.h"
 #include "nelf/objectType.h"
+
+#define GFX_MAX_CIRCLE_VERTICES 255
 
 elfRenderStation* rnd = nullptr;
 

@@ -5,9 +5,9 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxDriver.h"
 #include "nelf/gfx/gfxFormatType.h"
-#include "nelf/gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxObjectType.h"
 #include "nelf/gfx/gfxVertexDataType.h"
 

@@ -6,9 +6,9 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxDriver.h"
 #include "nelf/gfx/gfxFormatType.h"
-#include "nelf/gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxTexture.h"
 #include "nelf/gfx/gfxTextureFilterType.h"
 #include "nelf/gfx/gfxTextureFormat.h"
@@ -31,11 +31,10 @@ gfxTexture* gfxCreateTexture()
     return texture;
 }
 
-gfxTexture* gfxCreate2dTexture(unsigned int width, unsigned int height, float anisotropy, int mode, int filter,
-                               int format, int internalFormat, int dataFormat, void* data)
+gfxTexture* gfxCreate2dTexture(unsigned int width, unsigned int height, float anisotropy, GfxTextureWrapMode mode,
+                               GfxTextureFilterType filter, GfxTextureFormat format, GfxTextureFormat internalFormat,
+                               GfxFormatType dataFormat, void* data)
 {
-    gfxTexture* texture;
-
     if (width == 0 || height == 0 || (int)width > gfxGetMaxTextureSize() || (int)height > gfxGetMaxTextureSize())
     {
         printf("error: invalid dimensions when creating texture\n");
@@ -54,7 +53,7 @@ gfxTexture* gfxCreate2dTexture(unsigned int width, unsigned int height, float an
         return nullptr;
     }
 
-    texture = gfxCreateTexture();
+    gfxTexture* texture = gfxCreateTexture();
 
     texture->type = GFX_2D_MAP_TEXTURE;
     texture->width = width;
@@ -110,12 +109,11 @@ gfxTexture* gfxCreate2dTexture(unsigned int width, unsigned int height, float an
     return texture;
 }
 
-gfxTexture* gfxCreateCubeMap(unsigned int width, unsigned int height, float anisotropy, int mode, int filter,
-                             int format, int internalFormat, int dataFormat, void* xpos, void* xneg, void* ypos,
-                             void* yneg, void* zpos, void* zneg)
+gfxTexture* gfxCreateCubeMap(unsigned int width, unsigned int height, float anisotropy, GfxTextureWrapMode mode,
+                             GfxTextureFilterType filter, GfxTextureFormat format, GfxTextureFormat internalFormat,
+                             GfxFormatType dataFormat, void* xpos, void* xneg, void* ypos, void* yneg, void* zpos,
+                             void* zneg)
 {
-    gfxTexture* texture;
-
     if (driver->version < 130)
         return NULL;
 
@@ -137,7 +135,7 @@ gfxTexture* gfxCreateCubeMap(unsigned int width, unsigned int height, float anis
         return NULL;
     }
 
-    texture = gfxCreateTexture();
+    gfxTexture* texture = gfxCreateTexture();
 
     texture->type = GFX_CUBE_MAP_TEXTURE;
     texture->width = width;

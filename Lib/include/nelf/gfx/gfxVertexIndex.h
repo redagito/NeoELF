@@ -4,12 +4,15 @@
 
 struct gfxVertexData;
 
+// Represents a vertex data array and index array
+// TODO This requires a VAO to draw
 struct gfxVertexIndex
 {
     GFX_OBJECT_HEADER;
     int indiceCount = 0;
     gfxVertexData* data = nullptr;
-    unsigned char gpuData;
+    // TODO What is this meant to do? Its weird
+    bool gpuData = false;
 };
 
 gfxVertexIndex* gfxCreateVertexIndex(bool gpuData, gfxVertexData* data);

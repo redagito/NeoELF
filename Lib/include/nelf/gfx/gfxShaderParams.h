@@ -6,6 +6,7 @@ struct gfxTexture;
 struct gfxGbuffer;
 struct gfxShaderProgram;
 
+// RGBA color type
 struct gfxColor
 {
     float r = 0.f;
@@ -57,14 +58,19 @@ struct gfxRenderParams
 
 struct gfxFogParams
 {
+    // Fog density function
     unsigned char mode = 0;
+    // Start and end of fog distance to viewer
     float start = 0.f;
     float end = 0.f;
+    // Fog color
     gfxColor color;
 };
 
 struct gfxMaterialParams
 {
+    // TODO What is an ambient color?
+    //      This should probably be part of the light or an ambient light setting
     gfxColor ambientColor;
     gfxColor diffuseColor;
     gfxColor specularColor;
@@ -78,6 +84,7 @@ struct gfxTextureParams
     gfxTexture* texture = nullptr;
     int projectionMode = 0;
     float parallaxScale = 0.f;
+    // ??
     float matrix[16];
 };
 
@@ -110,6 +117,7 @@ struct gfxShaderParams
     float clipStart = 0.f;
     float clipEnd = 0.f;
 
+    // TODO No viewport origin x/y?
     int viewportWidth = 0;
     int viewportHeight = 0;
 
@@ -129,4 +137,7 @@ void gfxSetShaderParamsDefault(gfxShaderParams* shaderParams);
 void gfxSetMaterialParamsDefault(gfxShaderParams* shaderParams);
 void gfxSetTextureParamsDefault(gfxShaderParams* shaderParams);
 
+// Set shader params active, transfer state to GPU
+// TODO Cache settings to avoid unnecessary state changes
+// TODO Maybe sort shader params when rendering to minimize state changes?
 void gfxSetShaderParams(gfxShaderParams* shaderParams);

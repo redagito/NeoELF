@@ -12,13 +12,13 @@
 gfxShaderProgram* gfxCreateShaderProgram(const char* vertex, const char* fragment)
 {
     const GLchar* myStringPtrs[1];
-    int shaderLength;
-    int success;
-    char* infoLog;
-    int infoLogLength;
-    GLuint myVertexShader;
-    GLuint myFragmentShader;
-    gfxShaderProgram* shaderProgram;
+    int shaderLength = 0;
+    int success = 0;
+    char* infoLog = nullptr;
+    int infoLogLength = 0;
+    GLuint myVertexShader = 0;
+    GLuint myFragmentShader = 0;
+    gfxShaderProgram* shaderProgram = nullptr;
 
     if (driver->version < 200)
         return NULL;

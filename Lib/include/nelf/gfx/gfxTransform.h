@@ -8,8 +8,9 @@ struct gfxTransform
     float orient[4];
     float matrix[16];
     float normalMatrix[9];
-    bool recalcMatrix;
-    bool cameraMode;
+
+    bool recalcMatrix = false;
+    bool cameraMode = false;
 };
 
 void gfxSetViewport(int x, int y, int width, int height);
@@ -48,7 +49,7 @@ void gfxRotateTransformLocal(gfxTransform* transform, float x, float y, float z)
 void gfxMoveTransform(gfxTransform* transform, float x, float y, float z);
 void gfxMoveTransformLocal(gfxTransform* transform, float x, float y, float z);
 
-unsigned char gfxGetTransformCameraMode(gfxTransform* transform);
+bool gfxGetTransformCameraMode(gfxTransform* transform);
 
 void gfxGetTransformPosition(gfxTransform* transform, float* params);
 void gfxGetTransformRotation(gfxTransform* transform, float* params);

@@ -1,6 +1,10 @@
 #pragma once
 
+#include "nelf/gfx/gfxFormatType.h"
 #include "nelf/gfx/gfxObjectHeader.h"
+#include "nelf/gfx/gfxTextureFilterType.h"
+#include "nelf/gfx/gfxTextureFormat.h"
+#include "nelf/gfx/gfxTextureWrapMode.h"
 
 struct gfxTexture
 {
@@ -16,11 +20,13 @@ struct gfxTexture
 int gfxGetMaxTextureSize();
 
 gfxTexture* gfxCreateTexture();
-gfxTexture* gfxCreate2dTexture(unsigned int width, unsigned int height, float anisotropy, int mode, int filter,
-                               int format, int internalFormat, int dataFormat, void* data);
-gfxTexture* gfxCreateCubeMap(unsigned int width, unsigned int height, float anisotropy, int mode, int filter,
-                             int format, int internalFormat, int dataFormat, void* xpos, void* xneg, void* ypos,
-                             void* yneg, void* zpos, void* zneg);
+gfxTexture* gfxCreate2dTexture(unsigned int width, unsigned int height, float anisotropy, GfxTextureWrapMode mode,
+                               GfxTextureFilterType filter, GfxTextureFormat format, GfxTextureFormat internalFormat,
+                               GfxFormatType dataFormat, void* data);
+gfxTexture* gfxCreateCubeMap(unsigned int width, unsigned int height, float anisotropy, GfxTextureWrapMode mode,
+                             GfxTextureFilterType filter, GfxTextureFormat format, GfxTextureFormat internalFormat,
+                             GfxFormatType dataFormat, void* xpos, void* xneg, void* ypos, void* yneg, void* zpos,
+                             void* zneg);
 
 void gfxDestroyTexture(void* data);
 

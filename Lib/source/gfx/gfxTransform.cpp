@@ -334,7 +334,7 @@ void gfxMoveTransformLocal(gfxTransform* transform, float x, float y, float z)
     transform->recalcMatrix = true;
 }
 
-unsigned char gfxGetTransformCameraMode(gfxTransform* transform) { return transform->cameraMode; }
+bool gfxGetTransformCameraMode(gfxTransform* transform) { return transform->cameraMode; }
 
 void gfxGetTransformPosition(gfxTransform* transform, float* params)
 {

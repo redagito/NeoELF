@@ -1,5 +1,6 @@
 #pragma once
 
+// TODO DataType would be better
 using GfxFormatType = int;
 
 #define GFX_FLOAT 0x0000

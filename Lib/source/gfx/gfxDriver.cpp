@@ -4,13 +4,14 @@
 // GLAD header first
 #include <GLFW/glfw3.h>
 
+#include <cassert>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
 
+#include "gfx/gfxGeneral.h"
 #include "nelf/Log.h"
-#include "nelf/gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxShaderProgram.h"
 #include "nelf/gfx/gfxTexture.h"
 
@@ -133,8 +134,14 @@ bool gfxInit()
     driver->drawModes[GFX_TRIANGLE_STRIP] = GL_TRIANGLE_STRIP;
     driver->drawModes[GFX_TRIANGLE_FAN] = GL_TRIANGLE_FAN;
 
-    driver->textureInternalFormats[GFX_LUMINANCE] = GL_LUMINANCE;
-    driver->textureInternalFormats[GFX_LUMINANCE_ALPHA] = GL_LUMINANCE_ALPHA;
+    // Luminance is greysacle without alpha
+    // Luminance_alpha is greyscale with alpha
+    // For luminance, use GL_RED and store the greyscale in red channel and
+    // set green and blue to 0 and alpha to 1
+    // For luminance_alpha, use GL_RG and store greyscale in red and alpha in green
+    // channel and set blue to 0 and alpha to 1
+    driver->textureInternalFormats[GFX_LUMINANCE] = GL_RED;
+    driver->textureInternalFormats[GFX_LUMINANCE_ALPHA] = GL_RG;
     driver->textureInternalFormats[GFX_RGB] = GL_RGB;
     driver->textureInternalFormats[GFX_RGBA] = GL_RGBA;
     driver->textureInternalFormats[GFX_BGR] = GL_BGR;
@@ -153,8 +160,8 @@ bool gfxInit()
     driver->textureInternalFormats[GFX_RG16F] = GL_RG16F;
     driver->textureInternalFormats[GFX_RG32F] = GL_RG32F;
 
-    driver->textureDataFormats[GFX_LUMINANCE] = GL_LUMINANCE;
-    driver->textureDataFormats[GFX_LUMINANCE_ALPHA] = GL_LUMINANCE_ALPHA;
+    driver->textureDataFormats[GFX_LUMINANCE] = GL_RED;
+    driver->textureDataFormats[GFX_LUMINANCE_ALPHA] = GL_RG;
     driver->textureDataFormats[GFX_RGB] = GL_RGB;
     driver->textureDataFormats[GFX_RGBA] = GL_RGBA;
     driver->textureDataFormats[GFX_BGR] = GL_BGR;
@@ -168,8 +175,8 @@ bool gfxInit()
     driver->textureDataFormats[GFX_DEPTH_COMPONENT] = GL_DEPTH_COMPONENT;
     driver->textureDataFormats[GFX_R] = GL_RED;
     driver->textureDataFormats[GFX_RG] = GL_RG;
-    driver->textureDataFormats[GFX_R16F] = GL_R;
-    driver->textureDataFormats[GFX_R32F] = GL_R;
+    driver->textureDataFormats[GFX_R16F] = GL_RED;
+    driver->textureDataFormats[GFX_R32F] = GL_RED;
     driver->textureDataFormats[GFX_RG16F] = GL_RG;
     driver->textureDataFormats[GFX_RG32F] = GL_RG;
 
@@ -222,7 +229,6 @@ bool gfxInit()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClearDepth(1.0f);
 
-    glShadeModel(GL_SMOOTH);
     glFrontFace(GL_CCW);
 
     glEnable(GL_DEPTH_TEST);
@@ -230,22 +236,19 @@ bool gfxInit()
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    // VSync off
-    glfwSwapInterval(0);
-
     return true;
 }
 
 void gfxDeinit()
 {
-    if (!driver)
+    if (driver == nullptr)
         return;
 
     if (driver->shaderPrograms)
         gfxDestroyShaderPrograms(driver->shaderPrograms);
 
     free(driver);
-    driver = NULL;
+    driver = nullptr;
 
     if (gfxGetGlobalRefCount() > 0)
     {
@@ -274,10 +277,16 @@ void gfxDeinit()
     gfxDestroyGeneral(gfxGen);
 }
 
-int gfxGetVersion() { return driver->version; }
+int gfxGetVersion()
+{
+    if (driver == nullptr)
+        return 0;
+    return driver->version;
+}
 
 void gfxClearBuffers(float r, float g, float b, float a, float d)
 {
+    assert(driver != nullptr);
     glClearColor(r, g, b, a);
     glClearDepth(d);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -285,27 +294,30 @@ void gfxClearBuffers(float r, float g, float b, float a, float d)
 
 void gfxClearColorBuffer(float r, float g, float b, float a)
 {
+    assert(driver != nullptr);
     glClearColor(r, g, b, a);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void gfxClearDepthBuffer(float d)
 {
+    assert(driver != nullptr);
     glClearDepth(d);
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 void gfxReadPixels(int x, int y, int width, int height, int format, int dataFormat, void* data)
 {
+    assert(driver != nullptr);
     glReadPixels(x, y, width, height, driver->textureDataFormats[format], driver->formats[dataFormat], data);
 }
 
 void gfxCopyFrameBuffer(gfxTexture* texture, int ox, int oy, int x, int y, int width, int height)
 {
-    glActiveTexture(GL_TEXTURE0);
-    glClientActiveTexture(GL_TEXTURE0);
-
+    assert(driver != nullptr);
     glBindTexture(GL_TEXTURE_2D, texture->id);
+    // Copies from current GL_READ_BUFFER to texture
+    // TODO Check if this is used correctly
     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, ox, oy, x, y, width, height);
     glBindTexture(GL_TEXTURE_2D, 0);
     driver->shaderParams.textureParams[0].texture = NULL;
@@ -313,12 +325,17 @@ void gfxCopyFrameBuffer(gfxTexture* texture, int ox, int oy, int x, int y, int w
 
 void gfxResetVerticesDrawn()
 {
+    assert(driver != nullptr);
     memset(driver->verticesDrawn, 0x0, sizeof(unsigned int) * GFX_MAX_DRAW_MODES);
     driver->verticesDrawn[GFX_TRIANGLES] = 0;
     driver->verticesDrawn[GFX_TRIANGLE_STRIP] = 0;
 }
 
-int gfxGetVerticesDrawn(unsigned int drawMode) { return driver->verticesDrawn[drawMode]; }
+int gfxGetVerticesDrawn(unsigned int drawMode)
+{
+    assert(driver != nullptr);
+    return driver->verticesDrawn[drawMode];
+}
 
 static const char* getErrorString(GLenum error)
 {
@@ -343,6 +360,7 @@ static const char* getErrorString(GLenum error)
 
 void gfxPrintGLError()
 {
+    assert(driver != nullptr);
     GLenum err;
     err = glGetError();
     printf("%s\n", getErrorString(err));

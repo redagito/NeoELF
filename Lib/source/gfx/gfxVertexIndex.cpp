@@ -5,8 +5,8 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxDriver.h"
-#include "nelf/gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxObject.h"
 #include "nelf/gfx/gfxObjectType.h"
 #include "nelf/gfx/gfxVertexData.h"
@@ -50,7 +50,7 @@ int gfxGetVertexIndexIndiceCount(gfxVertexIndex* vertexIndex) { return vertexInd
 
 void gfxDrawVertexIndex(gfxVertexIndex* vertexIndex, unsigned int drawMode)
 {
-    if (vertexIndex->gpuData && driver->version >= 200)
+    if (vertexIndex->gpuData)
     {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexIndex->data->vbo);
         glDrawElements(driver->drawModes[drawMode], vertexIndex->indiceCount,

@@ -2,12 +2,13 @@
 
 #include <glad/glad.h>
 
+#include <cassert>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
+#include "gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxDriver.h"
-#include "nelf/gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxObjectType.h"
 #include "nelf/gfx/gfxTexture.h"
 
@@ -96,6 +97,7 @@ gfxRenderTarget* gfxGetCurRenderTarget() { return driver->renderTarget; }
 
 void gfxSetRenderTargetColorTexture(gfxRenderTarget* renderTarget, unsigned int n, gfxTexture* color)
 {
+    assert(driver != nullptr);
     gfxRenderTarget* rt;
 
     if ((int)n > driver->maxDrawBuffers - 1)
@@ -122,7 +124,7 @@ void gfxSetRenderTargetColorTexture(gfxRenderTarget* renderTarget, unsigned int 
 
 void gfxSetRenderTargetDepthTexture(gfxRenderTarget* renderTarget, gfxTexture* depth)
 {
-    gfxRenderTarget* rt;
+    assert(driver != nullptr);
 
     if (driver->renderTarget != renderTarget)
         glBindFramebuffer(GL_FRAMEBUFFER, renderTarget->fb);
@@ -144,7 +146,7 @@ void gfxSetRenderTargetDepthTexture(gfxRenderTarget* renderTarget, gfxTexture* d
     }
     else if (driver->renderTarget != renderTarget)
     {
-        rt = driver->renderTarget;
+        gfxRenderTarget* rt = driver->renderTarget;
         driver->renderTarget = NULL;
         gfxSetRenderTarget(rt);
     }
@@ -152,6 +154,7 @@ void gfxSetRenderTargetDepthTexture(gfxRenderTarget* renderTarget, gfxTexture* d
 
 bool gfxSetRenderTarget(gfxRenderTarget* renderTarget)
 {
+    assert(driver != nullptr);
     int i, j;
     GLenum drawBuffers[16];
 
@@ -190,6 +193,7 @@ bool gfxSetRenderTarget(gfxRenderTarget* renderTarget)
 
 void gfxDisableRenderTarget()
 {
+    assert(driver != nullptr);
     int i, j;
 
     if (!driver->renderTarget)

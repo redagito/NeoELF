@@ -2044,23 +2044,16 @@ void elfDrawScene(elfScene* scene)
         scene->shaderParams.renderParams.blendMode = GFX_ADD;
         elfSetCamera(scene->curCamera, &scene->shaderParams);
 
+        // Spot light with shadows
+        // TODO Shadows are disabled, requires shadow mapping to be reimplemented for modern opengl
+        light->shadows = false;
         if (light->lightType == ELF_SPOT_LIGHT && light->shadows)
         {
-            if (gfxGetVersion() >= 200)
-            {
-                scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].type = GFX_SHADOW_MAP;
-                scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].texture = rnd->shadowMap;
-                scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].projectionMode = GFX_SHADOW_PROJECTION;
-                memcpy(scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].matrix, light->projectionMatrix,
-                       sizeof(float) * 16);
-            }
-            else
-            {
-                scene->shaderParams.textureParams[3].type = GFX_SHADOW_MAP;
-                scene->shaderParams.textureParams[3].texture = rnd->shadowMap;
-                scene->shaderParams.textureParams[3].projectionMode = GFX_SHADOW_PROJECTION;
-                memcpy(scene->shaderParams.textureParams[3].matrix, light->projectionMatrix, sizeof(float) * 16);
-            }
+            scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].type = GFX_SHADOW_MAP;
+            scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].texture = rnd->shadowMap;
+            scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].projectionMode = GFX_SHADOW_PROJECTION;
+            memcpy(scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].matrix, light->projectionMatrix,
+                   sizeof(float) * 16);
         }
         else
         {

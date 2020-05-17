@@ -35,7 +35,7 @@ conan_cmake_run(REQUIRES
 	nlohmann_json/3.7.0
 	soil2/1.20@bincrafters/stable 
 	
-	OPTIONS glad:gl_profile=compatibility
+	OPTIONS glad:gl_profile=core
 	OPTIONS glad:gl_version=4.6
 	OPTIONS glad:spec=gl
 	OPTIONS glad:no_loader=False

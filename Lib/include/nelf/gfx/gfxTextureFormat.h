@@ -16,6 +16,7 @@ using GfxTextureFormat = int;
 #define GFX_DEPTH_COMPONENT 0x000A
 #define GFX_COMPRESSED_RGB 0x000B
 #define GFX_COMPRESSED_RGBA 0x000C
+// Rename GFX_RED
 #define GFX_R 0x000D
 #define GFX_RG 0x000E
 #define GFX_R16F 0x000F

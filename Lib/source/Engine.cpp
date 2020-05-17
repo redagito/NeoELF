@@ -153,6 +153,8 @@ bool elfInit(elfConfig* config)
     if (!elfInitContext(config->windowSize.x, config->windowSize.y, config->windowTitle, config->multisamples,
                         config->fullscreen))
         return false;
+
+    // TODO Init gfx as part of context
     if (!gfxInit())
     {
         elfDeinitContext();

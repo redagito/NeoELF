@@ -1,17 +1,24 @@
 #include "nelf/gfx/gfxShaderGen.h"
 
+#include <cassert>
 #include <cstdlib>
 #include <cstring>
 
+#include "gfx/gfxLightType.h"
 #include "nelf/gfx/gfxBlendMode.h"
 #include "nelf/gfx/gfxDriver.h"
-#include "nelf/gfx/gfxGBufferMode.h"
-#include "nelf/gfx/gfxLightType.h"
 #include "nelf/gfx/gfxMaxTextures.h"
 #include "nelf/gfx/gfxShaderConfig.h"
 #include "nelf/gfx/gfxShaderParams.h"
 #include "nelf/gfx/gfxShaderProgram.h"
 #include "nelf/gfx/gfxTextureMapType.h"
+
+enum GBufferMode
+{
+    GFX_GBUFFER_DEPTH,
+    GFX_GBUFFER_FILL,
+    GFX_GBUFFER_LIGHTING
+};
 
 char* gfxCreateString(const char* str)
 {
@@ -235,6 +242,7 @@ void gfxAddVertexLightingCalcs(gfxDocument* document, gfxShaderConfig* config)
             gfxAddDocumentLine(document, "\telf_Normal = vec3(elf_ModelviewMatrix*vec4(elf_NormalAttr, 0.0));");
         else
             gfxAddDocumentLine(document, "\tvec3 elf_Normal = elf_NormalMatrix*elf_NormalAttr;");
+
         gfxAddDocumentLine(document, "\tvec3 elf_Tangent = elf_NormalMatrix*elf_TangentAttr;");
         gfxAddDocumentLine(document, "\tvec3 elf_BiNormal = cross(elf_Normal, elf_Tangent);");
         gfxAddDocumentLine(document, "\tvec3 tmpvec = -vertex.xyz;");
@@ -529,6 +537,8 @@ void gfxAddFragmentEnd(gfxDocument* document, gfxShaderConfig* config)
 
 gfxShaderProgram* gfxGetShaderProgram(gfxShaderConfig* config)
 {
+    assert(driver != nullptr);
+
     gfxDocument* document;
     gfxShaderProgram* shaderProgram;
     gfxShaderProgram* lshpr;
@@ -781,6 +791,7 @@ void gfxAddGbufFragmentEnd(gfxDocument* document, gfxShaderConfig* config)
 
 gfxShaderProgram* gfxGetGbufShaderProgram(gfxShaderConfig* config)
 {
+    assert(driver != nullptr);
     gfxDocument* document;
     gfxShaderProgram* shaderProgram;
     gfxShaderProgram* lshpr;
