@@ -1,5 +1,6 @@
 #pragma once
 
+// RGBA color type
 struct elfColor
 {
     // Default to hot pink color

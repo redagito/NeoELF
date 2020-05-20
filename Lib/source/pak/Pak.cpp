@@ -2126,23 +2126,6 @@ void elfAddTextureForSaving(elfList* textures, elfTexture* texture)
 
 unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
 {
-    unsigned int offset;
-    int ival;
-
-    FILE* file;
-
-    elfList* scenes;
-    elfList* scripts;
-    elfList* textures;
-    elfList* materials;
-    elfList* models;
-    elfList* cameras;
-    elfList* entities;
-    elfList* lights;
-    elfList* armatures;
-    elfList* particles;
-    elfList* sprites;
-
     elfMaterial* mat;
     elfCamera* cam;
     elfEntity* ent;
@@ -2150,17 +2133,17 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
     elfParticles* par;
     elfSprite* spr;
 
-    scenes = elfCreateList();
-    scripts = elfCreateList();
-    textures = elfCreateList();
-    materials = elfCreateList();
-    models = elfCreateList();
-    cameras = elfCreateList();
-    entities = elfCreateList();
-    lights = elfCreateList();
-    armatures = elfCreateList();
-    particles = elfCreateList();
-    sprites = elfCreateList();
+    elfList* scenes = elfCreateList();
+    elfList* scripts = elfCreateList();
+    elfList* textures = elfCreateList();
+    elfList* materials = elfCreateList();
+    elfList* models = elfCreateList();
+    elfList* cameras = elfCreateList();
+    elfList* entities = elfCreateList();
+    elfList* lights = elfCreateList();
+    elfList* armatures = elfCreateList();
+    elfList* particles = elfCreateList();
+    elfList* sprites = elfCreateList();
 
     elfIncRef((elfObject*)scenes);
     elfIncRef((elfObject*)scripts);
@@ -2176,6 +2159,8 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
 
     elfAppendListObject(scenes, (elfObject*)scene);
 
+    // Create lists for the objects
+    // Cameras
     for (cam = (elfCamera*)elfBeginList(scene->cameras); cam; cam = (elfCamera*)elfGetListNext(scene->cameras))
     {
         if (cam->script && !elfGetResourceById(scripts, cam->script->id))
@@ -2188,6 +2173,7 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
         elfAppendListObject(cameras, (elfObject*)cam);
     }
 
+    // Entities with scripts, models, aramtures and materials (with textures)
     for (ent = (elfEntity*)elfBeginList(scene->entities); ent; ent = (elfEntity*)elfGetListNext(scene->entities))
     {
         if (ent->script && !elfGetResourceById(scripts, ent->script->id))
@@ -2227,6 +2213,7 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
         elfAppendListObject(entities, (elfObject*)ent);
     }
 
+    // Lights
     for (lig = (elfLight*)elfBeginList(scene->lights); lig; lig = (elfLight*)elfGetListNext(scene->lights))
     {
         if (lig->script && !elfGetResourceById(scripts, lig->script->id))
@@ -2239,6 +2226,7 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
         elfAppendListObject(lights, (elfObject*)lig);
     }
 
+    // Particles with scripts, texture, model and entities
     for (par = (elfParticles*)elfBeginList(scene->particles); par;
          par = (elfParticles*)elfGetListNext(scene->particles))
     {
@@ -2273,6 +2261,7 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
         elfAppendListObject(particles, (elfObject*)par);
     }
 
+    // Sprites with scripts, material (and textures)
     for (spr = (elfSprite*)elfBeginList(scene->sprites); spr; spr = (elfSprite*)elfGetListNext(scene->sprites))
     {
         if (spr->script && !elfGetResourceById(scripts, spr->script->id))
@@ -2299,7 +2288,8 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
         elfAppendListObject(sprites, (elfObject*)spr);
     }
 
-    file = fopen(filePath, "wb");
+    // Open file for writing
+    FILE* file = fopen(filePath, "wb");
     if (!file)
     {
         elfSetError(ELF_CANT_OPEN_FILE, "error: can't open file \"%s\" for writing\n", filePath);
@@ -2319,7 +2309,7 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
         return false;
     }
 
-    offset = 0;
+    unsigned int offset = 0;
     offset += sizeof(unsigned char);           // index type
     offset += sizeof(char) * ELF_NAME_LENGTH;  // index name
     offset += sizeof(int);                     // index offset
@@ -2332,7 +2322,7 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
     offset += sizeof(int);  // version
     offset += sizeof(int);  // number of indexes
 
-    ival = ELF_PAK_MAGIC;
+    int ival = ELF_PAK_MAGIC;
 
     fwrite((char*)&ival, sizeof(int), 1, file);  // magic
 
@@ -2347,6 +2337,7 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
 
     fwrite((char*)&ival, sizeof(int), 1, file);  // index count
 
+    // Write indices
     elfWriteResourceIndexesToFile(scenes, &offset, file);
     elfWriteResourceIndexesToFile(scripts, &offset, file);
     elfWriteResourceIndexesToFile(textures, &offset, file);
@@ -2359,6 +2350,7 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
     elfWriteResourceIndexesToFile(particles, &offset, file);
     elfWriteResourceIndexesToFile(sprites, &offset, file);
 
+    // Write data
     elfWriteResourcesToFile(scenes, file);
     elfWriteResourcesToFile(scripts, file);
     elfWriteResourcesToFile(textures, file);
@@ -2371,6 +2363,7 @@ unsigned char elfSaveSceneToPak(elfScene* scene, const char* filePath)
     elfWriteResourcesToFile(particles, file);
     elfWriteResourcesToFile(sprites, file);
 
+    // Cleanup
     fclose(file);
 
     elfDecRef((elfObject*)scenes);

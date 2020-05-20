@@ -39,6 +39,7 @@ struct gfxDriver
     bool dirtyVertexArrays = false;
     unsigned int verticesDrawn[GFX_MAX_DRAW_MODES];
 
+    // Active settings
     gfxShaderConfig shaderConfig;
 };
 

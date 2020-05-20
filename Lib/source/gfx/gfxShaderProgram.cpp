@@ -11,20 +11,23 @@
 
 gfxShaderProgram* gfxCreateShaderProgram(const char* vertex, const char* fragment)
 {
+    if (vertex == nullptr)
+        return nullptr;
+    if (fragment == nullptr)
+        return nullptr;
+
     const GLchar* myStringPtrs[1];
     int shaderLength = 0;
     int success = 0;
     char* infoLog = nullptr;
     int infoLogLength = 0;
-    GLuint myVertexShader = 0;
-    GLuint myFragmentShader = 0;
     gfxShaderProgram* shaderProgram = nullptr;
 
     if (driver->version < 200)
         return NULL;
 
-    myVertexShader = glCreateShader(GL_VERTEX_SHADER);
-
+    // Compile vertex shader object
+    GLuint myVertexShader = glCreateShader(GL_VERTEX_SHADER);
     if (vertex)
     {
         myStringPtrs[0] = vertex;
@@ -52,8 +55,8 @@ gfxShaderProgram* gfxCreateShaderProgram(const char* vertex, const char* fragmen
         }
     }
 
-    myFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
+    // Compile fragment shader object
+    GLuint myFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     if (fragment)
     {
         myStringPtrs[0] = fragment;
@@ -89,26 +92,26 @@ gfxShaderProgram* gfxCreateShaderProgram(const char* vertex, const char* fragmen
 
     shaderProgram->id = glCreateProgram();
 
-    if (vertex)
-        glAttachShader(shaderProgram->id, myVertexShader);
-    if (fragment)
-        glAttachShader(shaderProgram->id, myFragmentShader);
+    // Attach vertex and fragment shader
+    glAttachShader(shaderProgram->id, myVertexShader);
+    glAttachShader(shaderProgram->id, myFragmentShader);
 
+    // Bind default attribute locations
     glBindAttribLocation(shaderProgram->id, GFX_VERTEX, "elf_VertexAttr");
     glBindAttribLocation(shaderProgram->id, GFX_NORMAL, "elf_NormalAttr");
     glBindAttribLocation(shaderProgram->id, GFX_TEX_COORD, "elf_TexCoordAttr");
     glBindAttribLocation(shaderProgram->id, GFX_COLOR, "elf_ColorAttr");
     glBindAttribLocation(shaderProgram->id, GFX_TANGENT, "elf_TangentAttr");
 
+    // Link
     glLinkProgram(shaderProgram->id);
 
-    if (vertex)
-        glDeleteShader(myVertexShader);
-    if (fragment)
-        glDeleteShader(myFragmentShader);
+    // Cleanup
+    glDeleteShader(myVertexShader);
+    glDeleteShader(myFragmentShader);
 
+    // Check status
     glGetProgramiv(shaderProgram->id, GL_LINK_STATUS, &success);
-
     if (!success)
     {
         glGetProgramiv(shaderProgram->id, GL_INFO_LOG_LENGTH, &infoLogLength);
@@ -123,9 +126,10 @@ gfxShaderProgram* gfxCreateShaderProgram(const char* vertex, const char* fragmen
 
         free(infoLog);
 
-        return NULL;
+        return nullptr;
     }
 
+    // Common uniforms
     shaderProgram->projectionMatrixLoc = glGetUniformLocation(shaderProgram->id, "elf_ProjectionMatrix");
     shaderProgram->invProjectionMatrixLoc = glGetUniformLocation(shaderProgram->id, "elf_InvProjectionMatrix");
     shaderProgram->modelviewMatrixLoc = glGetUniformLocation(shaderProgram->id, "elf_ModelviewMatrix");
@@ -184,14 +188,30 @@ void gfxDestroyShaderPrograms(gfxShaderProgram* shaderProgram)
     gfxDestroyShaderProgram(shaderProgram);
 }
 
+int gfxGetUniformLocation(gfxShaderProgram* shaderProgram, const char* name)
+{
+    auto iter = shaderProgram->uniformLocations.find(name);
+    if (iter != shaderProgram->uniformLocations.end())
+    {
+        return iter->second;
+    }
+
+    // Not found, update cache
+    int index = glGetUniformLocation(shaderProgram->id, name);
+    shaderProgram->uniformLocations[name] = index;
+    return index;
+}
+
 void gfxSetShaderProgram(gfxShaderProgram* shaderProgram)
 {
     if (shaderProgram != driver->shaderParams.shaderProgram)
+    {
         glUseProgram(shaderProgram->id);
-
-    driver->shaderParams.shaderProgram = shaderProgram;
+        driver->shaderParams.shaderProgram = shaderProgram;
+    }
 
     // just inputting with values that do not make sense
+    // TODO Hacky, fix this
     driver->shaderConfig.textures = 255;
     driver->shaderConfig.light = 255;
 }
@@ -200,40 +220,40 @@ void gfxSetShaderProgramUniform1i(const char* name, int i)
 {
     if (!driver->shaderParams.shaderProgram)
         return;
-    glUniform1i(glGetUniformLocation(driver->shaderParams.shaderProgram->id, name), i);
+    glUniform1i(gfxGetUniformLocation(driver->shaderParams.shaderProgram, name), i);
 }
 
 void gfxSetShaderProgramUniform1f(const char* name, float f)
 {
     if (!driver->shaderParams.shaderProgram)
         return;
-    glUniform1f(glGetUniformLocation(driver->shaderParams.shaderProgram->id, name), f);
+    glUniform1f(gfxGetUniformLocation(driver->shaderParams.shaderProgram, name), f);
 }
 
 void gfxSetShaderProgramUniformVec2(const char* name, float x, float y)
 {
     if (!driver->shaderParams.shaderProgram)
         return;
-    glUniform2f(glGetUniformLocation(driver->shaderParams.shaderProgram->id, name), x, y);
+    glUniform2f(gfxGetUniformLocation(driver->shaderParams.shaderProgram, name), x, y);
 }
 
 void gfxSetShaderProgramUniformVec3(const char* name, float x, float y, float z)
 {
     if (!driver->shaderParams.shaderProgram)
         return;
-    glUniform3f(glGetUniformLocation(driver->shaderParams.shaderProgram->id, name), x, y, z);
+    glUniform3f(gfxGetUniformLocation(driver->shaderParams.shaderProgram, name), x, y, z);
 }
 
 void gfxSetShaderProgramUniformVec4(const char* name, float x, float y, float z, float w)
 {
     if (!driver->shaderParams.shaderProgram)
         return;
-    glUniform4f(glGetUniformLocation(driver->shaderParams.shaderProgram->id, name), x, y, z, w);
+    glUniform4f(gfxGetUniformLocation(driver->shaderParams.shaderProgram, name), x, y, z, w);
 }
 
 void gfxSetShaderProgramUniformMat4(const char* name, float* matrix)
 {
     if (!driver->shaderParams.shaderProgram)
         return;
-    glUniformMatrix4fv(glGetUniformLocation(driver->shaderParams.shaderProgram->id, name), 1, GL_FALSE, matrix);
+    glUniformMatrix4fv(gfxGetUniformLocation(driver->shaderParams.shaderProgram, name), 1, GL_FALSE, matrix);
 }

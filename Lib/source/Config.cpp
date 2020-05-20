@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "nelf/StringStream.h"
+#include "StringStream.h"
 #include "nelf/objectType.h"
 
 elfConfig* elfCreateConfig()

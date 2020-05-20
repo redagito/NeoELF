@@ -1,4 +1,4 @@
-#include "nelf/StringStream.h"
+#include "StringStream.h"
 
 #include <cstdlib>
 #include <cstring>

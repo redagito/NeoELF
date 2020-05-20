@@ -129,6 +129,7 @@ static const char* dofCombineShader = R"#(
 uniform sampler2D elf_Texture0;
 uniform sampler2D elf_Texture1;
 uniform sampler2D elf_Texture2;
+
 varying vec2 elf_TexCoord;
 uniform mat4 elf_InvProjectionMatrix;
 uniform float elf_FocalRange;
@@ -151,10 +152,13 @@ void main()
 static const char* ssaoShader = R"#(
 uniform sampler2D elf_Texture0;
 uniform sampler2D elf_Texture1;
+
 uniform int elf_ViewportWidth;
 uniform int elf_ViewportHeight;
+
 uniform float elf_ClipStart;
 uniform float elf_ClipEnd;
+
 uniform float amount;
 varying vec2 elf_TexCoord;
 
@@ -250,10 +254,12 @@ void main()
 
 static const char* lightShaftShader = R"#(
 uniform sampler2D elf_Texture0;
+
 uniform float exposure;
 uniform float decay;
 uniform float density;
 uniform float weight;
+
 uniform vec2 lightPosition;
 varying vec2 elf_TexCoord;
 
@@ -469,20 +475,339 @@ void elfInitPostProcessBuffers(elfPostProcess* postProcess)
     }
 }
 
+static void runPostProcessSSAO(elfPostProcess* postProcess, elfScene* scene, bool sourceRt)
+{
+    if (postProcess->dof || postProcess->bloom)
+    {
+        gfxSetRenderTarget(postProcess->mainRt);
+        gfxSetRenderTargetColorTexture(postProcess->mainRt, 0, postProcess->mainRtColor[!sourceRt]);
+    }
+    else
+    {
+        gfxDisableRenderTarget();
+    }
+
+    gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
+    gfxGetOrthographicProjectionMatrix(0.0f, (float)elfGetWindowWidth(), 0.0f, (float)elfGetWindowHeight(), -1.0f, 1.0f,
+                                       postProcess->shaderParams.projectionMatrix);
+
+    elfCamera* cam;
+    if ((cam = elfGetSceneActiveCamera(scene)))
+    {
+        postProcess->shaderParams.clipStart = elfGetCameraClip(cam).x;
+        postProcess->shaderParams.clipEnd = elfGetCameraClip(cam).y;
+        postProcess->shaderParams.viewportWidth = elfGetWindowWidth() * 2;
+        postProcess->shaderParams.viewportHeight = elfGetWindowHeight() * 2;
+    }
+
+    postProcess->shaderParams.shaderProgram = postProcess->ssaoShdr;
+
+    postProcess->shaderParams.textureParams[0].texture = postProcess->mainRtColor[sourceRt];
+    gfxSetShaderParams(&postProcess->shaderParams);
+    gfxSetShaderProgramUniform1f("amount", postProcess->ssaoAmount);
+
+    elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
+
+    postProcess->shaderParams.textureParams[0].texture = NULL;
+    postProcess->shaderParams.textureParams[1].texture = NULL;
+}
+
+static void runPostProcessDOF(elfPostProcess* postProcess, elfScene* scene, bool sourceRt)
+{
+    gfxSetViewport(0, 0, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
+    gfxGetOrthographicProjectionMatrix(0, postProcess->bufferWidth * 2, 0, postProcess->bufferHeight * 2, -1.0f, 1.0f,
+                                       postProcess->shaderParams.projectionMatrix);
+
+    gfxSetRenderTarget(postProcess->rtHigh);
+    gfxSetRenderTargetColorTexture(postProcess->rtHigh, 0, postProcess->rtTexHigh_1);
+
+    postProcess->shaderParams.textureParams[0].texture = postProcess->mainRtColor[sourceRt];
+    gfxSetShaderParams(&postProcess->shaderParams);
+    elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
+
+    gfxSetRenderTargetColorTexture(postProcess->rtHigh, 0, postProcess->rtTexHigh_2);
+
+    postProcess->shaderParams.shaderProgram = postProcess->blurShdr;
+    postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexHigh_1;
+    gfxSetShaderParams(&postProcess->shaderParams);
+    gfxSetShaderProgramUniformVec2("offset", 1.0f / ((float)(postProcess->bufferWidth * 2)), 0.0f);
+    elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
+
+    gfxSetRenderTargetColorTexture(postProcess->rtHigh, 0, postProcess->rtTexHigh_1);
+
+    postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexHigh_2;
+    gfxSetShaderParams(&postProcess->shaderParams);
+    gfxSetShaderProgramUniformVec2("offset", 0.0f, 1.0f / ((float)(postProcess->bufferHeight * 2)));
+    elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
+
+    if (postProcess->bloom)
+    {
+        gfxSetRenderTarget(postProcess->mainRt);
+        gfxSetRenderTargetColorTexture(postProcess->mainRt, 0, postProcess->mainRtColor[!sourceRt]);
+    }
+    else
+    {
+        gfxDisableRenderTarget();
+    }
+
+    gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
+    gfxGetOrthographicProjectionMatrix(0.0f, (float)elfGetWindowWidth(), 0.0f, (float)elfGetWindowHeight(), -1.0f, 1.0f,
+                                       postProcess->shaderParams.projectionMatrix);
+
+    gfxMatrix4GetInverse(scene->curCamera->projectionMatrix, postProcess->shaderParams.invProjectionMatrix);
+
+    postProcess->shaderParams.shaderProgram = postProcess->dofCombineShdr;
+    postProcess->shaderParams.textureParams[0].texture = postProcess->mainRtDepth;
+    postProcess->shaderParams.textureParams[1].texture = postProcess->mainRtColor[0];
+    postProcess->shaderParams.textureParams[2].texture = postProcess->rtTexHigh_1;
+
+    gfxSetShaderParams(&postProcess->shaderParams);
+
+    gfxSetShaderProgramUniform1f("elf_FocalRange", postProcess->dofFocalRange);
+    gfxSetShaderProgramUniform1f("elf_FocalDistance", postProcess->dofFocalDistance);
+
+    elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
+
+    postProcess->shaderParams.textureParams[0].texture = NULL;
+    postProcess->shaderParams.textureParams[1].texture = NULL;
+    postProcess->shaderParams.textureParams[2].texture = NULL;
+}
+
+static void runPostProcessBloom(elfPostProcess* postProcess, elfScene* scene, bool sourceRt)
+{
+    gfxSetViewport(0, 0, postProcess->bufferWidth, postProcess->bufferHeight);
+    gfxGetOrthographicProjectionMatrix(0, postProcess->bufferWidth, 0, postProcess->bufferHeight, -1.0f, 1.0f,
+                                       postProcess->shaderParams.projectionMatrix);
+
+    gfxSetRenderTarget(postProcess->rtMed);
+    gfxSetRenderTargetColorTexture(postProcess->rtMed, 0, postProcess->rtTexMed_1);
+
+    postProcess->shaderParams.shaderProgram = postProcess->hipassShdr;
+    postProcess->shaderParams.textureParams[0].texture = postProcess->mainRtColor[sourceRt];
+    gfxSetShaderParams(&postProcess->shaderParams);
+    gfxSetShaderProgramUniform1f("threshold", postProcess->bloomThreshold);
+    elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth, postProcess->bufferHeight);
+
+    gfxSetRenderTargetColorTexture(postProcess->rtMed, 0, postProcess->rtTexMed_2);
+
+    postProcess->shaderParams.shaderProgram = postProcess->blurShdr;
+    postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexMed_1;
+    gfxSetShaderParams(&postProcess->shaderParams);
+    gfxSetShaderProgramUniformVec2("offset", 1.0f / ((float)postProcess->bufferWidth), 0.0);
+    elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth, postProcess->bufferHeight);
+
+    gfxSetRenderTargetColorTexture(postProcess->rtMed, 0, postProcess->rtTexMed_3);
+
+    postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexMed_2;
+    gfxSetShaderParams(&postProcess->shaderParams);
+    gfxSetShaderProgramUniformVec2("offset", 0.0f, 1.0f / ((float)postProcess->bufferHeight));
+    elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth, postProcess->bufferHeight);
+
+    gfxSetViewport(0, 0, postProcess->bufferWidth / 2, postProcess->bufferHeight / 2);
+    gfxGetOrthographicProjectionMatrix(0.0f, postProcess->bufferWidth / 2, 0.0f, postProcess->bufferHeight / 2, -1.0f,
+                                       1.0f, postProcess->shaderParams.projectionMatrix);
+
+    gfxSetRenderTarget(postProcess->rtLow);
+    gfxSetRenderTargetColorTexture(postProcess->rtLow, 0, postProcess->rtTexLow_1);
+
+    postProcess->shaderParams.shaderProgram = postProcess->blurShdr;
+    postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexMed_3;
+    gfxSetShaderParams(&postProcess->shaderParams);
+    gfxSetShaderProgramUniformVec2("offset", 1.0f / ((float)postProcess->bufferWidth / 2), 0.0f);
+    elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth / 2, postProcess->bufferHeight / 2);
+
+    gfxSetRenderTargetColorTexture(postProcess->rtLow, 0, postProcess->rtTexLow_2);
+
+    postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexLow_1;
+    gfxSetShaderParams(&postProcess->shaderParams);
+    gfxSetShaderProgramUniformVec2("offset", 0.0f, 1.0f / ((float)postProcess->bufferHeight / 2));
+    elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth / 2, postProcess->bufferHeight / 2);
+
+    gfxSetViewport(0, 0, postProcess->bufferWidth / 4, postProcess->bufferHeight / 4);
+    gfxGetOrthographicProjectionMatrix(0.0f, postProcess->bufferWidth / 4, 0.0f, postProcess->bufferHeight / 4, -1.0f,
+                                       1.0f, postProcess->shaderParams.projectionMatrix);
+
+    gfxSetRenderTarget(postProcess->rtTiny);
+    gfxSetRenderTargetColorTexture(postProcess->rtTiny, 0, postProcess->rtTexTiny_1);
+
+    postProcess->shaderParams.shaderProgram = postProcess->blurShdr;
+    postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexLow_2;
+    gfxSetShaderParams(&postProcess->shaderParams);
+    gfxSetShaderProgramUniformVec2("offset", 1.0f / ((float)postProcess->bufferWidth / 4), 0.0f);
+    elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth / 4, postProcess->bufferHeight / 4);
+
+    gfxSetRenderTargetColorTexture(postProcess->rtTiny, 0, postProcess->rtTexTiny_2);
+
+    postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexTiny_1;
+    gfxSetShaderParams(&postProcess->shaderParams);
+    gfxSetShaderProgramUniformVec2("offset", 0.0f, 1.0f / ((float)postProcess->bufferHeight / 4));
+    elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth / 4, postProcess->bufferHeight / 4);
+
+    gfxDisableRenderTarget();
+
+    gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
+    gfxGetOrthographicProjectionMatrix(0.0f, (float)elfGetWindowWidth(), 0.0f, (float)elfGetWindowHeight(), -1.0f, 1.0f,
+                                       postProcess->shaderParams.projectionMatrix);
+
+    postProcess->shaderParams.shaderProgram = postProcess->bloomCombineShdr;
+    postProcess->shaderParams.textureParams[0].texture = postProcess->mainRtColor[sourceRt];
+    postProcess->shaderParams.textureParams[1].texture = postProcess->rtTexMed_3;
+    postProcess->shaderParams.textureParams[2].texture = postProcess->rtTexLow_2;
+    postProcess->shaderParams.textureParams[3].texture = postProcess->rtTexTiny_2;
+    gfxSetShaderParams(&postProcess->shaderParams);
+
+    elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
+
+    postProcess->shaderParams.textureParams[0].texture = NULL;
+    postProcess->shaderParams.textureParams[1].texture = NULL;
+    postProcess->shaderParams.textureParams[2].texture = NULL;
+    postProcess->shaderParams.textureParams[3].texture = NULL;
+}
+
+static void runPostProcessDefault(elfPostProcess* postProcess, bool sourceRt)
+{
+    gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
+    gfxGetOrthographicProjectionMatrix(0.0f, (float)elfGetWindowWidth(), 0.0f, (float)elfGetWindowHeight(), -1.0f, 1.0f,
+                                       postProcess->shaderParams.projectionMatrix);
+
+    postProcess->shaderParams.textureParams[0].texture = postProcess->mainRtColor[sourceRt];
+    gfxSetShaderParams(&postProcess->shaderParams);
+
+    elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
+
+    postProcess->shaderParams.textureParams[0].texture = NULL;
+}
+
+static void runPostProcessLightShafts(elfPostProcess* postProcess, elfScene* scene)
+{
+    bool firstShaft = true;
+    for (elfLight* light = (elfLight*)elfBeginList(scene->lights); light;
+         light = (elfLight*)elfGetListNext(scene->lights))
+    {
+        elfVec3f lightPos = elfGetActorPosition((elfActor*)light);
+        if (light->shaft && elfSphereInsideFrustum(scene->curCamera, &lightPos.x, light->shaftSize))
+        {
+            if (firstShaft)
+            {
+                gfxSetShaderParamsDefault(&scene->shaderParams);
+                elfSetCamera(scene->curCamera, &scene->shaderParams);
+                gfxSetViewport(0, 0, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
+                gfxSetShaderParams(&scene->shaderParams);
+
+                gfxSetRenderTarget(postProcess->rtHigh);
+                gfxSetRenderTargetColorTexture(postProcess->rtHigh, 0, postProcess->rtTexHigh_1);
+                gfxClearBuffers(0.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+
+                scene->shaderParams.renderParams.colorWrite = false;
+                scene->shaderParams.renderParams.alphaWrite = false;
+
+                elfEntity* ent;
+                int i;
+                for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue);
+                     i < scene->entityQueueCount && ent != NULL;
+                     i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
+                {
+                    elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
+                }
+
+                elfSprite* spr;
+                for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue);
+                     i < scene->spriteQueueCount && spr != NULL;
+                     i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
+                {
+                    elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
+                }
+
+                firstShaft = false;
+            }
+
+            elfVec3f camPos = elfGetActorPosition((elfActor*)scene->curCamera);
+            elfVec4f camOrient = elfGetActorOrientation((elfActor*)scene->curCamera);
+
+            int viewport[4];
+            viewport[0] = 0;
+            viewport[1] = 0;
+            viewport[2] = elfGetWindowWidth();
+            viewport[3] = elfGetWindowHeight();
+
+            elfVec3f lightScreenPos;
+            gfxProject(lightPos.x, lightPos.y, lightPos.z, elfGetCameraModelviewMatrix(scene->curCamera),
+                       elfGetCameraProjectionMatrix(scene->curCamera), viewport, &lightScreenPos.x);
+
+            lightPos = elfSubVec3fVec3f(lightPos, camPos);
+            camOrient = elfGetQuaInverted(camOrient);
+            lightPos = elfMulQuaVec3f(camOrient, lightPos);
+
+            // render the light beacon
+            gfxSetShaderParamsDefault(&scene->shaderParams);
+
+            elfSetCamera(scene->curCamera, &scene->shaderParams);
+            gfxSetViewport(0, 0, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
+
+            scene->shaderParams.renderParams.depthWrite = false;
+
+            gfxSetTransformPosition(postProcess->lightShaftTransform, lightPos.x, lightPos.y, lightPos.z);
+            memcpy(scene->shaderParams.modelviewMatrix, gfxGetTransformMatrix(postProcess->lightShaftTransform),
+                   sizeof(float) * 16);
+            gfxSetColor(&scene->shaderParams.materialParams.diffuseColor, light->color.r, light->color.g,
+                        light->color.b, 1.0);
+
+            gfxSetShaderParams(&scene->shaderParams);
+
+            gfxSetRenderTarget(postProcess->rtHigh);
+            gfxSetRenderTargetColorTexture(postProcess->rtHigh, 0, postProcess->rtTexHigh_1);
+
+            elfDrawCircle(0, 0, 32, light->shaftSize);
+
+            // shaft the light...
+            gfxSetRenderTargetColorTexture(postProcess->rtHigh, 0, postProcess->rtTexHigh_2);
+
+            gfxSetShaderParamsDefault(&scene->shaderParams);
+            gfxSetViewport(0, 0, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
+            gfxGetOrthographicProjectionMatrix(0.0f, (float)postProcess->bufferWidth * 2, 0.0f,
+                                               (float)postProcess->bufferHeight * 2, -1.0f, 1.0f,
+                                               scene->shaderParams.projectionMatrix);
+
+            scene->shaderParams.renderParams.depthTest = false;
+            scene->shaderParams.renderParams.depthWrite = false;
+            scene->shaderParams.shaderProgram = postProcess->lightShaftShdr;
+            scene->shaderParams.textureParams[0].texture = postProcess->rtTexHigh_1;
+
+            gfxSetShaderParams(&scene->shaderParams);
+            gfxSetShaderProgramUniform1f("exposure", 0.0034f);
+            gfxSetShaderProgramUniform1f("decay", 1.0f);
+            gfxSetShaderProgramUniform1f("density", 1.0f - light->shaftFadeOff);
+            gfxSetShaderProgramUniform1f("weight", light->shaftIntensity * 5.0f * postProcess->lightShaftsIntensity);
+            gfxSetShaderProgramUniformVec2("lightPosition", lightScreenPos.x / (float)elfGetWindowWidth(),
+                                           lightScreenPos.y / (float)elfGetWindowHeight());
+
+            elfDrawTextured2dQuad(0.0f, 0.0f, (float)postProcess->bufferWidth * 2,
+                                  (float)postProcess->bufferHeight * 2);
+
+            gfxDisableRenderTarget();
+
+            // add light shaft to scene
+            gfxSetShaderParamsDefault(&scene->shaderParams);
+            gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
+            gfxGetOrthographicProjectionMatrix(0.0f, (float)elfGetWindowWidth(), 0.0f, (float)elfGetWindowHeight(),
+                                               -1.0f, 1.0f, scene->shaderParams.projectionMatrix);
+
+            scene->shaderParams.renderParams.depthTest = false;
+            scene->shaderParams.renderParams.depthWrite = false;
+            scene->shaderParams.renderParams.blendMode = GFX_ADD;
+            scene->shaderParams.textureParams[0].texture = postProcess->rtTexHigh_2;
+
+            gfxSetShaderParams(&scene->shaderParams);
+
+            elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
+
+            scene->shaderParams.textureParams[0].texture = NULL;
+        }
+    }
+}
+
 void elfRunPostProcess(elfPostProcess* postProcess, elfScene* scene)
 {
-    bool sourceRt = false;
-    elfCamera* cam;
-    elfEntity* ent;
-    elfSprite* spr;
-    elfLight* light;
-    int i;
-    elfVec3f lightPos;
-    elfVec3f lightScreenPos;
-    elfVec3f camPos;
-    elfVec4f camOrient;
-    int viewport[4];
-
     gfxDisableRenderTarget();
 
     gfxSetShaderParamsDefault(&postProcess->shaderParams);
@@ -490,342 +815,47 @@ void elfRunPostProcess(elfPostProcess* postProcess, elfScene* scene)
     postProcess->shaderParams.renderParams.depthWrite = false;
     postProcess->shaderParams.renderParams.alphaTest = false;
 
+    // Use rendertarget as source
+    bool sourceRt = false;
+
     // SSAO
     if (postProcess->ssao && scene->curCamera)
     {
-        if (postProcess->dof || postProcess->bloom)
-        {
-            gfxSetRenderTarget(postProcess->mainRt);
-            gfxSetRenderTargetColorTexture(postProcess->mainRt, 0, postProcess->mainRtColor[!sourceRt]);
-        }
-        else
-        {
-            gfxDisableRenderTarget();
-        }
-
-        gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
-        gfxGetOrthographicProjectionMatrix(0.0f, (float)elfGetWindowWidth(), 0.0f, (float)elfGetWindowHeight(), -1.0f,
-                                           1.0f, postProcess->shaderParams.projectionMatrix);
-
-        if ((cam = elfGetSceneActiveCamera(scene)))
-        {
-            postProcess->shaderParams.clipStart = elfGetCameraClip(cam).x;
-            postProcess->shaderParams.clipEnd = elfGetCameraClip(cam).y;
-            postProcess->shaderParams.viewportWidth = elfGetWindowWidth() * 2;
-            postProcess->shaderParams.viewportHeight = elfGetWindowHeight() * 2;
-        }
-
-        postProcess->shaderParams.shaderProgram = postProcess->ssaoShdr;
-
-        postProcess->shaderParams.textureParams[0].texture = postProcess->mainRtColor[sourceRt];
-        gfxSetShaderParams(&postProcess->shaderParams);
-        gfxSetShaderProgramUniform1f("amount", postProcess->ssaoAmount);
-
-        elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
-
+        runPostProcessSSAO(postProcess, scene, sourceRt);
         sourceRt = !sourceRt;
-
-        postProcess->shaderParams.textureParams[0].texture = NULL;
-        postProcess->shaderParams.textureParams[1].texture = NULL;
     }
 
     // DOF
     if (postProcess->dof)
     {
-        gfxSetViewport(0, 0, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
-        gfxGetOrthographicProjectionMatrix(0, postProcess->bufferWidth * 2, 0, postProcess->bufferHeight * 2, -1.0f,
-                                           1.0f, postProcess->shaderParams.projectionMatrix);
-
-        gfxSetRenderTarget(postProcess->rtHigh);
-        gfxSetRenderTargetColorTexture(postProcess->rtHigh, 0, postProcess->rtTexHigh_1);
-
-        postProcess->shaderParams.textureParams[0].texture = postProcess->mainRtColor[sourceRt];
-        gfxSetShaderParams(&postProcess->shaderParams);
-        elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
-
-        gfxSetRenderTargetColorTexture(postProcess->rtHigh, 0, postProcess->rtTexHigh_2);
-
-        postProcess->shaderParams.shaderProgram = postProcess->blurShdr;
-        postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexHigh_1;
-        gfxSetShaderParams(&postProcess->shaderParams);
-        gfxSetShaderProgramUniformVec2("offset", 1.0f / ((float)(postProcess->bufferWidth * 2)), 0.0f);
-        elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
-
-        gfxSetRenderTargetColorTexture(postProcess->rtHigh, 0, postProcess->rtTexHigh_1);
-
-        postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexHigh_2;
-        gfxSetShaderParams(&postProcess->shaderParams);
-        gfxSetShaderProgramUniformVec2("offset", 0.0f, 1.0f / ((float)(postProcess->bufferHeight * 2)));
-        elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
-
-        if (postProcess->bloom)
-        {
-            gfxSetRenderTarget(postProcess->mainRt);
-            gfxSetRenderTargetColorTexture(postProcess->mainRt, 0, postProcess->mainRtColor[!sourceRt]);
-        }
-        else
-        {
-            gfxDisableRenderTarget();
-        }
-
-        gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
-        gfxGetOrthographicProjectionMatrix(0.0f, (float)elfGetWindowWidth(), 0.0f, (float)elfGetWindowHeight(), -1.0f,
-                                           1.0f, postProcess->shaderParams.projectionMatrix);
-
-        gfxMatrix4GetInverse(scene->curCamera->projectionMatrix, postProcess->shaderParams.invProjectionMatrix);
-
-        postProcess->shaderParams.shaderProgram = postProcess->dofCombineShdr;
-        postProcess->shaderParams.textureParams[0].texture = postProcess->mainRtDepth;
-        postProcess->shaderParams.textureParams[1].texture = postProcess->mainRtColor[0];
-        postProcess->shaderParams.textureParams[2].texture = postProcess->rtTexHigh_1;
-
-        gfxSetShaderParams(&postProcess->shaderParams);
-
-        gfxSetShaderProgramUniform1f("elf_FocalRange", postProcess->dofFocalRange);
-        gfxSetShaderProgramUniform1f("elf_FocalDistance", postProcess->dofFocalDistance);
-
-        elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
-
+        runPostProcessDOF(postProcess, scene, sourceRt);
         sourceRt = !sourceRt;
-
-        postProcess->shaderParams.textureParams[0].texture = NULL;
-        postProcess->shaderParams.textureParams[1].texture = NULL;
-        postProcess->shaderParams.textureParams[2].texture = NULL;
     }
 
     // BLOOM
     if (postProcess->bloom)
     {
-        gfxSetViewport(0, 0, postProcess->bufferWidth, postProcess->bufferHeight);
-        gfxGetOrthographicProjectionMatrix(0, postProcess->bufferWidth, 0, postProcess->bufferHeight, -1.0f, 1.0f,
-                                           postProcess->shaderParams.projectionMatrix);
-
-        gfxSetRenderTarget(postProcess->rtMed);
-        gfxSetRenderTargetColorTexture(postProcess->rtMed, 0, postProcess->rtTexMed_1);
-
-        postProcess->shaderParams.shaderProgram = postProcess->hipassShdr;
-        postProcess->shaderParams.textureParams[0].texture = postProcess->mainRtColor[sourceRt];
-        gfxSetShaderParams(&postProcess->shaderParams);
-        gfxSetShaderProgramUniform1f("threshold", postProcess->bloomThreshold);
-        elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth, postProcess->bufferHeight);
-
-        gfxSetRenderTargetColorTexture(postProcess->rtMed, 0, postProcess->rtTexMed_2);
-
-        postProcess->shaderParams.shaderProgram = postProcess->blurShdr;
-        postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexMed_1;
-        gfxSetShaderParams(&postProcess->shaderParams);
-        gfxSetShaderProgramUniformVec2("offset", 1.0f / ((float)postProcess->bufferWidth), 0.0);
-        elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth, postProcess->bufferHeight);
-
-        gfxSetRenderTargetColorTexture(postProcess->rtMed, 0, postProcess->rtTexMed_3);
-
-        postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexMed_2;
-        gfxSetShaderParams(&postProcess->shaderParams);
-        gfxSetShaderProgramUniformVec2("offset", 0.0f, 1.0f / ((float)postProcess->bufferHeight));
-        elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth, postProcess->bufferHeight);
-
-        gfxSetViewport(0, 0, postProcess->bufferWidth / 2, postProcess->bufferHeight / 2);
-        gfxGetOrthographicProjectionMatrix(0.0f, postProcess->bufferWidth / 2, 0.0f, postProcess->bufferHeight / 2,
-                                           -1.0f, 1.0f, postProcess->shaderParams.projectionMatrix);
-
-        gfxSetRenderTarget(postProcess->rtLow);
-        gfxSetRenderTargetColorTexture(postProcess->rtLow, 0, postProcess->rtTexLow_1);
-
-        postProcess->shaderParams.shaderProgram = postProcess->blurShdr;
-        postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexMed_3;
-        gfxSetShaderParams(&postProcess->shaderParams);
-        gfxSetShaderProgramUniformVec2("offset", 1.0f / ((float)postProcess->bufferWidth / 2), 0.0f);
-        elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth / 2, postProcess->bufferHeight / 2);
-
-        gfxSetRenderTargetColorTexture(postProcess->rtLow, 0, postProcess->rtTexLow_2);
-
-        postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexLow_1;
-        gfxSetShaderParams(&postProcess->shaderParams);
-        gfxSetShaderProgramUniformVec2("offset", 0.0f, 1.0f / ((float)postProcess->bufferHeight / 2));
-        elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth / 2, postProcess->bufferHeight / 2);
-
-        gfxSetViewport(0, 0, postProcess->bufferWidth / 4, postProcess->bufferHeight / 4);
-        gfxGetOrthographicProjectionMatrix(0.0f, postProcess->bufferWidth / 4, 0.0f, postProcess->bufferHeight / 4,
-                                           -1.0f, 1.0f, postProcess->shaderParams.projectionMatrix);
-
-        gfxSetRenderTarget(postProcess->rtTiny);
-        gfxSetRenderTargetColorTexture(postProcess->rtTiny, 0, postProcess->rtTexTiny_1);
-
-        postProcess->shaderParams.shaderProgram = postProcess->blurShdr;
-        postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexLow_2;
-        gfxSetShaderParams(&postProcess->shaderParams);
-        gfxSetShaderProgramUniformVec2("offset", 1.0f / ((float)postProcess->bufferWidth / 4), 0.0f);
-        elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth / 4, postProcess->bufferHeight / 4);
-
-        gfxSetRenderTargetColorTexture(postProcess->rtTiny, 0, postProcess->rtTexTiny_2);
-
-        postProcess->shaderParams.textureParams[0].texture = postProcess->rtTexTiny_1;
-        gfxSetShaderParams(&postProcess->shaderParams);
-        gfxSetShaderProgramUniformVec2("offset", 0.0f, 1.0f / ((float)postProcess->bufferHeight / 4));
-        elfDrawTextured2dQuad(0.0f, 0.0f, postProcess->bufferWidth / 4, postProcess->bufferHeight / 4);
-
-        gfxDisableRenderTarget();
-
-        gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
-        gfxGetOrthographicProjectionMatrix(0.0f, (float)elfGetWindowWidth(), 0.0f, (float)elfGetWindowHeight(), -1.0f,
-                                           1.0f, postProcess->shaderParams.projectionMatrix);
-
-        postProcess->shaderParams.shaderProgram = postProcess->bloomCombineShdr;
-        postProcess->shaderParams.textureParams[0].texture = postProcess->mainRtColor[sourceRt];
-        postProcess->shaderParams.textureParams[1].texture = postProcess->rtTexMed_3;
-        postProcess->shaderParams.textureParams[2].texture = postProcess->rtTexLow_2;
-        postProcess->shaderParams.textureParams[3].texture = postProcess->rtTexTiny_2;
-        gfxSetShaderParams(&postProcess->shaderParams);
-
-        elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
-
-        postProcess->shaderParams.textureParams[0].texture = NULL;
-        postProcess->shaderParams.textureParams[1].texture = NULL;
-        postProcess->shaderParams.textureParams[2].texture = NULL;
-        postProcess->shaderParams.textureParams[3].texture = NULL;
+        runPostProcessBloom(postProcess, scene, sourceRt);
     }
 
+    // Default
+    // TODO ssao only active if currentCam != null, BUG?
     if (!postProcess->bloom && !postProcess->dof && !postProcess->ssao)
     {
-        gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
-        gfxGetOrthographicProjectionMatrix(0.0f, (float)elfGetWindowWidth(), 0.0f, (float)elfGetWindowHeight(), -1.0f,
-                                           1.0f, postProcess->shaderParams.projectionMatrix);
-
-        postProcess->shaderParams.textureParams[0].texture = postProcess->mainRtColor[sourceRt];
-        gfxSetShaderParams(&postProcess->shaderParams);
-
-        elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
-
-        postProcess->shaderParams.textureParams[0].texture = NULL;
+        runPostProcessDefault(postProcess, sourceRt);
     }
 
     // LIGHT SHAFTS
-    bool firstShaft = true;
-
     if (postProcess->lightShafts && scene->curCamera)
     {
-        for (light = (elfLight*)elfBeginList(scene->lights); light; light = (elfLight*)elfGetListNext(scene->lights))
-        {
-            lightPos = elfGetActorPosition((elfActor*)light);
-            if (light->shaft && elfSphereInsideFrustum(scene->curCamera, &lightPos.x, light->shaftSize))
-            {
-                if (firstShaft)
-                {
-                    gfxSetShaderParamsDefault(&scene->shaderParams);
-                    elfSetCamera(scene->curCamera, &scene->shaderParams);
-                    gfxSetViewport(0, 0, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
-                    gfxSetShaderParams(&scene->shaderParams);
-
-                    gfxSetRenderTarget(postProcess->rtHigh);
-                    gfxSetRenderTargetColorTexture(postProcess->rtHigh, 0, postProcess->rtTexHigh_1);
-                    gfxClearBuffers(0.0f, 0.0f, 0.0f, 1.0f, 1.0f);
-
-                    scene->shaderParams.renderParams.colorWrite = false;
-                    scene->shaderParams.renderParams.alphaWrite = false;
-
-                    for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue);
-                         i < scene->entityQueueCount && ent != NULL;
-                         i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
-                    {
-                        elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
-                    }
-
-                    for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue);
-                         i < scene->spriteQueueCount && spr != NULL;
-                         i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
-                    {
-                        elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
-                    }
-
-                    firstShaft = false;
-                }
-
-                camPos = elfGetActorPosition((elfActor*)scene->curCamera);
-                camOrient = elfGetActorOrientation((elfActor*)scene->curCamera);
-                viewport[0] = 0;
-                viewport[1] = 0;
-                viewport[2] = elfGetWindowWidth();
-                viewport[3] = elfGetWindowHeight();
-                gfxProject(lightPos.x, lightPos.y, lightPos.z, elfGetCameraModelviewMatrix(scene->curCamera),
-                           elfGetCameraProjectionMatrix(scene->curCamera), viewport, &lightScreenPos.x);
-
-                lightPos = elfSubVec3fVec3f(lightPos, camPos);
-                camOrient = elfGetQuaInverted(camOrient);
-                lightPos = elfMulQuaVec3f(camOrient, lightPos);
-
-                // render the light beacon
-                gfxSetShaderParamsDefault(&scene->shaderParams);
-
-                elfSetCamera(scene->curCamera, &scene->shaderParams);
-                gfxSetViewport(0, 0, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
-
-                scene->shaderParams.renderParams.depthWrite = false;
-
-                gfxSetTransformPosition(postProcess->lightShaftTransform, lightPos.x, lightPos.y, lightPos.z);
-                memcpy(scene->shaderParams.modelviewMatrix, gfxGetTransformMatrix(postProcess->lightShaftTransform),
-                       sizeof(float) * 16);
-                gfxSetColor(&scene->shaderParams.materialParams.diffuseColor, light->color.r, light->color.g,
-                            light->color.b, 1.0);
-
-                gfxSetShaderParams(&scene->shaderParams);
-
-                gfxSetRenderTarget(postProcess->rtHigh);
-                gfxSetRenderTargetColorTexture(postProcess->rtHigh, 0, postProcess->rtTexHigh_1);
-
-                elfDrawCircle(0, 0, 32, light->shaftSize);
-
-                // shaft the light...
-                gfxSetRenderTargetColorTexture(postProcess->rtHigh, 0, postProcess->rtTexHigh_2);
-
-                gfxSetShaderParamsDefault(&scene->shaderParams);
-                gfxSetViewport(0, 0, postProcess->bufferWidth * 2, postProcess->bufferHeight * 2);
-                gfxGetOrthographicProjectionMatrix(0.0f, (float)postProcess->bufferWidth * 2, 0.0f,
-                                                   (float)postProcess->bufferHeight * 2, -1.0f, 1.0f,
-                                                   scene->shaderParams.projectionMatrix);
-
-                scene->shaderParams.renderParams.depthTest = false;
-                scene->shaderParams.renderParams.depthWrite = false;
-                scene->shaderParams.shaderProgram = postProcess->lightShaftShdr;
-                scene->shaderParams.textureParams[0].texture = postProcess->rtTexHigh_1;
-
-                gfxSetShaderParams(&scene->shaderParams);
-                gfxSetShaderProgramUniform1f("exposure", 0.0034f);
-                gfxSetShaderProgramUniform1f("decay", 1.0f);
-                gfxSetShaderProgramUniform1f("density", 1.0f - light->shaftFadeOff);
-                gfxSetShaderProgramUniform1f("weight",
-                                             light->shaftIntensity * 5.0f * postProcess->lightShaftsIntensity);
-                gfxSetShaderProgramUniformVec2("lightPosition", lightScreenPos.x / (float)elfGetWindowWidth(),
-                                               lightScreenPos.y / (float)elfGetWindowHeight());
-
-                elfDrawTextured2dQuad(0.0f, 0.0f, (float)postProcess->bufferWidth * 2,
-                                      (float)postProcess->bufferHeight * 2);
-
-                gfxDisableRenderTarget();
-
-                // add light shaft to scene
-                gfxSetShaderParamsDefault(&scene->shaderParams);
-                gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
-                gfxGetOrthographicProjectionMatrix(0.0f, (float)elfGetWindowWidth(), 0.0f, (float)elfGetWindowHeight(),
-                                                   -1.0f, 1.0f, scene->shaderParams.projectionMatrix);
-
-                scene->shaderParams.renderParams.depthTest = false;
-                scene->shaderParams.renderParams.depthWrite = false;
-                scene->shaderParams.renderParams.blendMode = GFX_ADD;
-                scene->shaderParams.textureParams[0].texture = postProcess->rtTexHigh_2;
-
-                gfxSetShaderParams(&scene->shaderParams);
-
-                elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
-
-                scene->shaderParams.textureParams[0].texture = NULL;
-            }
-        }
+        runPostProcessLightShafts(postProcess, scene);
     }
 
     // reset state just to be sure...
     gfxSetShaderParamsDefault(&postProcess->shaderParams);
     gfxSetShaderParams(&postProcess->shaderParams);
 
+    // TODO Can be removed?
     /*gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
     gfxGetOrthographicProjectionMatrix(0.0, (float)elfGetWindowWidth(),
             0.0, (float)elfGetWindowHeight(), -1.0, 1.0,
