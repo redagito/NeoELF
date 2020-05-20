@@ -23,6 +23,7 @@ struct elfEngine
     // Current working directory
     std::string cwd;
 
+    // Rendering stats?
     int fps = 0;
     unsigned int frames = 0;
     float sync = 0.f;
@@ -31,14 +32,20 @@ struct elfEngine
     elfTimer* fpsLimitTimer = nullptr;
     elfTimer* timeSyncTimer = nullptr;
 
+    // Flag for when engine should keep running?
     bool freeRun = true;
     bool quit = false;
 
+    // Active post process
     elfPostProcess* postProcess = nullptr;
 
+    // Font for GUI
     elfFont* guiFont = nullptr;
 
+    // Active scene
     elfScene* scene = nullptr;
+
+    // Active GUI
     elfGui* gui = nullptr;
 
     // TODO Current actor?
@@ -54,7 +61,7 @@ void elfDestroyEngine(void* data);
 bool elfInitEngine();
 void elfDeinitEngine();
 
-// TODO General application init?
+// Initializes all the subsystems and the global engine object
 bool elfInit(elfConfig* config);
 
 void elfLimitEngineFps();
@@ -85,7 +92,6 @@ void elfSetGui(elfGui* gui);
 elfGui* elfGetGui();
 
 float elfGetSync();
-
 int elfGetFps();
 
 void elfSetFpsLimit(float fpsLimit);

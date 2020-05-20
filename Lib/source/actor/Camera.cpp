@@ -69,8 +69,9 @@ void elfUpdateCamera(elfCamera* camera) { elfUpdateActor((elfActor*)camera); }
 void elfCameraPreDraw(elfCamera* camera)
 {
     elfActorPreDraw((elfActor*)camera);
-
+    // Calculates / updates camera frustum?
     gfxGetFrustum(camera->projectionMatrix, elfGetCameraModelviewMatrix(camera), camera->frustum);
+    // Retrieves current camera position
     elfGetActorPosition_((elfActor*)camera, &camera->position.x);
 }
 

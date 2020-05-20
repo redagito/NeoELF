@@ -1679,260 +1679,228 @@ bool elfRemoveSceneActorByObject(elfScene* scene, elfActor* actor)
     return false;
 }
 
-void elfDrawScene(elfScene* scene)
+static void drawOccluders(elfScene* scene)
 {
-    elfLight* light;
-    elfEntity* ent;
-    elfSprite* spr;
-    elfParticles* par;
-    float bias[16] = {0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.5f, 0.5f, 0.5f, 1.0f};
-    float tempMat1[16];
-    float tempMat2[16];
-    gfxRenderTarget* renderTarget;
-    int i;
-    elfVec3f lpos;
-    elfVec3f spos;
-    elfVec3f dvec;
-    float dist, att;
+    // draw occluders to depth buffer
+    gfxSetShaderParamsDefault(&scene->shaderParams);
+    elfSetCamera(scene->curCamera, &scene->shaderParams);
+    scene->shaderParams.renderParams.colorWrite = false;
+    scene->shaderParams.renderParams.alphaWrite = false;
+
     bool found = false;
+    scene->entityQueueCount = 0;
+    elfBeginList(scene->entityQueue);
 
-    if (!scene->curCamera)
-        return;
-
-    renderTarget = gfxGetCurRenderTarget();
-
-    if (scene->occlusionCulling)
+    for (elfEntity* ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
+         ent = (elfEntity*)elfGetListNext(scene->entities))
     {
-        // draw occluders to depth buffer
-        gfxSetShaderParamsDefault(&scene->shaderParams);
-        elfSetCamera(scene->curCamera, &scene->shaderParams);
-        scene->shaderParams.renderParams.colorWrite = false;
-        scene->shaderParams.renderParams.alphaWrite = false;
-
-        found = false;
-        scene->entityQueueCount = 0;
-        elfBeginList(scene->entityQueue);
-
-        for (ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
-             ent = (elfEntity*)elfGetListNext(scene->entities))
+        if (!elfCullEntity(ent, scene->curCamera))
         {
-            if (!elfCullEntity(ent, scene->curCamera))
+            if (scene->entityQueueCount < elfGetListLength(scene->entityQueue))
             {
-                if (scene->entityQueueCount < elfGetListLength(scene->entityQueue))
-                {
-                    elfSetListCurPtr(scene->entityQueue, (elfObject*)ent);
-                    elfGetListNext(scene->entityQueue);
-                }
-                else
-                {
-                    elfAppendListObject(scene->entityQueue, (elfObject*)ent);
-                }
-                scene->entityQueueCount++;
-                if (ent->occluder)
-                {
-                    elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
-                    found = true;
-                }
-                ent->culled = false;
+                elfSetListCurPtr(scene->entityQueue, (elfObject*)ent);
+                elfGetListNext(scene->entityQueue);
             }
             else
             {
-                ent->culled = true;
+                elfAppendListObject(scene->entityQueue, (elfObject*)ent);
             }
-        }
+            scene->entityQueueCount++;
 
-        scene->spriteQueueCount = 0;
-        elfBeginList(scene->spriteQueue);
-
-        for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
-             spr = (elfSprite*)elfGetListNext(scene->sprites))
-        {
-            if (!elfCullSprite(spr, scene->curCamera))
+            // Found occluder
+            if (ent->occluder)
             {
-                if (scene->spriteQueueCount < elfGetListLength(scene->spriteQueue))
-                {
-                    elfSetListCurPtr(scene->spriteQueue, (elfObject*)spr);
-                    elfGetListNext(scene->spriteQueue);
-                }
-                else
-                {
-                    elfAppendListObject(scene->spriteQueue, (elfObject*)spr);
-                }
-                scene->spriteQueueCount++;
-                if (spr->occluder)
-                {
-                    found = true;
-                    elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
-                }
-                spr->culled = false;
+                elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
+                found = true;
             }
-            else
-            {
-                spr->culled = true;
-            }
-        }
-
-        if (found)
-        {
-            // initiate occlusion queries
-            gfxSetShaderParamsDefault(&scene->shaderParams);
-            elfSetCamera(scene->curCamera, &scene->shaderParams);
-            scene->shaderParams.renderParams.depthWrite = false;
-            scene->shaderParams.renderParams.depthFunc = GFX_LEQUAL;
-            scene->shaderParams.renderParams.colorWrite = false;
-            scene->shaderParams.renderParams.alphaWrite = false;
-            scene->shaderParams.renderParams.cullFace = false;
-
-            for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
-                 i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
-            {
-                gfxBeginQuery(ent->query);
-                elfDrawEntityBoundingBox(ent, &scene->shaderParams);
-                gfxEndQuery(ent->query);
-            }
-
-            // draw depth buffer
-            gfxSetShaderParamsDefault(&scene->shaderParams);
-            elfSetCamera(scene->curCamera, &scene->shaderParams);
-            scene->shaderParams.renderParams.colorWrite = false;
-            scene->shaderParams.renderParams.alphaWrite = false;
-
-            for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
-                 i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
-            {
-                if (ent->occluder)
-                    continue;
-
-                if (gfxGetQueryResult(ent->query) < 1)
-                {
-                    elfRemoveListObject(scene->entityQueue, (elfObject*)ent);
-                    scene->entityQueueCount--;
-                    i--;
-                }
-                else
-                {
-                    elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
-                }
-            }
-
-            for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
-                 i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
-            {
-                if (spr->occluder)
-                    continue;
-
-                elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
-            }
+            ent->culled = false;
         }
         else
         {
-            // draw depth buffer
-            gfxSetShaderParamsDefault(&scene->shaderParams);
-            elfSetCamera(scene->curCamera, &scene->shaderParams);
-            scene->shaderParams.renderParams.colorWrite = false;
-            scene->shaderParams.renderParams.alphaWrite = false;
-
-            for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
-                 i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
-            {
-                elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
-            }
-
-            for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
-                 i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
-            {
-                elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
-            }
+            ent->culled = true;
         }
     }
-    else
+
+    scene->spriteQueueCount = 0;
+    elfBeginList(scene->spriteQueue);
+
+    for (elfSprite* spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
+         spr = (elfSprite*)elfGetListNext(scene->sprites))
     {
+        if (!elfCullSprite(spr, scene->curCamera))
+        {
+            if (scene->spriteQueueCount < elfGetListLength(scene->spriteQueue))
+            {
+                elfSetListCurPtr(scene->spriteQueue, (elfObject*)spr);
+                elfGetListNext(scene->spriteQueue);
+            }
+            else
+            {
+                elfAppendListObject(scene->spriteQueue, (elfObject*)spr);
+            }
+            scene->spriteQueueCount++;
+
+            // Found occluder
+            if (spr->occluder)
+            {
+                found = true;
+                elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
+            }
+            spr->culled = false;
+        }
+        else
+        {
+            spr->culled = true;
+        }
+    }
+
+    // Found occluder
+    if (found)
+    {
+        // initiate occlusion queries
+        gfxSetShaderParamsDefault(&scene->shaderParams);
+        elfSetCamera(scene->curCamera, &scene->shaderParams);
+        scene->shaderParams.renderParams.depthWrite = false;
+        scene->shaderParams.renderParams.depthFunc = GFX_LEQUAL;
+        scene->shaderParams.renderParams.colorWrite = false;
+        scene->shaderParams.renderParams.alphaWrite = false;
+        scene->shaderParams.renderParams.cullFace = false;
+
+        int i = 0;
+        elfEntity* ent = nullptr;
+        for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
+             i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
+        {
+            gfxBeginQuery(ent->query);
+            elfDrawEntityBoundingBox(ent, &scene->shaderParams);
+            gfxEndQuery(ent->query);
+        }
+
         // draw depth buffer
         gfxSetShaderParamsDefault(&scene->shaderParams);
         elfSetCamera(scene->curCamera, &scene->shaderParams);
         scene->shaderParams.renderParams.colorWrite = false;
         scene->shaderParams.renderParams.alphaWrite = false;
 
-        scene->entityQueueCount = 0;
-        elfBeginList(scene->entityQueue);
-
-        for (ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
-             ent = (elfEntity*)elfGetListNext(scene->entities))
-        {
-            if (!elfCullEntity(ent, scene->curCamera))
-            {
-                if (scene->entityQueueCount < elfGetListLength(scene->entityQueue))
-                {
-                    elfSetListCurPtr(scene->entityQueue, (elfObject*)ent);
-                    elfGetListNext(scene->entityQueue);
-                }
-                else
-                {
-                    elfAppendListObject(scene->entityQueue, (elfObject*)ent);
-                }
-                scene->entityQueueCount++;
-                elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
-                ent->culled = false;
-            }
-            else
-            {
-                ent->culled = true;
-            }
-        }
-
-        scene->spriteQueueCount = 0;
-        elfBeginList(scene->spriteQueue);
-
-        for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
-             spr = (elfSprite*)elfGetListNext(scene->sprites))
-        {
-            if (!elfCullSprite(spr, scene->curCamera))
-            {
-                if (scene->spriteQueueCount < elfGetListLength(scene->spriteQueue))
-                {
-                    elfSetListCurPtr(scene->spriteQueue, (elfObject*)spr);
-                    elfGetListNext(scene->spriteQueue);
-                }
-                else
-                {
-                    elfAppendListObject(scene->spriteQueue, (elfObject*)spr);
-                }
-                scene->spriteQueueCount++;
-                elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
-                spr->culled = false;
-            }
-            else
-            {
-                spr->culled = true;
-            }
-        }
-    }
-
-    // draw ambient pass
-    if (!elfAboutZero(scene->ambientColor.r) || !elfAboutZero(scene->ambientColor.g) ||
-        !elfAboutZero(scene->ambientColor.b))
-    {
-        gfxSetShaderParamsDefault(&scene->shaderParams);
-        elfSetCamera(scene->curCamera, &scene->shaderParams);
-
-        scene->shaderParams.renderParams.depthWrite = false;
-        scene->shaderParams.renderParams.depthFunc = GFX_EQUAL;
-        scene->shaderParams.renderParams.blendMode = GFX_ADD;
-
         for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
              i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
         {
-            elfDrawEntity(ent, ELF_DRAW_AMBIENT, &scene->shaderParams);
+            if (ent->occluder)
+                continue;
+
+            if (gfxGetQueryResult(ent->query) < 1)
+            {
+                elfRemoveListObject(scene->entityQueue, (elfObject*)ent);
+                scene->entityQueueCount--;
+                i--;
+            }
+            else
+            {
+                elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
+            }
         }
 
+        elfSprite* spr = nullptr;
         for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
              i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
         {
-            elfDrawSprite(spr, ELF_DRAW_AMBIENT, &scene->shaderParams);
+            if (spr->occluder)
+                continue;
+
+            elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
+        }
+    }
+    else
+    {
+        // No occluders found
+        // draw depth buffer
+        gfxSetShaderParamsDefault(&scene->shaderParams);
+        elfSetCamera(scene->curCamera, &scene->shaderParams);
+        scene->shaderParams.renderParams.colorWrite = false;
+        scene->shaderParams.renderParams.alphaWrite = false;
+
+        int i = 0;
+        elfEntity* ent = nullptr;
+        for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
+             i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
+        {
+            elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
+        }
+
+        elfSprite* spr = nullptr;
+        for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
+             i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
+        {
+            elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
+        }
+    }
+}
+
+static void drawDepth(elfScene* scene)
+{
+    // draw depth buffer
+    gfxSetShaderParamsDefault(&scene->shaderParams);
+    elfSetCamera(scene->curCamera, &scene->shaderParams);
+    scene->shaderParams.renderParams.colorWrite = false;
+    scene->shaderParams.renderParams.alphaWrite = false;
+
+    scene->entityQueueCount = 0;
+    elfBeginList(scene->entityQueue);
+
+    for (elfEntity* ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
+         ent = (elfEntity*)elfGetListNext(scene->entities))
+    {
+        if (!elfCullEntity(ent, scene->curCamera))
+        {
+            if (scene->entityQueueCount < elfGetListLength(scene->entityQueue))
+            {
+                elfSetListCurPtr(scene->entityQueue, (elfObject*)ent);
+                elfGetListNext(scene->entityQueue);
+            }
+            else
+            {
+                elfAppendListObject(scene->entityQueue, (elfObject*)ent);
+            }
+            scene->entityQueueCount++;
+            elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
+            ent->culled = false;
+        }
+        else
+        {
+            ent->culled = true;
         }
     }
 
-    // draw non lighted stuff
+    scene->spriteQueueCount = 0;
+    elfBeginList(scene->spriteQueue);
+
+    for (elfSprite* spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
+         spr = (elfSprite*)elfGetListNext(scene->sprites))
+    {
+        if (!elfCullSprite(spr, scene->curCamera))
+        {
+            if (scene->spriteQueueCount < elfGetListLength(scene->spriteQueue))
+            {
+                elfSetListCurPtr(scene->spriteQueue, (elfObject*)spr);
+                elfGetListNext(scene->spriteQueue);
+            }
+            else
+            {
+                elfAppendListObject(scene->spriteQueue, (elfObject*)spr);
+            }
+            scene->spriteQueueCount++;
+            elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
+            spr->culled = false;
+        }
+        else
+        {
+            spr->culled = true;
+        }
+    }
+}
+
+static void drawAmbientPass(elfScene* scene)
+{
     gfxSetShaderParamsDefault(&scene->shaderParams);
     elfSetCamera(scene->curCamera, &scene->shaderParams);
 
@@ -1940,20 +1908,50 @@ void elfDrawScene(elfScene* scene)
     scene->shaderParams.renderParams.depthFunc = GFX_EQUAL;
     scene->shaderParams.renderParams.blendMode = GFX_ADD;
 
+    int i = 0;
+    elfEntity* ent = nullptr;
+    for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
+         i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
+    {
+        elfDrawEntity(ent, ELF_DRAW_AMBIENT, &scene->shaderParams);
+    }
+
+    elfSprite* spr = nullptr;
+    for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
+         i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
+    {
+        elfDrawSprite(spr, ELF_DRAW_AMBIENT, &scene->shaderParams);
+    }
+}
+
+static void drawNonLighted(elfScene* scene)
+{
+    gfxSetShaderParamsDefault(&scene->shaderParams);
+    elfSetCamera(scene->curCamera, &scene->shaderParams);
+
+    scene->shaderParams.renderParams.depthWrite = false;
+    scene->shaderParams.renderParams.depthFunc = GFX_EQUAL;
+    scene->shaderParams.renderParams.blendMode = GFX_ADD;
+
+    int i = 0;
+    elfEntity* ent = nullptr;
     for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
          i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
     {
         elfDrawEntity(ent, ELF_DRAW_WITHOUT_LIGHTING, &scene->shaderParams);
     }
 
+    elfSprite* spr = nullptr;
     for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
          i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
     {
         elfDrawSprite(spr, ELF_DRAW_WITHOUT_LIGHTING, &scene->shaderParams);
     }
+}
 
-    // render lighting
-    for (light = (elfLight*)elfBeginList(scene->lights); light != NULL;
+static void drawLighting(elfScene* scene, gfxRenderTarget* renderTarget)
+{
+    for (elfLight* light = (elfLight*)elfBeginList(scene->lights); light != NULL;
          light = (elfLight*)elfGetListNext(scene->lights))
     {
         if (!light->visible)
@@ -1967,7 +1965,9 @@ void elfDrawScene(elfScene* scene)
 
             // check are there any entities visible for the spot, if there aren't don't bother continuing, just skip to
             // the next light
-            found = false;
+            bool found = false;
+            int i = 0;
+            elfEntity* ent = nullptr;
             for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
                  i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
             {
@@ -1978,6 +1978,7 @@ void elfDrawScene(elfScene* scene)
                 }
             }
 
+            elfSprite* spr = nullptr;
             for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
                  i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
             {
@@ -2006,6 +2007,7 @@ void elfDrawScene(elfScene* scene)
             gfxSetRenderTarget(rnd->shadowTarget);
             gfxClearDepthBuffer(1.0f);
 
+            elfEntity* ent = nullptr;
             for (ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
                  ent = (elfEntity*)elfGetListNext(scene->entities))
             {
@@ -2015,6 +2017,7 @@ void elfDrawScene(elfScene* scene)
                 }
             }
 
+            elfSprite* spr = nullptr;
             for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
                  spr = (elfSprite*)elfGetListNext(scene->sprites))
             {
@@ -2024,6 +2027,10 @@ void elfDrawScene(elfScene* scene)
                 }
             }
 
+            float bias[16] = {0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f,
+                              0.0f, 0.0f, 0.5f, 0.0f, 0.5f, 0.5f, 0.5f, 1.0f};
+            float tempMat1[16];
+            float tempMat2[16];
             gfxMulMatrix4Matrix4(elfGetCameraProjectionMatrix(light->shadowCamera), bias, tempMat1);
             gfxMulMatrix4Matrix4(elfGetCameraModelviewMatrix(light->shadowCamera), tempMat1, tempMat2);
             gfxMatrix4GetInverse(elfGetCameraModelviewMatrix(scene->curCamera), tempMat1);
@@ -2066,7 +2073,9 @@ void elfDrawScene(elfScene* scene)
         elfSetLight(light, scene->curCamera, &scene->shaderParams);
 
         // get the light position for culling point light entities
-        lpos = elfGetActorPosition((elfActor*)light);
+        auto lpos = elfGetActorPosition((elfActor*)light);
+        int i = 0;
+        elfEntity* ent = nullptr;
         for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
              i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
         {
@@ -2091,10 +2100,11 @@ void elfDrawScene(elfScene* scene)
             }
         }
 
+        elfSprite* spr = nullptr;
         for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
              i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
         {
-            spos = elfGetActorPosition((elfActor*)spr);
+            auto spos = elfGetActorPosition((elfActor*)spr);
             if (light->lightType == ELF_SPOT_LIGHT)
             {
                 if (!elfCullSprite(spr, light->shadowCamera))
@@ -2104,10 +2114,10 @@ void elfDrawScene(elfScene* scene)
             }
             else if (light->lightType == ELF_POINT_LIGHT)
             {
-                dvec = elfSubVec3fVec3f(spos, lpos);
-                dist = elfGetVec3fLength(dvec);
+                auto dvec = elfSubVec3fVec3f(spos, lpos);
+                auto dist = elfGetVec3fLength(dvec);
                 dist -= spr->cullRadius;
-                att = 1.0 - elfFloatMax(dist - light->range, 0.0f) / light->fadeRange;
+                auto att = 1.0 - elfFloatMax(dist - light->range, 0.0f) / light->fadeRange;
                 if (att > 0.0f)
                 {
                     elfDrawSprite(spr, ELF_DRAW_WITH_LIGHTING, &scene->shaderParams);
@@ -2119,44 +2129,52 @@ void elfDrawScene(elfScene* scene)
             }
         }
     }
+}
 
-    if (scene->fog && gfxGetVersion() >= 200)
+static void drawFog(elfScene* scene)
+{
+    gfxSetShaderParamsDefault(&scene->shaderParams);
+    scene->shaderParams.renderParams.depthWrite = false;
+    scene->shaderParams.renderParams.depthFunc = GFX_EQUAL;
+    scene->shaderParams.renderParams.colorWrite = true;
+    scene->shaderParams.renderParams.alphaWrite = true;
+
+    scene->shaderParams.fogParams.mode = GFX_FOG_LINEAR;
+    scene->shaderParams.fogParams.start = scene->fogStart;
+    scene->shaderParams.fogParams.end = scene->fogEnd;
+    memcpy(&scene->shaderParams.fogParams.color.r, &scene->fogColor.r, sizeof(float) * 4);
+
+    scene->shaderParams.shaderProgram = scene->composeFogShdr;
+    scene->shaderParams.renderParams.blendMode = GFX_TRANSPARENT;
+
+    elfSetCamera(scene->curCamera, &scene->shaderParams);
+
+    int i = 0;
+    elfEntity* ent = nullptr;
+    for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
+         i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
     {
-        gfxSetShaderParamsDefault(&scene->shaderParams);
-        scene->shaderParams.renderParams.depthWrite = false;
-        scene->shaderParams.renderParams.depthFunc = GFX_EQUAL;
-        scene->shaderParams.renderParams.colorWrite = true;
-        scene->shaderParams.renderParams.alphaWrite = true;
-
-        scene->shaderParams.fogParams.mode = GFX_FOG_LINEAR;
-        scene->shaderParams.fogParams.start = scene->fogStart;
-        scene->shaderParams.fogParams.end = scene->fogEnd;
-        memcpy(&scene->shaderParams.fogParams.color.r, &scene->fogColor.r, sizeof(float) * 4);
-
-        scene->shaderParams.shaderProgram = scene->composeFogShdr;
-        scene->shaderParams.renderParams.blendMode = GFX_TRANSPARENT;
-
-        elfSetCamera(scene->curCamera, &scene->shaderParams);
-
-        for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
-             i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
-        {
-            elfDrawEntity(ent, ELF_DRAW_AMBIENT, &scene->shaderParams);
-        }
-
-        for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
-             i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
-        {
-            elfDrawSprite(spr, ELF_DRAW_AMBIENT, &scene->shaderParams);
-        }
+        elfDrawEntity(ent, ELF_DRAW_AMBIENT, &scene->shaderParams);
     }
 
-    // render particles
+    elfSprite* spr = nullptr;
+    for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
+         i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
+    {
+        elfDrawSprite(spr, ELF_DRAW_AMBIENT, &scene->shaderParams);
+    }
+}
+
+void drawParticles(elfScene* scene)
+{
     gfxSetShaderParamsDefault(&scene->shaderParams);
     scene->shaderParams.renderParams.depthWrite = false;
     scene->shaderParams.renderParams.depthFunc = GFX_LEQUAL;
     scene->shaderParams.renderParams.colorWrite = true;
     scene->shaderParams.renderParams.alphaWrite = true;
+
+    // Consider fog when drawing particles
+    // TODO Why not just draw fog AFTER particles?
     if (scene->fog)
     {
         scene->shaderParams.fogParams.mode = GFX_FOG_LINEAR;
@@ -2166,7 +2184,7 @@ void elfDrawScene(elfScene* scene)
     }
     elfSetCamera(scene->curCamera, &scene->shaderParams);
 
-    for (par = (elfParticles*)elfBeginList(scene->particles); par;
+    for (elfParticles* par = (elfParticles*)elfBeginList(scene->particles); par;
          par = (elfParticles*)elfGetListNext(scene->particles))
     {
         if (!elfCullParticles(par, scene->curCamera))
@@ -2174,583 +2192,73 @@ void elfDrawScene(elfScene* scene)
             elfDrawParticles(par, scene->curCamera, &scene->shaderParams);
         }
     }
-
-    // reset state just to be sure...
-    gfxSetShaderParamsDefault(&scene->shaderParams);
-    gfxSetShaderParams(&scene->shaderParams);
-
-    // keep the query lists compact
-
-    if (elfGetListLength(scene->entityQueue) > scene->entityQueueCount)
-    {
-        ent = (elfEntity*)elfRBeginList(scene->entityQueue);
-        if (ent)
-            elfRemoveListObject(scene->entityQueue, (elfObject*)ent);
-    }
-
-    if (elfGetListLength(scene->spriteQueue) > scene->spriteQueueCount)
-    {
-        spr = (elfSprite*)elfRBeginList(scene->spriteQueue);
-        if (spr)
-            elfRemoveListObject(scene->spriteQueue, (elfObject*)spr);
-    }
 }
 
-// TODO Was commented out, was called eldDrawScene (same as above)
-//      Looks like this was the deferred drawing method
-/*
-void elfDrawSceneDeferred(elfScene* scene)
+void elfDrawScene(elfScene* scene)
 {
-    elfEntity* ent;
-    elfSprite* spr;
-    elfLight* lig;
-    elfParticles* par;
-    float bias[16] = {0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0};
-    float tempMat1[16];
-    float tempMat2[16];
-    float invProjectionMatrix[16];
-    bool found;
-    int i;
-    elfVec4f camOrient;
-    elfVec3f lpos;
-    float ldist;
-    elfVec3f ldvec;
-    elfVec3f lsspos;
-    elfVec3f ldsspos;
-    elfVec2f lmin;
-    elfVec2f lmax;
-    int wwidth;
-    int wheight;
-
-    if (!scene->curCamera)
+    // Active camera?
+    if (scene->curCamera == nullptr)
         return;
 
-    gfxBindGbuffer(eng->gbuffer, &scene->shaderParams);
-    gfxClearBuffers(0.0, 0.0, 0.0, 0.0, 1.0);
+    gfxRenderTarget* renderTarget = gfxGetCurRenderTarget();
 
     if (scene->occlusionCulling)
     {
-        // draw occluders to depth buffer
-        gfxSetShaderParamsDefault(&scene->shaderParams);
-        elfSetCamera(scene->curCamera, &scene->shaderParams);
-        scene->shaderParams.renderParams.colorWrite = ELF_FALSE;
-        scene->shaderParams.renderParams.alphaWrite = ELF_FALSE;
-        scene->shaderParams.gbuffer = eng->gbuffer;
-        scene->shaderParams.gbufferMode = GFX_GBUFFER_DEPTH;
-
-        found = ELF_FALSE;
-        scene->entityQueueCount = 0;
-        elfBeginList(scene->entityQueue);
-
-        for (ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
-             ent = (elfEntity*)elfGetListNext(scene->entities))
-        {
-            if (!elfCullEntity(ent, scene->curCamera))
-            {
-                if (scene->entityQueueCount < elfGetListLength(scene->entityQueue))
-                {
-                    elfSetListCurPtr(scene->entityQueue, (elfObject*)ent);
-                    elfGetListNext(scene->entityQueue);
-                }
-                else
-                {
-                    elfAppendListObject(scene->entityQueue, (elfObject*)ent);
-                }
-                scene->entityQueueCount++;
-                if (ent->occluder)
-                {
-                    elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
-                    found = true;
-                }
-                ent->culled = ELF_FALSE;
-            }
-            else
-            {
-                ent->culled = true;
-            }
-        }
-
-        scene->spriteQueueCount = 0;
-        elfBeginList(scene->spriteQueue);
-
-        for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
-             spr = (elfSprite*)elfGetListNext(scene->sprites))
-        {
-            if (!elfCullSprite(spr, scene->curCamera))
-            {
-                if (scene->spriteQueueCount < elfGetListLength(scene->spriteQueue))
-                {
-                    elfSetListCurPtr(scene->spriteQueue, (elfObject*)spr);
-                    elfGetListNext(scene->spriteQueue);
-                }
-                else
-                {
-                    elfAppendListObject(scene->spriteQueue, (elfObject*)spr);
-                }
-                scene->spriteQueueCount++;
-                if (spr->occluder)
-                {
-                    found = true;
-                    elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
-                }
-                spr->culled = ELF_FALSE;
-            }
-            else
-            {
-                spr->culled = true;
-            }
-        }
-
-        if (found)
-        {
-            // initiate occlusion queries
-            gfxSetShaderParamsDefault(&scene->shaderParams);
-            elfSetCamera(scene->curCamera, &scene->shaderParams);
-            scene->shaderParams.renderParams.depthWrite = false;
-            scene->shaderParams.renderParams.depthFunc = GFX_LEQUAL;
-            scene->shaderParams.renderParams.colorWrite = GFX_FALSE;
-            scene->shaderParams.renderParams.alphaWrite = GFX_FALSE;
-            scene->shaderParams.renderParams.cullFace = GFX_FALSE;
-
-            for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
-                 i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
-            {
-                gfxBeginQuery(ent->query);
-                elfDrawEntityBoundingBox(ent, &scene->shaderParams);
-                gfxEndQuery(ent->query);
-            }
-
-            // draw depth buffer
-            gfxSetShaderParamsDefault(&scene->shaderParams);
-            elfSetCamera(scene->curCamera, &scene->shaderParams);
-            scene->shaderParams.renderParams.colorWrite = ELF_FALSE;
-            scene->shaderParams.renderParams.alphaWrite = ELF_FALSE;
-            scene->shaderParams.gbuffer = eng->gbuffer;
-            scene->shaderParams.gbufferMode = GFX_GBUFFER_DEPTH;
-
-            for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
-                 i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
-            {
-                if (ent->occluder)
-                    continue;
-
-                if (gfxGetQueryResult(ent->query) < 1)
-                {
-                    elfRemoveListObject(scene->entityQueue, (elfObject*)ent);
-                    scene->entityQueueCount--;
-                    i--;
-                }
-                else
-                {
-                    elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
-                }
-            }
-
-            for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
-                 i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
-            {
-                if (spr->occluder)
-                    continue;
-
-                elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
-            }
-        }
-        else
-        {
-            // draw depth buffer
-            gfxSetShaderParamsDefault(&scene->shaderParams);
-            elfSetCamera(scene->curCamera, &scene->shaderParams);
-            scene->shaderParams.renderParams.colorWrite = ELF_FALSE;
-            scene->shaderParams.renderParams.alphaWrite = ELF_FALSE;
-            scene->shaderParams.gbuffer = eng->gbuffer;
-            scene->shaderParams.gbufferMode = GFX_GBUFFER_DEPTH;
-
-            for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
-                 i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
-            {
-                elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
-            }
-
-            for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
-                 i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
-            {
-                elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
-            }
-        }
+        drawOccluders(scene);
     }
     else
     {
-        // draw depth buffer
-        gfxSetShaderParamsDefault(&scene->shaderParams);
-        elfSetCamera(scene->curCamera, &scene->shaderParams);
-        scene->shaderParams.renderParams.colorWrite = ELF_FALSE;
-        scene->shaderParams.renderParams.alphaWrite = ELF_FALSE;
-        scene->shaderParams.gbuffer = eng->gbuffer;
-        scene->shaderParams.gbufferMode = GFX_GBUFFER_DEPTH;
-
-        scene->entityQueueCount = 0;
-        elfBeginList(scene->entityQueue);
-
-        for (ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
-             ent = (elfEntity*)elfGetListNext(scene->entities))
-        {
-            if (!elfCullEntity(ent, scene->curCamera))
-            {
-                if (scene->entityQueueCount < elfGetListLength(scene->entityQueue))
-                {
-                    elfSetListCurPtr(scene->entityQueue, (elfObject*)ent);
-                    elfGetListNext(scene->entityQueue);
-                }
-                else
-                {
-                    elfAppendListObject(scene->entityQueue, (elfObject*)ent);
-                }
-                scene->entityQueueCount++;
-                elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
-                ent->culled = ELF_FALSE;
-            }
-            else
-            {
-                ent->culled = ELF_TRUE;
-            }
-        }
-
-        scene->spriteQueueCount = 0;
-        elfBeginList(scene->spriteQueue);
-
-        for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
-             spr = (elfSprite*)elfGetListNext(scene->sprites))
-        {
-            if (!elfCullSprite(spr, scene->curCamera))
-            {
-                if (scene->spriteQueueCount < elfGetListLength(scene->spriteQueue))
-                {
-                    elfSetListCurPtr(scene->spriteQueue, (elfObject*)spr);
-                    elfGetListNext(scene->spriteQueue);
-                }
-                else
-                {
-                    elfAppendListObject(scene->spriteQueue, (elfObject*)spr);
-                }
-                scene->spriteQueueCount++;
-                elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
-                spr->culled = ELF_FALSE;
-            }
-            else
-            {
-                spr->culled = ELF_TRUE;
-            }
-        }
+        drawDepth(scene);
     }
 
-    // draw gbuffers
-    gfxSetShaderParamsDefault(&scene->shaderParams);
-    elfSetCamera(scene->curCamera, &scene->shaderParams);
-    scene->shaderParams.renderParams.depthWrite = GFX_FALSE;
-    scene->shaderParams.renderParams.depthFunc = GFX_EQUAL;
-    scene->shaderParams.gbuffer = eng->gbuffer;
-    scene->shaderParams.gbufferMode = GFX_GBUFFER_FILL;
-
-    for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
-         i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
-    {
-        elfDrawEntity(ent, ELF_DRAW_WITH_LIGHTING, &scene->shaderParams);
-    }
-
-    for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
-         i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
-    {
-        elfDrawSprite(spr, ELF_DRAW_WITH_LIGHTING, &scene->shaderParams);
-    }
-
-    // get inverse projection matrix for retrieving vertex position from depth
-    gfxMatrix4GetInverse(scene->curCamera->projectionMatrix, invProjectionMatrix);
-
-    // draw lighting
-    gfxBindGbufferLight(eng->gbuffer, &scene->shaderParams);
-    gfxClearColorBuffer(0.0, 0.0, 0.0, 1.0);
-
-    camOrient = elfGetActorOrientation((elfActor*)scene->curCamera);
-    wwidth = elfGetWindowWidth();
-    wheight = elfGetWindowHeight();
-
-    for (lig = (elfLight*)elfBeginList(scene->lights); lig; lig = (elfLight*)elfGetListNext(scene->lights))
-    {
-        if (!lig->visible)
-            continue;
-
-        // cull lights that aren't affecting any pixels on the screen
-        lpos = elfGetActorPosition((elfActor*)lig);
-        ldist = lig->range + 1.0 / lig->fadeSpeed;
-
-        ldvec.x = 0.0;
-        ldvec.y = ldist;
-        ldvec.z = 0.0;
-        ldvec = elfMulQuaVec3f(camOrient, ldvec);
-        ldvec = elfAddVec3fVec3f(lpos, ldvec);
-
-        lsspos = elfProjectCameraPoint(scene->curCamera, lpos.x, lpos.y, lpos.z);
-        ldsspos = elfProjectCameraPoint(scene->curCamera, ldvec.x, ldvec.y, ldvec.z);
-
-        ldvec = elfSubVec3fVec3f(ldsspos, lsspos);
-        ldist = elfGetVec3fLength(ldvec);
-
-        lmin.x = lsspos.x - ldist;
-        lmin.y = lsspos.y - ldist;
-        lmax.x = lsspos.x + ldist;
-        lmax.y = lsspos.y + ldist;
-
-        if (lmin.x < 0)
-            lmin.x = 0;
-        if (lmin.y < 0)
-            lmin.y = 0;
-        if (lmin.x > wwidth)
-            lmin.x = wwidth;
-        if (lmin.y > wheight)
-            lmin.y = wheight;
-        if (lmax.x < 0)
-            lmax.x = 0;
-        if (lmax.y < 0)
-            lmax.y = 0;
-        if (lmax.x > wwidth)
-            lmax.x = wwidth;
-        if (lmax.y > wheight)
-            lmax.y = wheight;
-
-        if (lmax.x - lmin.x == 0)
-            continue;
-        if (lmax.y - lmin.y == 0)
-            continue;
-
-        // need to call this for frustum culling...
-        if (lig->lightType == ELF_SPOT_LIGHT)
-        {
-            elfSetCameraViewport(lig->shadowCamera, 0, 0, elfGetShadowMapSize(), elfGetShadowMapSize());
-            elfSetCamera(lig->shadowCamera, &scene->shaderParams);
-
-            // check are there any entities visible for the spot, if there aren't don't bother continuing,
-            // just skip to the next light
-            found = ELF_FALSE;
-            for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
-                 i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
-            {
-                if (!elfCullEntity(ent, lig->shadowCamera))
-                {
-                    found = ELF_TRUE;
-                    break;
-                }
-            }
-
-            for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
-                 i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
-            {
-                if (!elfCullSprite(spr, lig->shadowCamera))
-                {
-                    found = ELF_TRUE;
-                    break;
-                }
-            }
-
-            if (!found)
-                continue;
-
-            // render shadow map if needed
-            if (lig->shadows)
-            {
-                gfxDisableScissor();
-
-                gfxSetShaderParamsDefault(&scene->shaderParams);
-                scene->shaderParams.renderParams.colorWrite = GFX_FALSE;
-                scene->shaderParams.renderParams.alphaWrite = GFX_FALSE;
-                scene->shaderParams.renderParams.offsetBias = 2.0;
-                scene->shaderParams.renderParams.offsetScale = 4.0;
-                elfSetCamera(lig->shadowCamera, &scene->shaderParams);
-                gfxSetShaderParams(&scene->shaderParams);
-
-                gfxSetRenderTarget(rnd->shadowTarget);
-                gfxClearDepthBuffer(1.0);
-
-                for (ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
-                     ent = (elfEntity*)elfGetListNext(scene->entities))
-                {
-                    if (!elfCullEntity(ent, lig->shadowCamera))
-                    {
-                        elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
-                    }
-                }
-
-                for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
-                     spr = (elfSprite*)elfGetListNext(scene->sprites))
-                {
-                    if (!elfCullSprite(spr, lig->shadowCamera))
-                    {
-                        elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
-                    }
-                }
-
-                gfxMulMatrix4Matrix4(elfGetCameraProjectionMatrix(lig->shadowCamera), bias, tempMat1);
-                gfxMulMatrix4Matrix4(elfGetCameraModelviewMatrix(lig->shadowCamera), tempMat1, tempMat2);
-                gfxMatrix4GetInverseFast(elfGetCameraModelviewMatrix(scene->curCamera), tempMat1);
-                gfxMulMatrix4Matrix4(tempMat1, tempMat2, lig->projectionMatrix);
-            }
-        }
-
-        gfxSetScissor((int)lmin.x, (int)lmin.y, (int)(lmax.x - lmin.x), (int)(lmax.y - lmin.y));
-
-        gfxBindGbufferLight(eng->gbuffer, &scene->shaderParams);
-
-        gfxSetShaderParamsDefault(&scene->shaderParams);
-
-        if (lig->lightType == ELF_SPOT_LIGHT && lig->shadows)
-        {
-            scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].type = GFX_SHADOW_MAP;
-            scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].texture = rnd->shadowMap;
-            scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].projectionMode = GFX_SHADOW_PROJECTION;
-            memcpy(scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].matrix, lig->projectionMatrix,
-                   sizeof(float) * 16);
-        }
-
-        gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
-        gfxGetOrthographicProjectionMatrix(0.0, (float)elfGetWindowWidth(), 0.0, (float)elfGetWindowHeight(), -1.0, 1.0,
-                                           scene->shaderParams.projectionMatrix);
-        scene->shaderParams.renderParams.depthTest = GFX_FALSE;
-        scene->shaderParams.renderParams.depthWrite = GFX_FALSE;
-        scene->shaderParams.renderParams.blendMode = GFX_ADD;
-        scene->shaderParams.gbufferMode = GFX_GBUFFER_LIGHTING;
-        memcpy(scene->shaderParams.invProjectionMatrix, invProjectionMatrix, sizeof(float) * 16);
-        scene->shaderParams.textureParams[0].texture = gfxGetGbufferDepth(eng->gbuffer);
-        scene->shaderParams.textureParams[1].texture = gfxGetGbufferBuf1(eng->gbuffer);
-        scene->shaderParams.textureParams[2].texture = gfxGetGbufferBuf3(eng->gbuffer);
-
-        elfSetLight(lig, scene->curCamera, &scene->shaderParams);
-
-        gfxSetShaderParams(&scene->shaderParams);
-
-        gfxDrawTextured_2dQuad(0.0, 0.0, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
-    }
-
-    gfxDisableScissor();
-
-    gfxBindGbufferMain(eng->gbuffer, &scene->shaderParams);
-
-    // combine lighting
-    gfxSetShaderParamsDefault(&scene->shaderParams);
-    scene->shaderParams.renderParams.depthTest = GFX_FALSE;
-    scene->shaderParams.renderParams.depthWrite = GFX_FALSE;
-    scene->shaderParams.shaderProgram = scene->composeMainShdr;
-    scene->shaderParams.textureParams[0].texture = gfxGetGbufferBuf2(eng->gbuffer);
-    scene->shaderParams.textureParams[1].texture = gfxGetGbufferDiffuse(eng->gbuffer);
-    scene->shaderParams.textureParams[2].texture = gfxGetGbufferSpecular(eng->gbuffer);
-
-    gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
-    gfxGetOrthographicProjectionMatrix(0.0, (float)elfGetWindowWidth(), 0.0, (float)elfGetWindowHeight(), -1.0, 1.0,
-                                       scene->shaderParams.projectionMatrix);
-
-    gfxSetShaderParams(&scene->shaderParams);
-
-    gfxDrawTextured_2dQuad(0.0, 0.0, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
-
-    // draw ambient
+    // draw ambient pass
     if (!elfAboutZero(scene->ambientColor.r) || !elfAboutZero(scene->ambientColor.g) ||
         !elfAboutZero(scene->ambientColor.b))
     {
-        scene->shaderParams.shaderProgram = NULL;
-        scene->shaderParams.renderParams.blendMode = GFX_ADD;
-        scene->shaderParams.textureParams[0].texture = gfxGetGbufferBuf2(eng->gbuffer);
-        scene->shaderParams.textureParams[1].texture = NULL;
-        scene->shaderParams.textureParams[2].texture = NULL;
-        memcpy(&scene->shaderParams.materialParams.color.r, &scene->ambientColor.r, sizeof(float) * 4);
-
-        gfxSetShaderParams(&scene->shaderParams);
-
-        gfxDrawTextured_2dQuad(0.0, 0.0, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
+        drawAmbientPass(scene);
     }
 
     // draw non lighted stuff
-    gfxSetShaderParamsDefault(&scene->shaderParams);
-    elfSetCamera(scene->curCamera, &scene->shaderParams);
-    scene->shaderParams.renderParams.depthWrite = GFX_FALSE;
-    scene->shaderParams.renderParams.depthFunc = GFX_EQUAL;
+    // Draws everything that has a material thats not affected by lighting
+    drawNonLighted(scene);
 
-    for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
-         i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
-    {
-        elfDrawEntity(ent, ELF_DRAW_WITHOUT_LIGHTING, &scene->shaderParams);
-    }
+    // render lighting
+    drawLighting(scene, renderTarget);
 
-    for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
-         i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
+    // Draw fog
+    // TODO Move after particles?
+    if (scene->fog)
     {
-        elfDrawSprite(spr, ELF_DRAW_WITHOUT_LIGHTING, &scene->shaderParams);
+        drawFog(scene);
     }
 
     // render particles
-    gfxSetShaderParamsDefault(&scene->shaderParams);
-    scene->shaderParams.renderParams.depthWrite = GFX_FALSE;
-    scene->shaderParams.renderParams.depthFunc = GFX_LEQUAL;
-    scene->shaderParams.renderParams.colorWrite = GFX_TRUE;
-    scene->shaderParams.renderParams.alphaWrite = GFX_TRUE;
-    elfSetCamera(scene->curCamera, &scene->shaderParams);
-
-    for (par = (elfParticles*)elfBeginList(scene->particles); par;
-         par = (elfParticles*)elfGetListNext(scene->particles))
-    {
-        if (!elfCullParticles(par, scene->curCamera))
-        {
-            elfDrawParticles(par, scene->curCamera, &scene->shaderParams);
-        }
-    }
-
-    gfxDisableRenderTarget();
-
-    if (!eng->postProcess)
-    {
-        // draw final image
-        gfxSetShaderParamsDefault(&scene->shaderParams);
-        scene->shaderParams.renderParams.depthTest = GFX_FALSE;
-        scene->shaderParams.renderParams.depthWrite = GFX_FALSE;
-        scene->shaderParams.textureParams[0].texture = gfxGetGbufferMain(eng->gbuffer);
-
-        gfxSetViewport(0, 0, elfGetWindowWidth(), elfGetWindowHeight());
-        gfxGetOrthographicProjectionMatrix(0.0, (float)elfGetWindowWidth(), 0.0, (float)elfGetWindowHeight(), -1.0, 1.0,
-                                           scene->shaderParams.projectionMatrix);
-
-        gfxSetShaderParams(&scene->shaderParams);
-
-        gfxDrawTextured_2dQuad(0.0, 0.0, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
-    }
+    drawParticles(scene);
 
     // reset state just to be sure...
     gfxSetShaderParamsDefault(&scene->shaderParams);
     gfxSetShaderParams(&scene->shaderParams);
 
     // keep the query lists compact
-
+    // TODO Removes last element in the lists? Why?
     if (elfGetListLength(scene->entityQueue) > scene->entityQueueCount)
     {
-        ent = (elfEntity*)elfRBeginList(scene->entityQueue);
+        elfEntity* ent = (elfEntity*)elfRBeginList(scene->entityQueue);
         if (ent)
             elfRemoveListObject(scene->entityQueue, (elfObject*)ent);
     }
 
     if (elfGetListLength(scene->spriteQueue) > scene->spriteQueueCount)
     {
-        spr = (elfSprite*)elfRBeginList(scene->spriteQueue);
+        elfSprite* spr = (elfSprite*)elfRBeginList(scene->spriteQueue);
         if (spr)
             elfRemoveListObject(scene->spriteQueue, (elfObject*)spr);
     }
 }
-*/
 
 void elfDrawSceneDebug(elfScene* scene)
 {
-    elfEntity* ent;
-    elfLight* lig;
-    elfCamera* cam;
-    elfParticles* par;
-    elfSprite* spr;
-
-    if (!scene->curCamera)
+    if (scene->curCamera == nullptr)
         return;
 
     gfxSetShaderParamsDefault(&scene->shaderParams);
@@ -2759,7 +2267,7 @@ void elfDrawSceneDebug(elfScene* scene)
     scene->shaderParams.renderParams.blendMode = GFX_ADD;
     elfSetCamera(scene->curCamera, &scene->shaderParams);
 
-    for (ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
+    for (elfEntity* ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
          ent = (elfEntity*)elfGetListNext(scene->entities))
     {
         elfDrawEntityDebug(ent, &scene->shaderParams);
@@ -2770,7 +2278,7 @@ void elfDrawSceneDebug(elfScene* scene)
     scene->shaderParams.renderParams.depthTest = false;
     elfSetCamera(scene->curCamera, &scene->shaderParams);
 
-    for (par = (elfParticles*)elfBeginList(scene->particles); par != NULL;
+    for (elfParticles* par = (elfParticles*)elfBeginList(scene->particles); par != NULL;
          par = (elfParticles*)elfGetListNext(scene->particles))
     {
         elfDrawParticlesDebug(par, &scene->shaderParams);
@@ -2781,7 +2289,8 @@ void elfDrawSceneDebug(elfScene* scene)
     scene->shaderParams.renderParams.depthTest = false;
     elfSetCamera(scene->curCamera, &scene->shaderParams);
 
-    for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL; spr = (elfSprite*)elfGetListNext(scene->sprites))
+    for (elfSprite* spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
+         spr = (elfSprite*)elfGetListNext(scene->sprites))
     {
         elfDrawSpriteDebug(spr, &scene->shaderParams);
     }
@@ -2791,7 +2300,8 @@ void elfDrawSceneDebug(elfScene* scene)
     scene->shaderParams.renderParams.depthTest = false;
     elfSetCamera(scene->curCamera, &scene->shaderParams);
 
-    for (lig = (elfLight*)elfBeginList(scene->lights); lig != NULL; lig = (elfLight*)elfGetListNext(scene->lights))
+    for (elfLight* lig = (elfLight*)elfBeginList(scene->lights); lig != NULL;
+         lig = (elfLight*)elfGetListNext(scene->lights))
     {
         elfDrawLightDebug(lig, &scene->shaderParams);
     }
@@ -2801,7 +2311,8 @@ void elfDrawSceneDebug(elfScene* scene)
     scene->shaderParams.renderParams.depthTest = false;
     elfSetCamera(scene->curCamera, &scene->shaderParams);
 
-    for (cam = (elfCamera*)elfBeginList(scene->cameras); cam != NULL; cam = (elfCamera*)elfGetListNext(scene->cameras))
+    for (elfCamera* cam = (elfCamera*)elfBeginList(scene->cameras); cam != NULL;
+         cam = (elfCamera*)elfGetListNext(scene->cameras))
     {
         if (cam == scene->curCamera)
             continue;

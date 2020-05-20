@@ -37,6 +37,7 @@ struct gfxDriver
     float maxAnisotropy = 0.f;
 
     bool dirtyVertexArrays = false;
+    // Rendering stats
     unsigned int verticesDrawn[GFX_MAX_DRAW_MODES];
 
     // Active settings
@@ -60,6 +61,7 @@ void gfxReadPixels(int x, int y, int width, int height, int format, int dataForm
 
 void gfxCopyFrameBuffer(gfxTexture* texture, int ox, int oy, int x, int y, int width, int height);
 
+// Rendering statistics
 void gfxResetVerticesDrawn();
 int gfxGetVerticesDrawn(unsigned int drawMode);
 

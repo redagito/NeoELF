@@ -88,7 +88,9 @@ unsigned char elfSaveScene(elfScene* scene, const char* filePath);
 
 void elfUpdateScene(elfScene* scene, float sync);
 
+// Calls predraw on scene objects / actors
 void elfScenePreDraw(elfScene* scene);
+// Calls postdraw on scene objects / actors
 void elfScenePostDraw(elfScene* scene);
 
 // Destructor
@@ -215,22 +217,14 @@ bool elfRemoveSceneParticlesByObject(elfScene* scene, elfParticles* particles);
 bool elfRemoveSceneSpriteByObject(elfScene* scene, elfSprite* sprite);
 bool elfRemoveSceneActorByObject(elfScene* scene, elfActor* actor);
 
-// TODO Was commented out, investigate later
-/*
-void elfDrawSceneDeferred(elfScene* scene);
-*/
-
 // TODO Draw method should NOT be in the scene
 //      Scene should only manage objects and provide culling and updates
 //      Refactor this asap
 void elfDrawScene(elfScene* scene);
-
 void elfDrawSceneDebug(elfScene* scene);
 
+// Collects scripts from all ecene objects
 elfList* elfGetSceneScripts(elfScene* scene);
-
 elfList* elfGetSceneTextures(elfScene* scene);
-
 elfList* elfGetSceneMaterials(elfScene* scene);
-
 elfList* elfGetSceneModels(elfScene* scene);

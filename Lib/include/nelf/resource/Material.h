@@ -16,6 +16,7 @@ struct elfMaterial
     elfColor ambientColor;
     elfColor specularColor;
     float specPower = 0.f;
+    // Material not affected by lighting
     bool lighting = true;
 
     elfTexture* diffuseMap = nullptr;

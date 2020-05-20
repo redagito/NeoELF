@@ -22,7 +22,7 @@ int main(int argc, char** argv)
     {
         elfSetError(ELF_CANT_INITIALIZE, "error: can't initialize engine\n");
         elfDestroyConfig(config);
-        return -1;
+        return EXIT_FAILURE;
     }
 
     // Load startup script
@@ -51,5 +51,5 @@ int main(int argc, char** argv)
     // Cleanup
     elfDeinit();
 
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -140,21 +140,30 @@ void elfDeinitEngine()
 
 bool elfInit(elfConfig* config)
 {
+    // Fallback to default
     if (config == nullptr)
         config = elfCreateConfig();
 
+    // Logging
     elfInitLog();
+
+    // Runtime object statistics
     elfInitGeneral();
+
+    // Custom logfile
     elfSetLogFilePath(config->logPath);
 
+    // Enable log to file
     elfStartLog();
     elfLogWrite("%s\n", elfGetVersion());
 
+    // Window with OpenGL context
     if (!elfInitContext(config->windowSize.x, config->windowSize.y, config->windowTitle, config->multisamples,
                         config->fullscreen))
         return false;
 
     // TODO Init gfx as part of context
+    // Requires valid context
     if (!gfxInit())
     {
         elfDeinitContext();
@@ -162,6 +171,7 @@ bool elfInit(elfConfig* config)
     }
 
     // TODO Check return values
+    // Audio system
     elfInitAudio();
     elfInitEngine();
     elfInitRenderStation();
@@ -169,13 +179,16 @@ bool elfInit(elfConfig* config)
     elfInitScripting();
     elfInitNetworking();
 
+    // Global settings from config
     elfSetTextureCompress(config->textureCompress);
     elfSetTextureAnisotropy(config->textureAnisotropy);
     elfSetShadowMapSize(config->shadowMapSize);
 
+    // Check if start-up pak file set
     if (strlen(config->start) > 0)
         elfLoadScene(config->start);
 
+    // Set config, remove old if exists
     if (eng->config)
         elfDecRef((elfObject*)eng->config);
     eng->config = config;
@@ -254,33 +267,39 @@ void elfCountEngineFps()
 
 bool elfRun()
 {
-    if (!eng || !eng->freeRun)
+    if (eng == nullptr)
+        return false;
+    if (!eng->freeRun)
         return false;
 
     eng->freeRun = false;
 
+    // Check if engine should quit
+    // TODO Why not just set eng->quit with f10 key?
     if ((eng->config->f10Exit && elfGetKeyState(ELF_KEY_F10)) || !elfIsWindowOpened() || eng->quit)
     {
         eng->freeRun = true;
         return false;
     }
 
+    // Reset rendering statistics
+    // TODO Have some kind of performance / benchmark mode and otherwise not do this
     gfxResetVerticesDrawn();
 
-    if (eng->postProcess)
+    // For post processing enabled render to offscreen render target
+    if (eng->postProcess != nullptr)
     {
         if (elfGetMultisamples() < 1)
         {
             gfxSetRenderTarget(eng->postProcess->mainRt);
             gfxSetRenderTargetColorTexture(eng->postProcess->mainRt, 0, eng->postProcess->mainRtColor[0]);
         }
-        gfxClearBuffers(0.0f, 0.0f, 0.0f, 1.0f, 1.0f);
-    }
-    else
-    {
-        gfxClearBuffers(0.0f, 0.0f, 0.0f, 1.0f, 1.0f);
     }
 
+    // Clear to black
+    gfxClearBuffers(0.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+
+    // Draw active scene
     if (eng->scene)
     {
         elfScenePreDraw(eng->scene);
@@ -294,13 +313,19 @@ bool elfRun()
         {
             gfxCopyFrameBuffer(eng->postProcess->mainRtColor[0], 0, 0, 0, 0, elfGetWindowWidth(), elfGetWindowHeight());
             if (eng->postProcess->dof || eng->postProcess->ssao)
+            {
                 gfxCopyFrameBuffer(eng->postProcess->mainRtDepth, 0, 0, 0, 0, elfGetWindowWidth(),
                                    elfGetWindowHeight());
+            }
         }
         elfRunPostProcess(eng->postProcess, eng->scene);
     }
+
+    // Debug draw
     if (eng->scene && eng->scene->debugDraw)
         elfDrawSceneDebug(eng->scene);
+
+    // Draw GUI
     if (eng->gui)
         elfDrawGui(eng->gui);
 
