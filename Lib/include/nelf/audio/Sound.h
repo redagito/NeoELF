@@ -10,7 +10,7 @@
 struct elfSound
 {
     ELF_OBJECT_HEADER;
-    char* filePath;
+    char* filePath = nullptr;
     unsigned char fileType;
     ALuint buffer[3];
     int freq;

@@ -321,13 +321,16 @@ void elfDestroyAudioSource(void* data)
 {
     elfAudioSource* source = (elfAudioSource*)data;
 
+    // Delete source first
+    if (source->source)
+        alDeleteSources(1, &source->source);
+
+    // This may delete the buffer
     if (source->sound)
     {
         source->sound->streaming = false;
         elfDecRef((elfObject*)source->sound);
     }
-    if (source->source)
-        alDeleteSources(1, &source->source);
 
     free(source);
 

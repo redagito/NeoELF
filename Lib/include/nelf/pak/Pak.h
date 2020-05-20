@@ -40,7 +40,9 @@ struct elfPak
     int scriptCount = 0;
 };
 
-elfPak* elfCreatePakFromFile(const char* filePath);
+// Loads PAK data from file
+// Legacy format support for older PAK without version
+elfPak* elfCreatePakFromFile(const char* filePath, bool legacyFormat = false);
 
 void elfDestroyPak(void* data);
 

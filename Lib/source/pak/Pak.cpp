@@ -51,28 +51,18 @@
 #include "nelf/resource/Script.h"
 #include "nelf/resource/Texture.h"
 
-elfPak* elfCreatePakFromFile(const char* filePath)
+elfPak* elfCreatePakFromFile(const char* filePath, bool legacyFormat)
 {
-    elfPak* pak;
-    elfPakIndex* index;
-    FILE* file;
-    int magic;
-    int version;
-    int indexCount;
-    int i;
-
-    unsigned char type;
     char name[ELF_NAME_LENGTH];
-    int offset;
 
-    file = fopen(filePath, "rb");
+    FILE* file = fopen(filePath, "rb");
     if (!file)
     {
         elfSetError(ELF_CANT_OPEN_FILE, "error: can't open \"%s\"\n", filePath);
         return NULL;
     }
 
-    magic = 0;
+    int magic = 0;
     fread((char*)&magic, sizeof(int), 1, file);
 
     if (magic != ELF_PAK_MAGIC)
@@ -82,22 +72,40 @@ elfPak* elfCreatePakFromFile(const char* filePath)
         return NULL;
     }
 
-    fread((char*)&version, sizeof(int), 1, file);
-
-    if (version < ELF_PAK_VERSION)
+    if (legacyFormat)
     {
-        elfSetError(ELF_INVALID_FILE, "error: can't load \"%s\", old .pak version %i\n", filePath, version);
-        fclose(file);
-        return NULL;
+        elfWriteLogLine("Loading pak as legacy format without version info");
+    }
+    else
+    {
+        int version = 0;
+        fread((char*)&version, sizeof(int), 1, file);
+
+        if (version < ELF_PAK_VERSION)
+        {
+            elfSetError(ELF_INVALID_FILE, "error: can't load \"%s\", old .pak version %i\n", filePath, version);
+            fclose(file);
+            return NULL;
+        }
+
+        if (version > ELF_PAK_VERSION)
+        {
+            elfSetError(ELF_INVALID_FILE, "error: can't load \"%s\", new .pak version\n", filePath);
+            return NULL;
+        }
     }
 
-    if (version > ELF_PAK_VERSION)
+    // Number of indices in the pak
+    int indexCount = 0;
+    fread((char*)&indexCount, sizeof(int), 1, file);
+
+    if (indexCount < 0)
     {
-        elfSetError(ELF_INVALID_FILE, "error: can't load \"%s\", new .pak version\n", filePath);
-        return NULL;
+        elfSetError(ELF_INVALID_FILE, "error: can't load \"%s\", invalid / negative index count\n", filePath);
+        return nullptr;
     }
 
-    pak = (elfPak*)malloc(sizeof(elfPak));
+    elfPak* pak = (elfPak*)malloc(sizeof(elfPak));
     memset(pak, 0x0, sizeof(elfPak));
     pak->objType = ELF_PAK;
     pak->objDestr = elfDestroyPak;
@@ -109,13 +117,11 @@ elfPak* elfCreatePakFromFile(const char* filePath)
     pak->indexes = elfCreateList();
     elfIncRef((elfObject*)pak->indexes);
 
-    indexCount = 0;
-    fread((char*)&indexCount, sizeof(int), 1, file);
-
-    for (i = 0; i < indexCount; i++)
+    for (int i = 0; i < indexCount; i++)
     {
-        type = 0;
-        offset = 0;
+        // 8 bit type
+        unsigned char type = 0;
+        int offset = 0;
         fread((char*)&type, sizeof(unsigned char), 1, file);
 
         switch (type)
@@ -152,7 +158,13 @@ elfPak* elfCreatePakFromFile(const char* filePath)
         fread(name, sizeof(char), ELF_NAME_LENGTH, file);
         fread((char*)&offset, sizeof(int), 1, file);
 
-        index = elfCreatePakIndex();
+        if (offset < 0)
+        {
+            elfSetError(ELF_INVALID_FILE, "error: while loading \"%s\", invalid offset encountered\n", filePath);
+            // TODO Cleanup and return null
+        }
+
+        elfPakIndex* index = elfCreatePakIndex();
         index->indexType = type;
         index->name = elfCreateString(name);
         index->offset = offset;

@@ -38,6 +38,7 @@ void elfDestroySound(void* data)
 
     if (sound->filePath)
         elfDestroyString(sound->filePath);
+
     if (!sound->streamed)
     {
         if (sound->buffer[0])

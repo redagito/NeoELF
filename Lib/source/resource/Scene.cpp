@@ -441,9 +441,10 @@ elfScene* elfCreateSceneFromFile(const char* name, const char* filePath)
         return NULL;
     }
 
-    if (!strcmp(type, ".pak"))
+    if (strcmp(type, ".pak") == 0 || strcmp(type, ".pakl") == 0)
     {
-        pak = elfCreatePakFromFile(filePath);
+        bool legacy = strcmp(type, ".pakl") == 0;
+        pak = elfCreatePakFromFile(filePath, legacy);
         if (!pak)
             return NULL;
 

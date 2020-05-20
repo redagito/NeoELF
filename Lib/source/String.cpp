@@ -7,12 +7,10 @@
 
 char* elfCreateString(const char* str)
 {
-    char* nstr;
-
     if (!str)
         return nullptr;
 
-    nstr = (char*)malloc(strlen(str) + 1);
+    char* nstr = (char*)malloc(strlen(str) + 1);
     memset(nstr, 0x0, sizeof(char) * (strlen(str) + 1));
 
     memcpy(nstr, str, sizeof(char) * strlen(str));

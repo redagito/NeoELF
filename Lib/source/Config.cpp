@@ -106,11 +106,11 @@ elfConfig* elfReadConfig(const char* filePath)
         }
         else
         {
-            if (!strcmp(str, "windowSize"))
+            if (strcmp(str, "windowSize") == 0 || strcmp(str, "window_size") == 0)
             {
                 elfReadSstInts(text, &pos, 2, &config->windowSize.x);
             }
-            else if (!strcmp(str, "windowTitle"))
+            else if (strcmp(str, "windowTitle") == 0 || strcmp(str, "window_title") == 0)
             {
                 if (config->windowTitle)
                     free(config->windowTitle);
@@ -124,15 +124,15 @@ elfConfig* elfReadConfig(const char* filePath)
             {
                 config->fullscreen = elfReadSstBool(text, &pos);
             }
-            else if (!strcmp(str, "textureCompress"))
+            else if (strcmp(str, "textureCompress") == 0 || strcmp(str, "texture_compress") == 0)
             {
                 config->textureCompress = elfReadSstBool(text, &pos);
             }
-            else if (!strcmp(str, "textureAnisotropy"))
+            else if (strcmp(str, "textureAnisotropy") == 0 || strcmp(str, "texture_anisotropy") == 0)
             {
                 config->textureAnisotropy = elfReadSstFloat(text, &pos);
             }
-            else if (!strcmp(str, "shadowMapSize"))
+            else if (strcmp(str, "shadowMapSize") == 0 || strcmp(str, "shadow_map_size") == 0)
             {
                 config->shadowMapSize = elfReadSstInt(text, &pos);
             }
@@ -142,7 +142,7 @@ elfConfig* elfReadConfig(const char* filePath)
                     free(config->start);
                 config->start = elfReadSstString(text, &pos);
             }
-            else if (!strcmp(str, "logPath"))
+            else if (strcmp(str, "logPath") == 0 || strcmp(str, "log_path") == 0)
             {
                 if (config->logPath)
                     free(config->logPath);
