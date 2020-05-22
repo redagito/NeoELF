@@ -72,7 +72,7 @@ The original version of the engine can be found at https://github.com/jesterKing
 
 ![Banner](https://github.com/redagito/NeoELF/blob/master/Doc/images/topbanner.jpg)
 
-Last valid state of the original webiste can be found at http://web.archive.org/web/20121014085548/http://blendelf.com/
+Last valid state of the original website can be found at http://web.archive.org/web/20121014085548/http://blendelf.com/
 
 ## Original Readme
 
