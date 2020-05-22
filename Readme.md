@@ -70,7 +70,7 @@ These are from BlendELF, to be replaced once everything works
 The version of the BlendELF source code used as basis for development was taken from https://github.com/cartuchogl/BlendELF (capi branch).
 The original version of the engine can be found at https://github.com/jesterKing/BlendELF.
 
-![Banner](https://github.com/redagito/NeoELF/blob/master/doc/images/topbanner.jpg)
+![Banner](https://github.com/redagito/NeoELF/blob/master/Doc/images/topbanner.jpg)
 
 Last valid state of the original webiste can be found at http://web.archive.org/web/20121014085548/http://blendelf.com/
 
