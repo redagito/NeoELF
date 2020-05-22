@@ -9,7 +9,7 @@ struct elfTexture;
 struct elfResources
 {
     ELF_OBJECT_HEADER;
-    // List of all textures
+    // List of all loaded textures
     elfList* textures = nullptr;
 
     // Separate counters for each resource type
@@ -35,5 +35,8 @@ void elfDestroyResources(void* data);
 bool elfInitResources();
 void elfDeinitResources();
 
+// Get from loaded textures
+// TODO Weird that filepath is required here
 elfTexture* elfGetResourcesTexture(const char* filePath, const char* name);
+// Get from loaded or load from file
 elfTexture* elfGetOrLoadResourcesTexture(const char* filePath, const char* name);

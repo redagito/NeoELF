@@ -5,8 +5,14 @@
 struct elfScript
 {
     ELF_RESOURCE_HEADER;
+    // Path to script file
+    // TODO Hot reloading?
     char* filePath = nullptr;
+
+    // Source code
     char* text = nullptr;
+
+    // Script execution resulted in an error
     bool error = false;
 };
 

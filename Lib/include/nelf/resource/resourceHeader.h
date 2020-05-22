@@ -4,7 +4,7 @@
 
 // Common data for all resource types, provides
 // - id, a resource id
-// - name, string identifier
+// - name, string identifier, must be unique?
 #define ELF_RESOURCE_HEADER \
     ELF_OBJECT_HEADER;      \
     int id = 0;             \

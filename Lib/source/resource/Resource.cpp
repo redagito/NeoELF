@@ -37,32 +37,38 @@ void elfSetResourceUniqueName(elfList* namedObjects, elfResource* object)
 {
     char* tname = nullptr;
     char* nname = nullptr;
-    int dotPos = 0;
-    int num = 0;
 
-    if (object->name && strlen(object->name))
+    if (object->name != nullptr && strlen(object->name) > 0)
     {
-        if (!elfGetResource(namedObjects, object->name))
+        // Resource object has a name
+        if (elfGetResource(namedObjects, object->name) == nullptr)
         {
+            // Name is unused
             return;
         }
 
-        dotPos = elfRFindCharFromString('.', object->name);
+        // Resource with the same name already exists
+        // Find dot in name from end
+        int dotPos = elfRFindCharFromString('.', object->name);
 
         if (dotPos == (int)strlen(object->name) - 1)
         {
+            // Dot at end
             tname = (char*)malloc(sizeof(char) * (strlen(object->name) + 1));
             memcpy(tname, object->name, sizeof(char) * strlen(object->name));
             tname[strlen(object->name)] = '\0';
         }
         else if (dotPos == -1 || !elfIsStringPositiveInt(&object->name[dotPos + 1]))
         {
+            // No dot found
+            // TODO Appends dot at end?
             tname = (char*)malloc(sizeof(char) * (strlen(object->name) + 2));
             sprintf(tname, "%s.", object->name);
             tname[strlen(object->name) + 1] = '\0';
         }
         else
         {
+            // Dot somewhere in the string
             tname = (char*)malloc(sizeof(char) * (dotPos + 2));
             memcpy(tname, object->name, sizeof(char) * (dotPos + 1));
             tname[dotPos + 1] = '\0';
@@ -75,12 +81,15 @@ void elfSetResourceUniqueName(elfList* namedObjects, elfResource* object)
         tname[7] = '\0';
     }
 
+    // Just space for 12 extra chars?
     nname = (char*)malloc(sizeof(char) * (strlen(tname) + 12));
     memset(nname, 0x0, sizeof(char) * (strlen(tname) + 12));
 
-    num = 1;
+    int num = 1;
     sprintf(nname, "%s%d", tname, num);
 
+    // Counts up until a unique name was generated
+    // TODO This is stupid
     while (elfGetResource(namedObjects, nname))
     {
         memset(nname, 0x0, sizeof(char) * (strlen(tname) + 12));

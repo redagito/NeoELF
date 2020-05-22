@@ -78,6 +78,7 @@ elfPak* elfCreatePakFromFile(const char* filePath, bool legacyFormat)
     }
     else
     {
+        // Version only present in new format
         int version = 0;
         fread((char*)&version, sizeof(int), 1, file);
 
@@ -1017,21 +1018,15 @@ elfMaterial* elfCreateMaterialFromPak(FILE* file, const char* name, elfScene* sc
 
 elfModel* elfCreateModelFromPak(FILE* file, const char* name, elfScene* scene)
 {
-    elfModel* model = NULL;
-    int magic = 0;
-    int i = 0;
     char rname[ELF_NAME_LENGTH];
     unsigned int indicesRead = 0;
-    unsigned char isNormals;
-    unsigned char isTexCoords;
-    unsigned char isWeightsAndBoneids;
-    unsigned char junk;
     float weights[4];
     float length;
     short int boneids[4];
     float* vertexBuffer;
 
     // read magic
+    int magic = 0;
     fread((char*)&magic, sizeof(int), 1, file);
 
     if (magic != ELF_MODEL_MAGIC)
@@ -1040,7 +1035,7 @@ elfModel* elfCreateModelFromPak(FILE* file, const char* name, elfScene* scene)
         return NULL;
     }
 
-    model = elfCreateModel(NULL);
+    elfModel* model = elfCreateModel(NULL);
 
     // read name
     fread(rname, sizeof(char), ELF_NAME_LENGTH, file);
@@ -1049,6 +1044,11 @@ elfModel* elfCreateModelFromPak(FILE* file, const char* name, elfScene* scene)
     model->filePath = elfCreateString(elfGetSceneFilePath(scene));
 
     // read header
+    unsigned char isNormals;
+    unsigned char isTexCoords;
+    unsigned char isWeightsAndBoneids;
+    unsigned char junk;
+
     fread((char*)&model->verticeCount, sizeof(int), 1, file);
     fread((char*)&model->frameCount, sizeof(int), 1, file);
     fread((char*)&model->indiceCount, sizeof(int), 1, file);
@@ -1095,7 +1095,7 @@ elfModel* elfCreateModelFromPak(FILE* file, const char* name, elfScene* scene)
     model->areas = (elfModelArea*)malloc(sizeof(elfModelArea) * model->areaCount);
     memset(model->areas, 0x0, sizeof(elfModelArea) * model->areaCount);
 
-    for (i = 0; i < model->areaCount; i++)
+    for (int i = 0; i < model->areaCount; i++)
     {
         fread((char*)&model->areas[i].indiceCount, sizeof(int), 1, file);
         if (model->areas[i].indiceCount)
@@ -1131,7 +1131,7 @@ elfModel* elfCreateModelFromPak(FILE* file, const char* name, elfScene* scene)
     if (isWeightsAndBoneids > 0)
     {
         model->weights = (float*)malloc(sizeof(float) * 4 * model->verticeCount);
-        for (i = 0; i < model->verticeCount; i++)
+        for (int i = 0; i < model->verticeCount; i++)
         {
             fread((char*)weights, sizeof(float), 4, file);
             if (weights[0] > 1.0f)
@@ -1157,7 +1157,7 @@ elfModel* elfCreateModelFromPak(FILE* file, const char* name, elfScene* scene)
             model->weights[i * 4 + 3] = weights[3] * length;
         }
         model->boneids = (int*)malloc(sizeof(int) * 4 * model->verticeCount);
-        for (i = 0; i < model->verticeCount; i++)
+        for (int i = 0; i < model->verticeCount; i++)
         {
             fread((char*)boneids, sizeof(short int), 4, file);
             model->boneids[i * 4] = boneids[0];
@@ -1173,7 +1173,7 @@ elfModel* elfCreateModelFromPak(FILE* file, const char* name, elfScene* scene)
     memcpy(&model->bbMin.x, vertexBuffer, sizeof(float) * 3);
     memcpy(&model->bbMax.x, vertexBuffer, sizeof(float) * 3);
 
-    for (i = 3; i < model->verticeCount * 3; i += 3)
+    for (int i = 3; i < model->verticeCount * 3; i += 3)
     {
         if (vertexBuffer[i] < model->bbMin.x)
             model->bbMin.x = vertexBuffer[i];
@@ -1198,7 +1198,7 @@ elfModel* elfCreateModelFromPak(FILE* file, const char* name, elfScene* scene)
     if (isTexCoords > 0)
         gfxSetVertexArrayData(model->vertexArray, GFX_TEX_COORD, model->texCoords);
 
-    for (i = 0; i < model->areaCount; i++)
+    for (int i = 0; i < model->areaCount; i++)
     {
         if (model->areas[i].indiceCount > 0)
         {
@@ -1517,8 +1517,10 @@ elfScene* elfCreateSceneFromPak(const char* name, elfPak* pak)
             particles = elfGetOrLoadParticlesByName(scene, index->name);
         else if (index->indexType == ELF_SCENE && !sceneRead)
         {
+            // TODO Why open again?
+            // TODO Why not in separate function?
             file = fopen(elfGetPakFilePath(pak), "rb");
-            if (file)
+            if (file != nullptr)
             {
                 sceneRead = true;
                 fseek(file, elfGetPakIndexOffset(index), SEEK_SET);
@@ -1529,7 +1531,7 @@ elfScene* elfCreateSceneFromPak(const char* name, elfPak* pak)
                     printf("warning: scene header section of \"%s\" is invalid\n", elfGetPakFilePath(pak));
                     continue;
                 }
-
+                // Scene name
                 fread(rname, sizeof(char), ELF_NAME_LENGTH, file);
                 if (!name || strlen(name) < 1)
                 {
@@ -1538,6 +1540,7 @@ elfScene* elfCreateSceneFromPak(const char* name, elfPak* pak)
                     scene->name = elfCreateString(rname);
                 }
 
+                // Ambient color
                 fread((char*)ambientColor, sizeof(float), 4, file);
 
                 elfSetSceneAmbientColor(scene, ambientColor[0], ambientColor[1], ambientColor[2], ambientColor[3]);

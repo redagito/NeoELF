@@ -5,13 +5,13 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "audio/streamChunkSize.h"
 #include "nelf/General.h"
 #include "nelf/List.h"
 #include "nelf/Object.h"
 #include "nelf/actor/Actor.h"
 #include "nelf/actor/Entity.h"
 #include "nelf/audio/soundFileType.h"
-#include "nelf/audio/streamChunkSize.h"
 #include "nelf/objectType.h"
 
 // TODO Cyclic dependency due to global AudioDevice, fix this

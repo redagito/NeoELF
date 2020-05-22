@@ -621,11 +621,17 @@ void elfPostDrawEntity(elfEntity* entity)
 
 void elfDrawEntity(elfEntity* entity, int mode, gfxShaderParams* shaderParams)
 {
-    if (!entity->model || !entity->visible)
+    // No model set
+    if (entity->model == nullptr)
+        return;
+    // Not visible
+    if (!entity->visible)
         return;
 
+    // Set ModelView matrix
     gfxMulMatrix4Matrix4(gfxGetTransformMatrix(entity->transform), shaderParams->cameraMatrix,
                          shaderParams->modelviewMatrix);
+    // Set normal matrix
     gfxMulMatrix3Matrix4(gfxGetTransformNormalMatrix(entity->transform), shaderParams->cameraMatrix,
                          shaderParams->normalMatrix);
 

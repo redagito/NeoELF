@@ -1,24 +1,34 @@
 #pragma once
 
+#include "nelf/gui/buttonState.h"
 #include "nelf/gui/guiObjectHeader.h"
 
 struct elfFont;
 struct elfTexture;
 struct gfxShaderParams;
 
+/**
+ * Represents a clickable button
+ */
 struct elfButton
 {
     ELF_GUI_OBJECT_HEADER;
+
+    // Text on the button
     char* text = nullptr;
+    // Font for the text
     elfFont* font = nullptr;
-    // TODO Override setting with active flag?
-    //      Basically always off if inactive
-    // ButtonState
-    unsigned char state = 0;
-    elfTexture* off = nullptr;
-    elfTexture* over = nullptr;
-    elfTexture* on = nullptr;
+    // Text color
     elfColor textColor = colorBlack;
+
+    // ButtonState
+    ButtonState state = ELF_OFF;
+    // Texture when off
+    elfTexture* off = nullptr;
+    // Texture when mouse over
+    elfTexture* over = nullptr;
+    // Texture when on
+    elfTexture* on = nullptr;
 };
 
 elfButton* elfCreateButton(const char* name);

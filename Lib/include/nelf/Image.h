@@ -26,7 +26,10 @@ struct elfImage
 };
 
 elfImage* elfCreateImage();
+// Sets data to 0
+// Produces black image (with alpha 0 if bpp = 32)
 elfImage* elfCreateEmptyImage(int width, int height, int bpp);
+// Load from supported file type
 elfImage* elfCreateImageFromFile(const char* filePath);
 void elfDestroyImage(void* data);
 
@@ -36,6 +39,7 @@ int elfGetImageWidth(elfImage* image);
 int elfGetImageHeight(elfImage* image);
 int elfGetImageBitsPerPixel(elfImage* image);
 elfColor elfGetImagePixel(elfImage* image, int x, int y);
+// Raw data access
 void* elfGetImageData(elfImage* image);
-
+// Write to file
 bool elfSaveImageData(const char* filePath, int width, int height, unsigned char bpp, void* data);

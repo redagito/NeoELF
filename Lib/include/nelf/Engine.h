@@ -12,7 +12,10 @@ struct elfScene;
 struct elfGui;
 struct elfObject;
 
-// Game engine, provides runtime environment for games etc.
+/**
+ * Runtime environment for the application
+ * TODO Move global state to here
+ */
 struct elfEngine
 {
     ELF_OBJECT_HEADER;
@@ -83,6 +86,8 @@ void elfQuit();
 void elfSetF10Exit(bool exit);
 bool elfGetF10Exit();
 
+// Loads scene from file and sets the resulting
+// scene as the active scene for the engine
 elfScene* elfLoadScene(const char* filePath);
 
 void elfSetScene(elfScene* scene);

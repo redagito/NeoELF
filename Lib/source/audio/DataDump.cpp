@@ -1,9 +1,16 @@
-#include "nelf/audio/DataDump.h"
+#include "audio/DataDump.h"
 
 #include <cstdlib>
 #include <cstring>
 
-elfDataChunk* elfCreateDataChunk()
+struct elfDataChunk
+{
+    elfDataChunk* next = nullptr;
+    int length = 0;
+    void* data = nullptr;
+};
+
+static elfDataChunk* elfCreateDataChunk()
 {
     elfDataChunk* chunk;
 
@@ -13,7 +20,7 @@ elfDataChunk* elfCreateDataChunk()
     return chunk;
 }
 
-void elfDestroyDataChunk(elfDataChunk* chunk)
+static void elfDestroyDataChunk(elfDataChunk* chunk)
 {
     if (chunk->next)
         elfDestroyDataChunk(chunk->next);
@@ -93,3 +100,17 @@ void elfDataDumpToBuffer(elfDataDump* dump, void* buf)
         chk = chk->next;
     }
 }
+
+namespace nelf
+{
+void Buffer::add(const unsigned char* data, size_t size) {}
+
+void Buffer::add(const std::vector<unsigned char>& data) {}
+
+size_t Buffer::getSize() const { return 0; }
+
+std::vector<unsigned char> Buffer::getData() const { return {}; }
+
+void Buffer::dumpData(unsigned char* arr, size_t size) const {}
+
+}  // namespace nelf

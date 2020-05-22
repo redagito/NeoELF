@@ -5,11 +5,17 @@
 #include "nelf/Vertex.h"
 #include "nelf/objectHeader.h"
 
-// TODO Maybe just call it a mesh?
+/**
+ * Represents a single mesh
+ */
 struct elfMeshData
 {
     ELF_OBJECT_HEADER;
+    // List of vertex data
+    // A single vertex has position, normals and texture coordinates
     elfList* vertices;
+    // List of faces in the mesh
+    // A face consists of indices into the vertices list
     elfList* faces;
 };
 

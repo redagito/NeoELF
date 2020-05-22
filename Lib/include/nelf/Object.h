@@ -2,6 +2,7 @@
 
 #include "nelf/objectHeader.h"
 
+// TODO Base object class probably not necessary for OOP implementation
 struct elfObject
 {
     ELF_OBJECT_HEADER;

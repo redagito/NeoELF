@@ -186,7 +186,9 @@ bool elfInit(elfConfig* config)
 
     // Check if start-up pak file set
     if (strlen(config->start) > 0)
+    {
         elfLoadScene(config->start);
+    }
 
     // Set config, remove old if exists
     if (eng->config)
@@ -331,6 +333,7 @@ bool elfRun()
 
     elfSwapBuffers();
 
+    // TODO WHYYYY
     elfLimitEngineFps();
     elfUpdateEngine();
     elfCountEngineFps();
@@ -380,7 +383,7 @@ elfScene* elfLoadScene(const char* filePath)
     elfScene* scene;
 
     scene = elfCreateSceneFromFile("", filePath);
-    if (scene)
+    if (scene != nullptr)
     {
         if (eng->scene)
             elfDecRef((elfObject*)eng->scene);

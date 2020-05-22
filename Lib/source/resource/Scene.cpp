@@ -430,75 +430,61 @@ void elfRecursivelyImportAssets(elfScene* scene, const struct aiScene* aiscn, st
 
 elfScene* elfCreateSceneFromFile(const char* name, const char* filePath)
 {
-    elfPak* pak;
-    elfScene* scene;
-    const char* type;
-
-    type = strrchr(filePath, '.');
+    const char* type = strrchr(filePath, '.');
     if (!type)
     {
         elfSetError(ELF_INVALID_FILE, "error: can't open file \"%s\", no identifying file extension\n", filePath);
-        return NULL;
+        return nullptr;
     }
 
+    // Load by file type, pak and pakl are custom formats, pakl being a legacy format
+    // Other file types are supported with assimp
     if (strcmp(type, ".pak") == 0 || strcmp(type, ".pakl") == 0)
     {
+        // Load pak
         bool legacy = strcmp(type, ".pakl") == 0;
-        pak = elfCreatePakFromFile(filePath, legacy);
-        if (!pak)
-            return NULL;
+        elfPak* pak = elfCreatePakFromFile(filePath, legacy);
 
-        scene = elfCreateSceneFromPak(name, pak);
+        // Failed to load
+        if (pak == nullptr)
+            return nullptr;
 
+        // Build scene from pak
+        elfScene* scene = elfCreateSceneFromPak(name, pak);
         return scene;
     }
-#ifndef NO_ASSIMP
     else if (aiIsExtensionSupported(type))
     {
-        const struct aiScene* aiscn;
-        struct aiLogStream stream;
+        // TODO Whats the stream for?
+        aiLogStream stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT, NULL);
 
-        stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT, NULL);
-
-        aiscn = aiImportFile(filePath, aiProcessPreset_TargetRealtime_Quality);
+        // Load with assimp
+        const aiScene* aiscn = aiImportFile(filePath, aiProcessPreset_TargetRealtime_Quality);
         if (!aiscn)
         {
             elfSetError(ELF_INVALID_FILE, "error: assimp failed to load file \"%s\"\n", filePath);
             return NULL;
         }
 
-        scene = elfCreateScene(name);
+        // Create scene
+        elfScene* scene = elfCreateScene(name);
         scene->filePath = elfCreateString(filePath);
 
+        // Load assimp scene data into scene
         elfRecursivelyImportAssets(scene, aiscn, aiscn->mRootNode);
-
         aiReleaseImport(aiscn);
 
         return scene;
     }
-#endif
-    else
-    {
-        elfSetError(ELF_INVALID_FILE, "error: can't open \"%s\", unsupported format\n", filePath);
-        return NULL;
-    }
+
+    elfSetError(ELF_INVALID_FILE, "error: can't open \"%s\", unsupported format\n", filePath);
+    return nullptr;
 }
 
 unsigned char elfSaveScene(elfScene* scene, const char* filePath) { return elfSaveSceneToPak(scene, filePath); }
 
 void elfUpdateScene(elfScene* scene, float sync)
 {
-    elfCamera* cam;
-    elfEntity* ent;
-    elfLight* light;
-    elfParticles* par;
-    elfSprite* spr;
-    float position[3];
-    float orient[4];
-    float vecZ[3] = {0.0f, 0.0f, -1.0f};
-    float vecY[3] = {0.0f, 1.0f, -1.0f};
-    float frontUpVec[6];
-
     if (sync > 0.0f)
     {
         if (scene->physics)
@@ -508,39 +494,49 @@ void elfUpdateScene(elfScene* scene, float sync)
 
     if (scene->curCamera)
     {
+        float position[3];
         elfGetActorPosition_((elfActor*)scene->curCamera, position);
+
+        float orient[4];
         elfGetActorOrientation_((elfActor*)scene->curCamera, orient);
+
+        float vecZ[3] = {0.0f, 0.0f, -1.0f};
+        float frontUpVec[6];
         gfxMulQuaVec(orient, vecZ, &frontUpVec[0]);
+
+        float vecY[3] = {0.0f, 1.0f, -1.0f};
         gfxMulQuaVec(orient, vecY, &frontUpVec[3]);
         elfSetAudioListenerPosition(position[0], position[1], position[2]);
         elfSetAudioListenerOrientation(frontUpVec);
     }
 
     // logics update pass
-    for (cam = (elfCamera*)elfBeginList(scene->cameras); cam != NULL; cam = (elfCamera*)elfGetListNext(scene->cameras))
+    for (elfCamera* cam = (elfCamera*)elfBeginList(scene->cameras); cam != NULL;
+         cam = (elfCamera*)elfGetListNext(scene->cameras))
     {
         elfUpdateCamera(cam);
     }
 
-    for (ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
+    for (elfEntity* ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
          ent = (elfEntity*)elfGetListNext(scene->entities))
     {
         elfUpdateEntity(ent);
     }
 
-    for (light = (elfLight*)elfBeginList(scene->lights); light != NULL;
+    for (elfLight* light = (elfLight*)elfBeginList(scene->lights); light != NULL;
          light = (elfLight*)elfGetListNext(scene->lights))
     {
         elfUpdateLight(light);
     }
 
-    for (par = (elfParticles*)elfBeginList(scene->particles); par != NULL;
+    for (elfParticles* par = (elfParticles*)elfBeginList(scene->particles); par != NULL;
          par = (elfParticles*)elfGetListNext(scene->particles))
     {
         elfUpdateParticles(par, sync);
     }
 
-    for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL; spr = (elfSprite*)elfGetListNext(scene->sprites))
+    for (elfSprite* spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
+         spr = (elfSprite*)elfGetListNext(scene->sprites))
     {
         elfUpdateSprite(spr);
     }
@@ -1247,6 +1243,7 @@ elfLight* elfGetOrLoadLightByName(elfScene* scene, const char* name)
     elfPakIndex* index;
     FILE* file;
 
+    // Light already loaded
     for (light = (elfLight*)elfBeginList(scene->lights); light; light = (elfLight*)elfGetListNext(scene->lights))
     {
         if (!strcmp(light->name, name))

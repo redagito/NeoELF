@@ -30,6 +30,7 @@ struct aiNode;
 struct elfScene
 {
     ELF_RESOURCE_HEADER;
+    // Path of the file from which the scene was loaded
     char* filePath = nullptr;
 
     bool physics = true;
@@ -74,6 +75,7 @@ struct elfScene
 
     gfxShaderProgram* composeFogShdr = nullptr;
 
+    // Pak object this scene was loaded from
     elfPak* pak = nullptr;
 };
 

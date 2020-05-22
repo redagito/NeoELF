@@ -63,35 +63,40 @@ elfTexture* elfGetResourcesTexture(const char* filePath, const char* name)
 {
     elfTexture* tex;
 
-    if (!name || strlen(name) < 1)
+    if (name == nullptr || strlen(name) == 0)
     {
+        // Name not set, fetch by filepath
         for (tex = (elfTexture*)elfBeginList(res->textures); tex; tex = (elfTexture*)elfGetListNext(res->textures))
         {
-            if (!strcmp(tex->filePath, filePath))
+            if (strcmp(tex->filePath, filePath) == 0)
                 return tex;
         }
     }
     else
     {
+        // Name is set, must match filepath and name
         for (tex = (elfTexture*)elfBeginList(res->textures); tex; tex = (elfTexture*)elfGetListNext(res->textures))
         {
-            if (!strcmp(tex->filePath, filePath) && !strcmp(tex->name, name))
+            if (strcmp(tex->filePath, filePath) == 0 && strcmp(tex->name, name) == 0)
                 return tex;
         }
     }
 
-    return NULL;
+    // Not found
+    return nullptr;
 }
 
 elfTexture* elfGetOrLoadResourcesTexture(const char* filePath, const char* name)
 {
     elfTexture* texture;
 
+    // Get from loaded textures
     texture = elfGetResourcesTexture(filePath, name);
-    if (!texture)
+    if (texture == nullptr)
     {
+        // Load from file
         texture = elfCreateTextureFromFile(name, filePath);
-        if (texture)
+        if (texture != nullptr)
             elfAppendListObject(res->textures, (elfObject*)texture);
     }
 

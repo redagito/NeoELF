@@ -7,14 +7,14 @@
 #include <cstring>
 #include <vector>
 
+#include "audio/DataDump.h"
+#include "audio/streamChunkSize.h"
 #include "nelf/General.h"
 #include "nelf/Log.h"
 #include "nelf/Object.h"
 #include "nelf/String.h"
 #include "nelf/audio/AudioDevice.h"
-#include "nelf/audio/DataDump.h"
 #include "nelf/audio/soundFileType.h"
-#include "nelf/audio/streamChunkSize.h"
 #include "nelf/errorCode.h"
 #include "nelf/objectType.h"
 

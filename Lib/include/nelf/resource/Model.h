@@ -11,6 +11,7 @@ struct gfxVertexData;
 struct gfxVertexIndex;
 struct gfxShaderParams;
 
+// Model faces?
 struct elfModelArea
 {
     int indiceCount = 0;
@@ -19,6 +20,10 @@ struct elfModelArea
     unsigned int materialNumber = 0;
 };
 
+/**
+ * A model has mesh data for rendering, bounding box data for
+ * culling and data for collision and physics simulation
+ */
 struct elfModel
 {
     ELF_RESOURCE_HEADER;
@@ -29,13 +34,18 @@ struct elfModel
     int indiceCount = 0;
 
     gfxVertexArray* vertexArray = nullptr;
+
     gfxVertexData* vertices = nullptr;
     gfxVertexData* normals = nullptr;
     gfxVertexData* texCoords = nullptr;
     gfxVertexData* tangents = nullptr;
+    // Indices
     unsigned int* index = nullptr;
+
     float* weights = nullptr;
     int* boneids = nullptr;
+
+    // Triangle mesh for physics simulation
     elfPhysicsTriMesh* triMesh = nullptr;
     elfModelArea* areas = nullptr;
     elfVec3f bbMin;

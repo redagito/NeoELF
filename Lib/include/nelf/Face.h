@@ -6,7 +6,7 @@
 struct elfFace
 {
     ELF_OBJECT_HEADER;
-    // TODO Indices?
+    // Indices into a list of vertices
     int v1 = 0;
     int v2 = 0;
     int v3 = 0;

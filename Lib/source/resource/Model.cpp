@@ -152,13 +152,7 @@ elfModel* elfCreateModelFromMeshData(elfMeshData* data)
 
 void elfGenerateModelTangents(elfModel* model)
 {
-    float* vertexBuffer;
-    float* texCoordBuffer;
-    float* normalBuffer;
     float* tangentBuffer;
-    float* vertices;
-    float* texCoords;
-    float* tangents;
     float edge1[3];
     float edge2[3];
     float edge1uv[2];
@@ -171,15 +165,16 @@ void elfGenerateModelTangents(elfModel* model)
     if (!model->vertices || !model->texCoords || !model->index)
         return;
 
+    // Remove old tangent vectors
     if (model->tangents)
         gfxDecRef((gfxObject*)model->tangents);
 
-    vertexBuffer = (float*)gfxGetVertexDataBuffer(model->vertices);
-    texCoordBuffer = (float*)gfxGetVertexDataBuffer(model->texCoords);
+    float* vertexBuffer = (float*)gfxGetVertexDataBuffer(model->vertices);
+    float* texCoordBuffer = (float*)gfxGetVertexDataBuffer(model->texCoords);
 
-    vertices = (float*)malloc(sizeof(float) * model->indiceCount * 3);
-    texCoords = (float*)malloc(sizeof(float) * model->indiceCount * 2);
-    tangents = (float*)malloc(sizeof(float) * model->indiceCount * 3);
+    float* vertices = (float*)malloc(sizeof(float) * model->indiceCount * 3);
+    float* texCoords = (float*)malloc(sizeof(float) * model->indiceCount * 2);
+    float* tangents = (float*)malloc(sizeof(float) * model->indiceCount * 3);
 
     // create corresponding vertice and tex coord arrays independent of index
     for (i = 0; i < (int)model->indiceCount / 3; i++)
@@ -259,7 +254,7 @@ void elfGenerateModelTangents(elfModel* model)
         gfxVecNormalize(&tangentBuffer[i]);
     }
 
-    normalBuffer = (float*)gfxGetVertexDataBuffer(model->normals);
+    float* normalBuffer = (float*)gfxGetVertexDataBuffer(model->normals);
 
     // orthogonize tangents
     for (i = 0; i < (int)model->verticeCount * 3; i += 3)

@@ -32,36 +32,37 @@ elfScript* elfCreateScript(const char* name)
 
 elfScript* elfCreateScriptFromFile(const char* name, const char* filePath)
 {
-    elfScript* script = NULL;
-    FILE* file;
-    int length;
-    char* text;
-
-    file = fopen(filePath, "r");
+    FILE* file = fopen(filePath, "r");
     if (!file)
     {
         elfSetError(ELF_CANT_OPEN_FILE, "error: can't open file \"%s\"\n", filePath);
         return NULL;
     }
 
+    // File size
     fseek(file, 0, SEEK_END);
-    length = ftell(file);
+    int length = ftell(file);
     fseek(file, 0, SEEK_SET);
-    if (length > 0)
+
+    // Empty file
+    if (length <= 0)
     {
-        text = (char*)malloc(sizeof(char) * length + 1);
-        memset(text, 0x0, sizeof(char) * length + 1);
-        fread(text, sizeof(char), length, file);
-
-        script = elfCreateScript(name);
-
-        script->filePath = elfCreateString(filePath);
-
-        elfSetScriptText(script, text);
-
-        free(text);
+        fclose(file);
+        return nullptr;
     }
 
+    // Read script source
+    char* text = (char*)malloc(sizeof(char) * length + 1);
+    memset(text, 0x0, sizeof(char) * length + 1);
+    fread(text, sizeof(char), length, file);
+
+    // Create script object
+    elfScript* script = elfCreateScript(name);
+    script->filePath = elfCreateString(filePath);
+    elfSetScriptText(script, text);
+
+    // Cleanup
+    free(text);
     fclose(file);
 
     return script;
@@ -96,11 +97,15 @@ const char* elfGetScriptFilePath(elfScript* script) { return script->filePath; }
 
 void elfSetScriptText(elfScript* script, const char* text)
 {
-    if (script->text)
+    if (script->text != nullptr)
+    {
         elfDestroyString(script->text);
-    script->text = NULL;
-    if (text)
+        script->text = nullptr;
+    }
+
+    if (text != nullptr)
         script->text = elfCreateString(text);
+
     script->error = false;
 }
 

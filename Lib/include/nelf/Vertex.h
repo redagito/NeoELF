@@ -3,13 +3,17 @@
 #include "nelf/Vector.h"
 #include "nelf/objectHeader.h"
 
+// Per vertex data in model space
 // TODO Why do these have object headers?
 //      Are these refcounted? Performance???
 struct elfVertex
 {
     ELF_OBJECT_HEADER;
+    // Position in model space
     elfVec3f position;
+    // Normal vector in model space
     elfVec3f normal;
+    // UV texture coordinate
     elfVec2f texCoord;
 };
 

@@ -469,9 +469,7 @@ void elfDrawCircle(float x, float y, int vertices, float size)
 
 void elfDrawBoundingBox(float min[3], float max[3])
 {
-    float* vertexBuffer;
-
-    vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->bbVertexData);
+    float* vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->bbVertexData);
 
     vertexBuffer[0] = min[0];
     vertexBuffer[1] = max[1];
