@@ -50,6 +50,7 @@ int gfxGetVertexIndexIndiceCount(gfxVertexIndex* vertexIndex) { return vertexInd
 
 void gfxDrawVertexIndex(gfxVertexIndex* vertexIndex, unsigned int drawMode)
 {
+    // Should use VAO for drawing with full state setup
     if (vertexIndex->gpuData)
     {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexIndex->data->vbo);
@@ -59,6 +60,7 @@ void gfxDrawVertexIndex(gfxVertexIndex* vertexIndex, unsigned int drawMode)
     }
     else
     {
+        // For drawing without an VBO, uploads data directly
         glDrawElements(driver->drawModes[drawMode], vertexIndex->indiceCount,
                        driver->formats[vertexIndex->data->format], vertexIndex->data->data);
     }

@@ -126,6 +126,7 @@ struct gfxShaderParams
     float modelviewMatrix[16];
     float normalMatrix[9];
 
+    // Unused
     gfxGbuffer* gbuffer = nullptr;
     unsigned char gbufferMode = 0;
     gfxShaderProgram* shaderProgram = nullptr;

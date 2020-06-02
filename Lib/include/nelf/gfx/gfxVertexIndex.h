@@ -11,7 +11,9 @@ struct gfxVertexIndex
     GFX_OBJECT_HEADER;
     int indiceCount = 0;
     gfxVertexData* data = nullptr;
-    // TODO What is this meant to do? Its weird
+    // Whether the index data is in a VBO and already uploaded to the GPU
+    // or the data is provided with the draw call
+    // TODO Performance impact if false, should always use VBO
     bool gpuData = false;
 };
 

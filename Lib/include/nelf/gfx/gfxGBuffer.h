@@ -6,6 +6,7 @@ struct gfxTexture;
 struct gfxRenderTarget;
 struct gfxShaderParams;
 
+// GBuffer for deferred rendering, currently unused
 struct gfxGbuffer
 {
     GFX_OBJECT_HEADER;

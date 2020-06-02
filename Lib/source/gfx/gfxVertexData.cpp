@@ -62,7 +62,7 @@ int gfxGetVertexDataSizeBytes(gfxVertexData* data) { return data->sizeBytes; }
 
 void gfxUpdateVertexData(gfxVertexData* data)
 {
-    if (data->vbo)
+    if (data->vbo != 0)
     {
         glBindBuffer(GL_ARRAY_BUFFER, data->vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, data->sizeBytes, data->data);
@@ -78,7 +78,7 @@ void gfxUpdateVertexDataSubData(gfxVertexData* data, int start, int length)
     if (start + length > data->sizeBytes)
         length -= (start + length) - data->sizeBytes;
 
-    if (data->vbo)
+    if (data->vbo != 0)
     {
         glBindBuffer(GL_ARRAY_BUFFER, data->vbo);
         glBufferSubData(GL_ARRAY_BUFFER, start, length, &((char*)data->data)[start]);

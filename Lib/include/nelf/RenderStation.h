@@ -56,7 +56,9 @@ void elfDrawTextured2dQuad(float x, float y, float width, float height);
 void elfDrawTextured2dQuadRegion(float x, float y, float width, float height, float tx, float ty, float twidth,
                                  float theight);
 
+// Draws circle at position x/y
 void elfDrawCircle(float x, float y, int vertices, float size);
+// Bounding box, minimal x/y/z, maximum x/y/z
 void elfDrawBoundingBox(float min[3], float max[3]);
 
 void elfDrawLines(int count, gfxVertexData* vertices);
