@@ -68,3 +68,8 @@ target_include_directories(${LIB_NAME}
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source
 	PRIVATE ${OPENGL_INCLUDE_DIR}
 )
+
+# Required for glm extensions
+target_compile_definitions(${LIB_NAME}
+	PUBLIC GLM_EXT_INCLUDED
+)
