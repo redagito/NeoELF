@@ -39,6 +39,9 @@ elfListPtr* elfCreateListPtr();
 void elfDestroyListPtr(elfListPtr* ptr);
 void elfDestroyListPtrs(elfListPtr* ptr);
 
+void elfSetListCurPtr(elfList* list, elfObject* ptr);
+
+// Lua API
 elfList* elfCreateList();
 void elfDestroyList(void* data);
 
@@ -47,6 +50,7 @@ int elfGetListLength(elfList* list);
 void elfInsertListObject(elfList* list, int idx, elfObject* obj);
 void elfAppendListObject(elfList* list, elfObject* obj);
 
+// Get by index
 elfObject* elfGetListObject(elfList* list, int idx);
 bool elfRemoveListObject(elfList* list, elfObject* obj);
 
@@ -55,8 +59,6 @@ elfObject* elfGetListNext(elfList* list);
 
 elfObject* elfRBeginList(elfList* list);
 elfObject* elfGetListRNext(elfList* list);
-
-void elfSetListCurPtr(elfList* list, elfObject* ptr);
 
 void elfSeekList(elfList* list, elfObject* ptr);
 void elfRSeekList(elfList* list, elfObject* ptr);

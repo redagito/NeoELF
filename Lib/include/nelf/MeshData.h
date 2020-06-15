@@ -28,5 +28,6 @@ int elfGetMeshDataFaceCount(elfMeshData* meshData);
 void elfAddMeshDataVertex(elfMeshData* meshData, elfVertex* vertice);
 void elfAddMeshDataFace(elfMeshData* meshData, int v1, int v2, int v3);
 
+// Fetch by index
 elfVertex* elfGetVertexFromMeshData(elfMeshData* meshData, int idx);
 elfFace* elfGetFaceFromMeshData(elfMeshData* meshData, int idx);

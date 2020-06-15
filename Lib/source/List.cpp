@@ -146,12 +146,12 @@ elfObject* elfGetListObject(elfList* list, int idx)
     elfListPtr* ptr = nullptr;
 
     if (idx < 0 || idx > list->length - 1)
-        return NULL;
+        return nullptr;
 
     ptr = list->first;
     int i = 0;
 
-    while (ptr)
+    while (ptr != nullptr)
     {
         if (i == idx)
         {

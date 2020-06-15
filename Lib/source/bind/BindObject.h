@@ -2,8 +2,6 @@
 
 #include <lua.hpp>
 
-struct elfObject;
-
 int lua_IncRef(lua_State* L);
 int lua_DecRef(lua_State* L);
 

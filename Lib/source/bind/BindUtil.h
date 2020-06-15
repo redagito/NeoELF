@@ -18,6 +18,12 @@ struct lua_elf_userdata
     LUA_ELF_USERDATA_HEADER;
 };
 
+// Utility functions for Lua to C++ function binding
+int lua_fail_with_backtrace(lua_State* L, const char* fmt, ...);
+int lua_fail_arg_count(lua_State* L, const char* func_name, int a, int b);
+int lua_fail_arg(lua_State* L, const char* func_name, int idx, const char* etype);
+
+// TODO Move to separate file
 struct elfObject;
 
 struct lua_elfObject
@@ -26,11 +32,5 @@ struct lua_elfObject
     elfObject* object;
 };
 
-// Utility functions for Lua to C++ function binding
-int lua_fail_with_backtrace(lua_State* L, const char* fmt, ...);
-int lua_fail_arg_count(lua_State* L, const char* func_name, int a, int b);
-int lua_fail_arg(lua_State* L, const char* func_name, int idx, const char* etype);
-
-// TODO Implementation in Binds.cpp
 void lua_create_elfObject(lua_State* L, elfObject* obj);
 int lua_elfObject__gc(lua_State* L);

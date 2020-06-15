@@ -365,7 +365,7 @@ float* elfGetModelTangents(elfModel* model)
 
 unsigned int* elfGetModelIndices(elfModel* model) { return model->index; }
 
-void elfDrawModel(elfList* materials, elfModel* model, int mode, gfxShaderParams* shaderParams)
+void elfDrawModel(elfList* materials, elfModel* model, DrawMode mode, gfxShaderParams* shaderParams)
 {
     int i, j;
     elfMaterial* material = nullptr;
@@ -387,7 +387,7 @@ void elfDrawModel(elfList* materials, elfModel* model, int mode, gfxShaderParams
                 break;
             }
         }
-
+        // No material found for the drawing mode
         if (!found)
             return;
     }

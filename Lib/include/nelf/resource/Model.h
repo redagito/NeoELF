@@ -1,6 +1,7 @@
 #pragma once
 
 #include "nelf/Vector.h"
+#include "nelf/drawMode.h"
 #include "nelf/resource/resourceHeader.h"
 
 struct elfMeshData;
@@ -76,5 +77,7 @@ float* elfGetModelTexCoords(elfModel* model);
 float* elfGetModelTangents(elfModel* model);
 unsigned int* elfGetModelIndices(elfModel* model);
 
-void elfDrawModel(elfList* materials, elfModel* model, int mode, gfxShaderParams* shaderParams);
+// Draw the model
+// TODO Model does not store its own material?
+void elfDrawModel(elfList* materials, elfModel* model, DrawMode mode, gfxShaderParams* shaderParams);
 void elfDrawModelBoundingBox(elfModel* model, gfxShaderParams* shaderParams);
