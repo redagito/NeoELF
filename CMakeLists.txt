@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 3.16.0)
 project (NeoELF)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set (VS_STARTUP_PROJECT ${PROJECT_NAME})
 
 # Download automatically

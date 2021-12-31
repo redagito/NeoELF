@@ -1,6 +1,6 @@
 #pragma once
 
-using ParticleDrawMode = int;
+using ParticleDrawMode = unsigned char;
 
 // <mdoc> PARTICLE DRAW MODES <mdocc> The draw modes used by elf.SetParticlesDrawMode
 #define ELF_TRANSPARENT 0x0001

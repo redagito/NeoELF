@@ -31,6 +31,7 @@ Development is currently done with
 * Conan, 1.25.0, https://conan.io
 * Visual Studio 2019 Community Edition, https://visualstudio.microsoft.com/vs/community
 * clang-format 10.0.0, https://llvm.org
+* Python, 3.9.1, https://www.python.org
 
 Conan remotes used are
 * conan-center: https://conan.bintray.com

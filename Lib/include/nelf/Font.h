@@ -27,9 +27,7 @@ struct elfFont
 };
 
 elfFont* elfCreateFont();
-
 elfFont* elfCreateFontFromFile(const char* filePath, int size);
-
 elfFont* elfGetDefaultFont();
 
 void elfDestroyFont(void* data);

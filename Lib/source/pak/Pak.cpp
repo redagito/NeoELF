@@ -16,6 +16,7 @@
 #include "nelf/Object.h"
 #include "nelf/Property.h"
 #include "nelf/String.h"
+
 #include "nelf/actor/Actor.h"
 #include "nelf/actor/Camera.h"
 #include "nelf/actor/Entity.h"
@@ -24,6 +25,7 @@
 #include "nelf/actor/Particles.h"
 #include "nelf/actor/Sprite.h"
 #include "nelf/errorCode.h"
+
 #include "nelf/gfx/gfxAttributeType.h"
 #include "nelf/gfx/gfxFormatType.h"
 #include "nelf/gfx/gfxMath.h"
@@ -36,12 +38,16 @@
 #include "nelf/gfx/gfxVertexData.h"
 #include "nelf/gfx/gfxVertexDataType.h"
 #include "nelf/gfx/gfxVertexIndex.h"
+
 #include "nelf/objectType.h"
+
 #include "nelf/pak/PakIndex.h"
 #include "nelf/pak/nameLength.h"
 #include "nelf/pak/pakMagic.h"
 #include "nelf/pak/pakVersion.h"
+
 #include "nelf/propertyType.h"
+
 #include "nelf/resource/Armature.h"
 #include "nelf/resource/Material.h"
 #include "nelf/resource/Model.h"

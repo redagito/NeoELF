@@ -1,7 +1,8 @@
 #include "nelf/gfx/gfxObject.h"
 
-#include "gfx/gfxGeneral.h"
 #include "nelf/Log.h"
+
+#include "gfx/gfxGeneral.h"
 
 void gfxIncRef(gfxObject* obj)
 {

@@ -8,6 +8,9 @@
 #include "nelf/Math.h"
 #include "nelf/Object.h"
 #include "nelf/errorCode.h"
+#include "nelf/objectType.h"
+
+//
 #include "nelf/gfx/gfxAttributeType.h"
 #include "nelf/gfx/gfxDrawMode.h"
 #include "nelf/gfx/gfxFormatType.h"
@@ -22,7 +25,6 @@
 #include "nelf/gfx/gfxVertexData.h"
 #include "nelf/gfx/gfxVertexDataType.h"
 #include "nelf/gfx/gfxVertexIndex.h"
-#include "nelf/objectType.h"
 
 #define GFX_MAX_CIRCLE_VERTICES 255
 

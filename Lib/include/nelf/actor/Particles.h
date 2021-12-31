@@ -22,8 +22,7 @@ struct elfParticles
 
     // TODO Use unsigned 64bit (or just capacity of array if particle container is changed)
     int maxCount = 0;
-    // TODO Change type to ParticleDrawMode
-    unsigned char drawMode = 0;
+    ParticleDrawMode drawMode = 0;
 
     // TODO Probably REALLY slow to iterate, use dynamic array instead
     elfList* particles = nullptr;

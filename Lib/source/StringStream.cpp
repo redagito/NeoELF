@@ -7,10 +7,7 @@
 
 char* elfReadSstNext(const char* text, int* pos, const char* sep)
 {
-    int start, end;
-    char* str;
-
-    start = *pos;
+    int start = *pos;
 
     while (elfRFindCharFromString(text[start], sep) != -1 && text[start] != '\0')
     {
@@ -18,7 +15,7 @@ char* elfReadSstNext(const char* text, int* pos, const char* sep)
         start++;
     }
 
-    end = start;
+    int end = start;
 
     while (elfRFindCharFromString(text[end], sep) == -1 && text[end] != '\0')
     {
@@ -29,7 +26,7 @@ char* elfReadSstNext(const char* text, int* pos, const char* sep)
     if (start == end)
         return nullptr;
 
-    str = (char*)malloc(sizeof(char) * (end - start + 1));
+    char*  str = (char*)malloc(sizeof(char) * (end - start + 1));
     memcpy(str, &text[start], sizeof(char) * (end - start));
     str[end - start] = '\0';
 

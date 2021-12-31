@@ -1,6 +1,8 @@
 #pragma once
 
 // String parsing
+// Only used in Config
+// TODO Replace with JSON library
 
 char* elfReadSstNext(const char* text, int* pos, const char* sep);
 

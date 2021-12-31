@@ -7,7 +7,7 @@
 
 gfxQuery* gfxCreateQuery()
 {
-    gfxQuery* query;
+    gfxQuery* query = nullptr;
 
     // TODO Heap alloc for struct with single int seems.. inefficient
     //      Actually the pointer is bigger than the stored int on 64 bit

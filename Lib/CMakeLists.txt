@@ -2,7 +2,7 @@ find_package (OpenGL REQUIRED)
 
 set (LIB_NAME ${PROJECT_NAME}Lib)
 
-file(GLOB_RECURSE SOURCE_FILES
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS 
 	${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/source/*.cxx
 	${CMAKE_CURRENT_SOURCE_DIR}/source/*.h
@@ -12,6 +12,8 @@ file(GLOB_RECURSE SOURCE_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/include/*.hxx
 )
+# Source group to preserve folder structure in ide
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES})
 
 add_library (${LIB_NAME} ${SOURCE_FILES})
 

@@ -10,8 +10,9 @@
 #include <cstring>
 #include <iostream>
 
-#include "gfx/gfxGeneral.h"
 #include "nelf/Log.h"
+
+#include "gfx/gfxGeneral.h"
 #include "nelf/gfx/gfxShaderProgram.h"
 #include "nelf/gfx/gfxTexture.h"
 
