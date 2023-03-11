@@ -207,7 +207,7 @@ void elfSetPhysicsObjectWorld(elfPhysicsObject* object, elfPhysicsWorld* world)
     if (object->world)
     {
         object->world->world->removeRigidBody(object->body);
-        object->world = NULL;
+        object->world = nullptr;
     }
     object->world = world;
     if (object->world)

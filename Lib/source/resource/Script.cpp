@@ -36,7 +36,7 @@ elfScript* elfCreateScriptFromFile(const char* name, const char* filePath)
     if (!file)
     {
         elfSetError(ELF_CANT_OPEN_FILE, "error: can't open file \"%s\"\n", filePath);
-        return NULL;
+        return nullptr;
     }
 
     // File size

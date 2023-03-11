@@ -155,7 +155,7 @@ void elfRecursivelyImportAssets(elfScene* scene, const struct aiScene* aiscn, st
     int indexOffset;
     float* vertexBuffer;
     float* normalBuffer;
-    float* texcoordBuffer = NULL;
+    float* texcoordBuffer = nullptr;
     unsigned int* indexBuffer;
     aiColor4D col;
     const aiMaterial* aimat;
@@ -285,7 +285,7 @@ void elfRecursivelyImportAssets(elfScene* scene, const struct aiScene* aiscn, st
             }
 
             parentFolder = elfGetDirectoryFromPath(scene->filePath);
-            realPath = NULL;
+            realPath = nullptr;
 
             if (AI_SUCCESS == aiGetMaterialString(aimat, AI_MATKEY_TEXTURE_DIFFUSE(0), &path))
             {
@@ -511,31 +511,31 @@ void elfUpdateScene(elfScene* scene, float sync)
     }
 
     // logics update pass
-    for (elfCamera* cam = (elfCamera*)elfBeginList(scene->cameras); cam != NULL;
+    for (elfCamera* cam = (elfCamera*)elfBeginList(scene->cameras); cam != nullptr;
          cam = (elfCamera*)elfGetListNext(scene->cameras))
     {
         elfUpdateCamera(cam);
     }
 
-    for (elfEntity* ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
+    for (elfEntity* ent = (elfEntity*)elfBeginList(scene->entities); ent != nullptr;
          ent = (elfEntity*)elfGetListNext(scene->entities))
     {
         elfUpdateEntity(ent);
     }
 
-    for (elfLight* light = (elfLight*)elfBeginList(scene->lights); light != NULL;
+    for (elfLight* light = (elfLight*)elfBeginList(scene->lights); light != nullptr;
          light = (elfLight*)elfGetListNext(scene->lights))
     {
         elfUpdateLight(light);
     }
 
-    for (elfParticles* par = (elfParticles*)elfBeginList(scene->particles); par != NULL;
+    for (elfParticles* par = (elfParticles*)elfBeginList(scene->particles); par != nullptr;
          par = (elfParticles*)elfGetListNext(scene->particles))
     {
         elfUpdateParticles(par, sync);
     }
 
-    for (elfSprite* spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
+    for (elfSprite* spr = (elfSprite*)elfBeginList(scene->sprites); spr != nullptr;
          spr = (elfSprite*)elfGetListNext(scene->sprites))
     {
         elfUpdateSprite(spr);
@@ -550,29 +550,29 @@ void elfScenePreDraw(elfScene* scene)
     elfSprite* spr;
     elfParticles* par;
 
-    for (cam = (elfCamera*)elfBeginList(scene->cameras); cam != NULL; cam = (elfCamera*)elfGetListNext(scene->cameras))
+    for (cam = (elfCamera*)elfBeginList(scene->cameras); cam != nullptr; cam = (elfCamera*)elfGetListNext(scene->cameras))
     {
         elfCameraPreDraw(cam);
     }
 
-    for (ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
+    for (ent = (elfEntity*)elfBeginList(scene->entities); ent != nullptr;
          ent = (elfEntity*)elfGetListNext(scene->entities))
     {
         elfEntityPreDraw(ent);
     }
 
-    for (light = (elfLight*)elfBeginList(scene->lights); light != NULL;
+    for (light = (elfLight*)elfBeginList(scene->lights); light != nullptr;
          light = (elfLight*)elfGetListNext(scene->lights))
     {
         elfLightPreDraw(light);
     }
 
-    for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL; spr = (elfSprite*)elfGetListNext(scene->sprites))
+    for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != nullptr; spr = (elfSprite*)elfGetListNext(scene->sprites))
     {
         elfSpritePreDraw(spr, scene->curCamera);
     }
 
-    for (par = (elfParticles*)elfBeginList(scene->particles); par != NULL;
+    for (par = (elfParticles*)elfBeginList(scene->particles); par != nullptr;
          par = (elfParticles*)elfGetListNext(scene->particles))
     {
         elfParticlesPreDraw(par);
@@ -587,29 +587,29 @@ void elfScenePostDraw(elfScene* scene)
     elfSprite* spr;
     elfParticles* par;
 
-    for (cam = (elfCamera*)elfBeginList(scene->cameras); cam != NULL; cam = (elfCamera*)elfGetListNext(scene->cameras))
+    for (cam = (elfCamera*)elfBeginList(scene->cameras); cam != nullptr; cam = (elfCamera*)elfGetListNext(scene->cameras))
     {
         elfCameraPostDraw(cam);
     }
 
-    for (ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
+    for (ent = (elfEntity*)elfBeginList(scene->entities); ent != nullptr;
          ent = (elfEntity*)elfGetListNext(scene->entities))
     {
         elfEntityPostDraw(ent);
     }
 
-    for (light = (elfLight*)elfBeginList(scene->lights); light != NULL;
+    for (light = (elfLight*)elfBeginList(scene->lights); light != nullptr;
          light = (elfLight*)elfGetListNext(scene->lights))
     {
         elfLightPostDraw(light);
     }
 
-    for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL; spr = (elfSprite*)elfGetListNext(scene->sprites))
+    for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != nullptr; spr = (elfSprite*)elfGetListNext(scene->sprites))
     {
         elfSpritePostDraw(spr);
     }
 
-    for (par = (elfParticles*)elfBeginList(scene->particles); par != NULL;
+    for (par = (elfParticles*)elfBeginList(scene->particles); par != nullptr;
          par = (elfParticles*)elfGetListNext(scene->particles))
     {
         elfParticlesPostDraw(par);
@@ -1395,7 +1395,7 @@ void elfRemoveActor(elfActor* actor)
 {
     elfJoint* joint;
 
-    actor->scene = NULL;
+    actor->scene = nullptr;
 
     if (actor->object)
     {
@@ -1422,7 +1422,7 @@ bool elfRemoveSceneCamera(elfScene* scene, const char* name)
 {
     elfCamera* cam;
 
-    for (cam = (elfCamera*)elfBeginList(scene->cameras); cam != NULL; cam = (elfCamera*)elfGetListNext(scene->cameras))
+    for (cam = (elfCamera*)elfBeginList(scene->cameras); cam != nullptr; cam = (elfCamera*)elfGetListNext(scene->cameras))
     {
         if (!strcmp(cam->name, name))
         {
@@ -1441,7 +1441,7 @@ bool elfRemoveSceneEntity(elfScene* scene, const char* name)
 {
     elfEntity* ent;
 
-    for (ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
+    for (ent = (elfEntity*)elfBeginList(scene->entities); ent != nullptr;
          ent = (elfEntity*)elfGetListNext(scene->entities))
     {
         if (!strcmp(ent->name, name))
@@ -1459,7 +1459,7 @@ bool elfRemoveSceneLight(elfScene* scene, const char* name)
 {
     elfLight* lig;
 
-    for (lig = (elfLight*)elfBeginList(scene->lights); lig != NULL; lig = (elfLight*)elfGetListNext(scene->lights))
+    for (lig = (elfLight*)elfBeginList(scene->lights); lig != nullptr; lig = (elfLight*)elfGetListNext(scene->lights))
     {
         if (!strcmp(lig->name, name))
         {
@@ -1476,7 +1476,7 @@ bool elfRemoveSceneParticles(elfScene* scene, const char* name)
 {
     elfParticles* par;
 
-    for (par = (elfParticles*)elfBeginList(scene->particles); par != NULL;
+    for (par = (elfParticles*)elfBeginList(scene->particles); par != nullptr;
          par = (elfParticles*)elfGetListNext(scene->particles))
     {
         if (!strcmp(par->name, name))
@@ -1494,7 +1494,7 @@ bool elfRemoveSceneSprite(elfScene* scene, const char* name)
 {
     elfSprite* spr;
 
-    for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL; spr = (elfSprite*)elfGetListNext(scene->sprites))
+    for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != nullptr; spr = (elfSprite*)elfGetListNext(scene->sprites))
     {
         if (!strcmp(spr->name, name))
         {
@@ -1515,7 +1515,7 @@ bool elfRemoveSceneCameraByIndex(elfScene* scene, int idx)
     if (idx < 0 || idx > elfGetListLength(scene->cameras) - 1)
         return false;
 
-    for (i = 0, cam = (elfCamera*)elfBeginList(scene->cameras); cam != NULL;
+    for (i = 0, cam = (elfCamera*)elfBeginList(scene->cameras); cam != nullptr;
          cam = (elfCamera*)elfGetListNext(scene->cameras), i++)
     {
         if (i == idx)
@@ -1541,7 +1541,7 @@ bool elfRemoveSceneEntityByIndex(elfScene* scene, int idx)
     if (idx < 0 || idx > elfGetListLength(scene->entities) - 1)
         return false;
 
-    for (i = 0, ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
+    for (i = 0, ent = (elfEntity*)elfBeginList(scene->entities); ent != nullptr;
          ent = (elfEntity*)elfGetListNext(scene->entities), i++)
     {
         if (i == idx)
@@ -1563,7 +1563,7 @@ bool elfRemoveSceneLightByIndex(elfScene* scene, int idx)
     if (idx < 0 || idx > elfGetListLength(scene->lights) - 1)
         return false;
 
-    for (i = 0, lig = (elfLight*)elfBeginList(scene->lights); lig != NULL;
+    for (i = 0, lig = (elfLight*)elfBeginList(scene->lights); lig != nullptr;
          lig = (elfLight*)elfGetListNext(scene->lights), i++)
     {
         if (i == idx)
@@ -1585,7 +1585,7 @@ bool elfRemoveSceneParticlesByIndex(elfScene* scene, int idx)
     if (idx < 0 || idx > elfGetListLength(scene->particles) - 1)
         return false;
 
-    for (i = 0, par = (elfParticles*)elfBeginList(scene->particles); par != NULL;
+    for (i = 0, par = (elfParticles*)elfBeginList(scene->particles); par != nullptr;
          par = (elfParticles*)elfGetListNext(scene->particles), i++)
     {
         if (i == idx)
@@ -1607,7 +1607,7 @@ bool elfRemoveSceneSpriteByIndex(elfScene* scene, int idx)
     if (idx < 0 || idx > elfGetListLength(scene->sprites) - 1)
         return false;
 
-    for (i = 0, spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
+    for (i = 0, spr = (elfSprite*)elfBeginList(scene->sprites); spr != nullptr;
          spr = (elfSprite*)elfGetListNext(scene->sprites), i++)
     {
         if (i == idx)
@@ -1689,7 +1689,7 @@ static void drawOccluders(elfScene* scene)
     scene->entityQueueCount = 0;
     elfBeginList(scene->entityQueue);
 
-    for (elfEntity* ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
+    for (elfEntity* ent = (elfEntity*)elfBeginList(scene->entities); ent != nullptr;
          ent = (elfEntity*)elfGetListNext(scene->entities))
     {
         if (!elfCullEntity(ent, scene->curCamera))
@@ -1722,7 +1722,7 @@ static void drawOccluders(elfScene* scene)
     scene->spriteQueueCount = 0;
     elfBeginList(scene->spriteQueue);
 
-    for (elfSprite* spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
+    for (elfSprite* spr = (elfSprite*)elfBeginList(scene->sprites); spr != nullptr;
          spr = (elfSprite*)elfGetListNext(scene->sprites))
     {
         if (!elfCullSprite(spr, scene->curCamera))
@@ -1766,7 +1766,7 @@ static void drawOccluders(elfScene* scene)
 
         int i = 0;
         elfEntity* ent = nullptr;
-        for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
+        for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != nullptr;
              i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
         {
             gfxBeginQuery(ent->query);
@@ -1780,7 +1780,7 @@ static void drawOccluders(elfScene* scene)
         scene->shaderParams.renderParams.colorWrite = false;
         scene->shaderParams.renderParams.alphaWrite = false;
 
-        for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
+        for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != nullptr;
              i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
         {
             if (ent->occluder)
@@ -1799,7 +1799,7 @@ static void drawOccluders(elfScene* scene)
         }
 
         elfSprite* spr = nullptr;
-        for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
+        for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != nullptr;
              i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
         {
             if (spr->occluder)
@@ -1819,14 +1819,14 @@ static void drawOccluders(elfScene* scene)
 
         int i = 0;
         elfEntity* ent = nullptr;
-        for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
+        for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != nullptr;
              i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
         {
             elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
         }
 
         elfSprite* spr = nullptr;
-        for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
+        for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != nullptr;
              i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
         {
             elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
@@ -1845,7 +1845,7 @@ static void drawDepth(elfScene* scene)
     scene->entityQueueCount = 0;
     elfBeginList(scene->entityQueue);
 
-    for (elfEntity* ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
+    for (elfEntity* ent = (elfEntity*)elfBeginList(scene->entities); ent != nullptr;
          ent = (elfEntity*)elfGetListNext(scene->entities))
     {
         if (!elfCullEntity(ent, scene->curCamera))
@@ -1872,7 +1872,7 @@ static void drawDepth(elfScene* scene)
     scene->spriteQueueCount = 0;
     elfBeginList(scene->spriteQueue);
 
-    for (elfSprite* spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
+    for (elfSprite* spr = (elfSprite*)elfBeginList(scene->sprites); spr != nullptr;
          spr = (elfSprite*)elfGetListNext(scene->sprites))
     {
         if (!elfCullSprite(spr, scene->curCamera))
@@ -1908,14 +1908,14 @@ static void drawAmbientPass(elfScene* scene)
 
     int i = 0;
     elfEntity* ent = nullptr;
-    for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
+    for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != nullptr;
          i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
     {
         elfDrawEntity(ent, ELF_DRAW_AMBIENT, &scene->shaderParams);
     }
 
     elfSprite* spr = nullptr;
-    for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
+    for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != nullptr;
          i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
     {
         elfDrawSprite(spr, ELF_DRAW_AMBIENT, &scene->shaderParams);
@@ -1933,14 +1933,14 @@ static void drawNonLighted(elfScene* scene)
 
     int i = 0;
     elfEntity* ent = nullptr;
-    for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
+    for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != nullptr;
          i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
     {
         elfDrawEntity(ent, ELF_DRAW_WITHOUT_LIGHTING, &scene->shaderParams);
     }
 
     elfSprite* spr = nullptr;
-    for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
+    for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != nullptr;
          i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
     {
         elfDrawSprite(spr, ELF_DRAW_WITHOUT_LIGHTING, &scene->shaderParams);
@@ -1949,7 +1949,7 @@ static void drawNonLighted(elfScene* scene)
 
 static void drawLighting(elfScene* scene, gfxRenderTarget* renderTarget)
 {
-    for (elfLight* light = (elfLight*)elfBeginList(scene->lights); light != NULL;
+    for (elfLight* light = (elfLight*)elfBeginList(scene->lights); light != nullptr;
          light = (elfLight*)elfGetListNext(scene->lights))
     {
         if (!light->visible)
@@ -1966,7 +1966,7 @@ static void drawLighting(elfScene* scene, gfxRenderTarget* renderTarget)
             bool found = false;
             int i = 0;
             elfEntity* ent = nullptr;
-            for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
+            for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != nullptr;
                  i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
             {
                 if (!elfCullEntity(ent, light->shadowCamera))
@@ -1977,7 +1977,7 @@ static void drawLighting(elfScene* scene, gfxRenderTarget* renderTarget)
             }
 
             elfSprite* spr = nullptr;
-            for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
+            for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != nullptr;
                  i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
             {
                 if (!elfCullSprite(spr, light->shadowCamera))
@@ -2006,7 +2006,7 @@ static void drawLighting(elfScene* scene, gfxRenderTarget* renderTarget)
             gfxClearDepthBuffer(1.0f);
 
             elfEntity* ent = nullptr;
-            for (ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
+            for (ent = (elfEntity*)elfBeginList(scene->entities); ent != nullptr;
                  ent = (elfEntity*)elfGetListNext(scene->entities))
             {
                 if (!elfCullEntity(ent, light->shadowCamera))
@@ -2016,7 +2016,7 @@ static void drawLighting(elfScene* scene, gfxRenderTarget* renderTarget)
             }
 
             elfSprite* spr = nullptr;
-            for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
+            for (spr = (elfSprite*)elfBeginList(scene->sprites); spr != nullptr;
                  spr = (elfSprite*)elfGetListNext(scene->sprites))
             {
                 if (!elfCullSprite(spr, light->shadowCamera))
@@ -2063,7 +2063,7 @@ static void drawLighting(elfScene* scene, gfxRenderTarget* renderTarget)
         else
         {
             scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].type = GFX_COLOR_MAP;
-            scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].texture = NULL;
+            scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].texture = nullptr;
             scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].projectionMode = GFX_PROJECTION_NONE;
             gfxMatrix4SetIdentity(scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].matrix);
         }
@@ -2074,7 +2074,7 @@ static void drawLighting(elfScene* scene, gfxRenderTarget* renderTarget)
         auto lpos = elfGetActorPosition((elfActor*)light);
         int i = 0;
         elfEntity* ent = nullptr;
-        for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
+        for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != nullptr;
              i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
         {
             if (light->lightType == ELF_SPOT_LIGHT)
@@ -2099,7 +2099,7 @@ static void drawLighting(elfScene* scene, gfxRenderTarget* renderTarget)
         }
 
         elfSprite* spr = nullptr;
-        for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
+        for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != nullptr;
              i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
         {
             auto spos = elfGetActorPosition((elfActor*)spr);
@@ -2149,14 +2149,14 @@ static void drawFog(elfScene* scene)
 
     int i = 0;
     elfEntity* ent = nullptr;
-    for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != NULL;
+    for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue); i < scene->entityQueueCount && ent != nullptr;
          i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
     {
         elfDrawEntity(ent, ELF_DRAW_AMBIENT, &scene->shaderParams);
     }
 
     elfSprite* spr = nullptr;
-    for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != NULL;
+    for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue); i < scene->spriteQueueCount && spr != nullptr;
          i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
     {
         elfDrawSprite(spr, ELF_DRAW_AMBIENT, &scene->shaderParams);
@@ -2265,7 +2265,7 @@ void elfDrawSceneDebug(elfScene* scene)
     scene->shaderParams.renderParams.blendMode = GFX_ADD;
     elfSetCamera(scene->curCamera, &scene->shaderParams);
 
-    for (elfEntity* ent = (elfEntity*)elfBeginList(scene->entities); ent != NULL;
+    for (elfEntity* ent = (elfEntity*)elfBeginList(scene->entities); ent != nullptr;
          ent = (elfEntity*)elfGetListNext(scene->entities))
     {
         elfDrawEntityDebug(ent, &scene->shaderParams);
@@ -2276,7 +2276,7 @@ void elfDrawSceneDebug(elfScene* scene)
     scene->shaderParams.renderParams.depthTest = false;
     elfSetCamera(scene->curCamera, &scene->shaderParams);
 
-    for (elfParticles* par = (elfParticles*)elfBeginList(scene->particles); par != NULL;
+    for (elfParticles* par = (elfParticles*)elfBeginList(scene->particles); par != nullptr;
          par = (elfParticles*)elfGetListNext(scene->particles))
     {
         elfDrawParticlesDebug(par, &scene->shaderParams);
@@ -2287,7 +2287,7 @@ void elfDrawSceneDebug(elfScene* scene)
     scene->shaderParams.renderParams.depthTest = false;
     elfSetCamera(scene->curCamera, &scene->shaderParams);
 
-    for (elfSprite* spr = (elfSprite*)elfBeginList(scene->sprites); spr != NULL;
+    for (elfSprite* spr = (elfSprite*)elfBeginList(scene->sprites); spr != nullptr;
          spr = (elfSprite*)elfGetListNext(scene->sprites))
     {
         elfDrawSpriteDebug(spr, &scene->shaderParams);
@@ -2298,7 +2298,7 @@ void elfDrawSceneDebug(elfScene* scene)
     scene->shaderParams.renderParams.depthTest = false;
     elfSetCamera(scene->curCamera, &scene->shaderParams);
 
-    for (elfLight* lig = (elfLight*)elfBeginList(scene->lights); lig != NULL;
+    for (elfLight* lig = (elfLight*)elfBeginList(scene->lights); lig != nullptr;
          lig = (elfLight*)elfGetListNext(scene->lights))
     {
         elfDrawLightDebug(lig, &scene->shaderParams);
@@ -2309,7 +2309,7 @@ void elfDrawSceneDebug(elfScene* scene)
     scene->shaderParams.renderParams.depthTest = false;
     elfSetCamera(scene->curCamera, &scene->shaderParams);
 
-    for (elfCamera* cam = (elfCamera*)elfBeginList(scene->cameras); cam != NULL;
+    for (elfCamera* cam = (elfCamera*)elfBeginList(scene->cameras); cam != nullptr;
          cam = (elfCamera*)elfGetListNext(scene->cameras))
     {
         if (cam == scene->curCamera)

@@ -5,7 +5,7 @@
 
 #include "nelf/Log.h"
 
-elfGeneral* gen = NULL;
+elfGeneral* gen = nullptr;
 
 void elfInitGeneral()
 {

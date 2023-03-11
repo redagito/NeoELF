@@ -192,7 +192,7 @@ bool elfRemoveListObject(elfList* list, elfObject* obj)
             {
                 list->first = ptr->next;
                 if (list->first)
-                    list->first->prev = NULL;
+                    list->first->prev = nullptr;
             }
             if (ptr == list->last)
                 list->last = ptr->prev;

@@ -104,7 +104,7 @@ gfxTexture* gfxCreate2dTexture(unsigned int width, unsigned int height, float an
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);
-    driver->shaderParams.textureParams[0].texture = NULL;
+    driver->shaderParams.textureParams[0].texture = nullptr;
 
     return texture;
 }
@@ -166,7 +166,7 @@ gfxTexture* gfxCreateCubeMap(unsigned int width, unsigned int height, float anis
                  driver->textureDataFormats[format], driver->formats[dataFormat], zneg);
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-    driver->shaderParams.textureParams[0].texture = NULL;
+    driver->shaderParams.textureParams[0].texture = nullptr;
 
     return texture;
 }
@@ -210,5 +210,5 @@ void elfDisableTexture(int slot)
     glActiveTexture(GL_TEXTURE0 + slot);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    driver->shaderParams.textureParams[slot].texture = NULL;
+    driver->shaderParams.textureParams[slot].texture = nullptr;
 }

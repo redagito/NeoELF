@@ -3,6 +3,7 @@
 #include "nelf/Color.h"
 #include "nelf/Vector.h"
 #include "nelf/actor/actorHeader.h"
+#include "nelf/particleDrawMode.h"
 
 struct elfTexture;
 struct elfModel;

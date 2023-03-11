@@ -167,7 +167,7 @@ elfConfig* elfReadConfig(const char* filePath)
             }
         }
         free(str);
-        str = NULL;
+        str = nullptr;
     }
 
     free(text);

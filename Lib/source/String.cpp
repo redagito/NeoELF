@@ -279,7 +279,7 @@ char* elfGetFileFolder(const char* filePath)
         nstr = elfSubString(str, 0, elfRFindCharFromString('/', str) + 1);
         elfDestroyString(str);
         str = nstr;
-        nstr = NULL;
+        nstr = nullptr;
     }
 
     if (elfRFindCharFromString('\\', filePath) != -1)
@@ -287,7 +287,7 @@ char* elfGetFileFolder(const char* filePath)
         nstr = elfSubString(str, 0, elfRFindCharFromString('\\', str) + 1);
         elfDestroyString(str);
         str = nstr;
-        nstr = NULL;
+        nstr = nullptr;
     }
 
     return str;

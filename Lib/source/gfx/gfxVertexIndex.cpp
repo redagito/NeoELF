@@ -13,7 +13,7 @@
 
 gfxVertexIndex* gfxCreateVertexIndex(bool gpuData, gfxVertexData* data)
 {
-    gfxVertexIndex* vertexIndex = NULL;
+    gfxVertexIndex* vertexIndex = nullptr;
 
     vertexIndex = (gfxVertexIndex*)malloc(sizeof(gfxVertexIndex));
     memset(vertexIndex, 0x0, sizeof(gfxVertexIndex));

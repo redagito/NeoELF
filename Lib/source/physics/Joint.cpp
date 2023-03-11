@@ -115,14 +115,14 @@ void elfSetJointWorld(elfJoint* joint, elfPhysicsWorld* world)
     {
         joint->world->world->removeConstraint(joint->constraint);
         delete joint->constraint;
-        joint->constraint = NULL;
+        joint->constraint = nullptr;
     }
     joint->world = world;
     if (joint->world)
     {
         if (joint->world != joint->actor1->scene->world || joint->world != joint->actor2->scene->world)
         {
-            joint->world = NULL;
+            joint->world = nullptr;
             return;
         }
         elfRecalcJoint(joint);
@@ -208,11 +208,11 @@ void elfClearJoint(elfJoint* joint)
         if (joint->world)
             joint->world->world->removeConstraint(joint->constraint);
         delete joint->constraint;
-        joint->constraint = NULL;
+        joint->constraint = nullptr;
     }
-    joint->actor1 = NULL;
-    joint->actor2 = NULL;
-    joint->world = NULL;
+    joint->actor1 = nullptr;
+    joint->actor2 = nullptr;
+    joint->world = nullptr;
 }
 
 void elfDestroyJoint(void* data)

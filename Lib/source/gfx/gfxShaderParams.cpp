@@ -59,7 +59,7 @@ void gfxSetShaderParamsDefault(gfxShaderParams* shaderParams)
     for (int i = 0; i < GFX_MAX_TEXTURES; i++)
     {
         shaderParams->textureParams[i].type = GFX_COLOR_MAP;
-        shaderParams->textureParams[i].texture = NULL;
+        shaderParams->textureParams[i].texture = nullptr;
         shaderParams->textureParams[i].projectionMode = GFX_PROJECTION_NONE;
         gfxMatrix4SetIdentity(shaderParams->textureParams[i].matrix);
     }
@@ -69,7 +69,7 @@ void gfxSetShaderParamsDefault(gfxShaderParams* shaderParams)
     gfxMatrix4SetIdentity(shaderParams->modelviewMatrix);
     gfxMatrix3SetIdentity(shaderParams->normalMatrix);
 
-    shaderParams->shaderProgram = NULL;
+    shaderParams->shaderProgram = nullptr;
 }
 
 void gfxSetMaterialParamsDefault(gfxShaderParams* shaderParams)
@@ -84,7 +84,7 @@ void gfxSetTextureParamsDefault(gfxShaderParams* shaderParams)
     for (int i = 0; i < GFX_MAX_TEXTURES; i++)
     {
         shaderParams->textureParams[i].type = GFX_COLOR_MAP;
-        shaderParams->textureParams[i].texture = NULL;
+        shaderParams->textureParams[i].texture = nullptr;
         shaderParams->textureParams[i].projectionMode = GFX_PROJECTION_NONE;
         shaderParams->textureParams[i].parallaxScale = 0.25f;
         gfxMatrix4SetIdentity(shaderParams->textureParams[i].matrix);

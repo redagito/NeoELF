@@ -559,7 +559,7 @@ void elfDrawParticles(elfParticles* particles, elfCamera* camera, gfxShaderParam
         if (particles->texture)
             shaderParams->textureParams->texture = particles->texture->texture;
         else
-            shaderParams->textureParams->texture = NULL;
+            shaderParams->textureParams->texture = nullptr;
         shaderParams->textureParams->type = GFX_COLOR_MAP;
         gfxSetShaderParams(shaderParams);
 
@@ -770,14 +770,14 @@ void elfClearParticlesTexture(elfParticles* particles)
 {
     if (particles->texture)
         elfDecRef((elfObject*)particles->texture);
-    particles->texture = NULL;
+    particles->texture = nullptr;
 }
 
 void elfSetParticlesModel(elfParticles* particles, elfModel* model)
 {
     if (particles->entity)
         elfDecRef((elfObject*)particles->entity);
-    particles->entity = NULL;
+    particles->entity = nullptr;
 
     if (particles->model)
         elfDecRef((elfObject*)particles->model);
@@ -792,7 +792,7 @@ void elfClearParticlesModel(elfParticles* particles)
 {
     if (particles->model)
         elfDecRef((elfObject*)particles->model);
-    particles->model = NULL;
+    particles->model = nullptr;
 
     elfCalcParticlesAabb(particles);
 }
@@ -801,7 +801,7 @@ void elfSetParticlesEntity(elfParticles* particles, elfEntity* entity)
 {
     if (particles->model)
         elfDecRef((elfObject*)particles->model);
-    particles->model = NULL;
+    particles->model = nullptr;
 
     if (particles->entity)
         elfDecRef((elfObject*)particles->entity);
@@ -816,7 +816,7 @@ void elfClearParticlesEntity(elfParticles* particles)
 {
     if (particles->entity)
         elfDecRef((elfObject*)particles->entity);
-    particles->entity = NULL;
+    particles->entity = nullptr;
 
     elfCalcParticlesAabb(particles);
 }

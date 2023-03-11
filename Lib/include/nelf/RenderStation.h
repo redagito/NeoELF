@@ -42,7 +42,7 @@ struct elfRenderStation
 };
 
 // Globally accessible render station
-extern elfRenderStation* rnd;
+extern elfRenderStation* renderStation;
 
 elfRenderStation* elfCreateRenderStation();
 void elfDestroyRenderStation(void* data);

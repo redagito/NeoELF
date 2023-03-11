@@ -55,7 +55,7 @@ void elfDeinitResources()
     if (res)
     {
         elfDecRef((elfObject*)res);
-        res = NULL;
+        res = nullptr;
     }
 }
 

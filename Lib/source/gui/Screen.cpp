@@ -149,7 +149,7 @@ void elfDrawScreen(elfScreen* screen, elfArea* area, gfxShaderParams* shaderPara
             elfDrawTextured2dQuad((float)screen->pos.x, (float)screen->pos.y, (float)screen->width,
                                   (float)screen->height);
 
-            shaderParams->textureParams[0].texture = NULL;
+            shaderParams->textureParams[0].texture = nullptr;
         }
     }
 
@@ -266,9 +266,9 @@ void elfForceScreenFocus(elfScreen* screen)
         button->state = ELF_OFF;
     }
 
-    screen->root->trace = NULL;
-    screen->root->target = NULL;
-    screen->root->activeTextField = NULL;
+    screen->root->trace = nullptr;
+    screen->root->target = nullptr;
+    screen->root->activeTextField = nullptr;
 
     screen->root->focusScreen = screen;
 }
@@ -278,5 +278,5 @@ void elfReleaseScreenFocus(elfScreen* screen)
     if (!screen->root)
         return;
 
-    screen->root->focusScreen = NULL;
+    screen->root->focusScreen = nullptr;
 }

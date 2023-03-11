@@ -76,7 +76,7 @@ void elfDestroyGui(void* data)
          object = (elfGuiObject*)elfGetListNext(gui->children))
     {
         elfClearGuiObjectRoot(object);
-        object->parent = NULL;
+        object->parent = nullptr;
     }
 
     elfDecRef((elfObject*)gui->children);
@@ -113,7 +113,7 @@ void elfSendGuiCharEvent(elfGui* gui, char chr)
             elfRunString("me = nil; event = 0");
 
             elfDecRef((elfObject*)gui->activeTextField);
-            eng->actor = NULL;
+            eng->actor = nullptr;
         }
     }
 }
@@ -164,10 +164,10 @@ void elfSendGuiKeyEvent(elfGui* gui, int key)
                 elfRunString("me = nil; event = 0");
 
                 elfDecRef((elfObject*)gui->activeTextField);
-                eng->actor = NULL;
+                eng->actor = nullptr;
             }
 
-            gui->activeTextField = NULL;
+            gui->activeTextField = nullptr;
         }
     }
 }
@@ -243,10 +243,10 @@ void elfUpdateGui(elfGui* gui, float step)
                 elfRunString("me = nil; event = 0");
 
                 elfDecRef((elfObject*)gui->activeTextField);
-                eng->actor = NULL;
+                eng->actor = nullptr;
             }
 
-            gui->activeTextField = NULL;
+            gui->activeTextField = nullptr;
         }
 
         gui->target = gui->trace;
@@ -272,7 +272,7 @@ void elfUpdateGui(elfGui* gui, float step)
                     elfRunString("me = nil; event = 0");
 
                     elfDecRef((elfObject*)gui->activeTextField);
-                    eng->actor = NULL;
+                    eng->actor = nullptr;
                 }
             }
             else if (gui->target->objType == ELF_SLIDER)
@@ -307,7 +307,7 @@ void elfUpdateGui(elfGui* gui, float step)
                     elfRunString("me = nil; event = 0");
 
                     elfDecRef((elfObject*)gui->target);
-                    eng->actor = NULL;
+                    eng->actor = nullptr;
                 }
             }
             else if (gui->target->objType == ELF_TEXT_LIST)
@@ -346,7 +346,7 @@ void elfUpdateGui(elfGui* gui, float step)
                         elfRunString("me = nil; event = 0");
 
                         elfDecRef((elfObject*)gui->target);
-                        eng->actor = NULL;
+                        eng->actor = nullptr;
                     }
                 }
             }
@@ -365,7 +365,7 @@ void elfUpdateGui(elfGui* gui, float step)
                     elfRunString("me = nil; event = 0");
 
                     elfDecRef((elfObject*)gui->target);
-                    eng->actor = NULL;
+                    eng->actor = nullptr;
                 }
             }
         }
@@ -391,12 +391,12 @@ void elfUpdateGui(elfGui* gui, float step)
                         elfRunString("me = nil; event = 0");
 
                         elfDecRef((elfObject*)gui->target);
-                        eng->actor = NULL;
+                        eng->actor = nullptr;
                     }
                 }
             }
         }
-        gui->target = NULL;
+        gui->target = nullptr;
 
         if (gui->trace && gui->trace->active)
         {
@@ -416,7 +416,7 @@ void elfUpdateGui(elfGui* gui, float step)
                         elfRunString("me = nil; event = 0");
 
                         elfDecRef((elfObject*)gui->trace);
-                        eng->actor = NULL;
+                        eng->actor = nullptr;
                     }
                 }
             }
@@ -460,7 +460,7 @@ void elfUpdateGui(elfGui* gui, float step)
                     elfRunString("me = nil; event = 0");
 
                     elfDecRef((elfObject*)gui->target);
-                    eng->actor = NULL;
+                    eng->actor = nullptr;
                 }
             }
         }

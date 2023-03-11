@@ -72,7 +72,7 @@ void elfDrawPicture(elfPicture* picture, gfxShaderParams* shaderParams)
     shaderParams->textureParams[0].texture = picture->texture->texture;
     gfxSetShaderParams(shaderParams);
     elfDrawTextured2dQuad((float)picture->pos.x, (float)picture->pos.y, (float)picture->width, (float)picture->height);
-    shaderParams->textureParams[0].texture = NULL;
+    shaderParams->textureParams[0].texture = nullptr;
 }
 
 void elfRecalcPicture(elfPicture* picture)

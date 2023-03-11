@@ -5,6 +5,15 @@
 #include <cstring>
 #include <filesystem>
 
+// Gfx
+#include "nelf/gfx/gfxDriver.h"
+#include "nelf/gfx/gfxObject.h"
+#include "nelf/gfx/gfxRenderTarget.h"
+#include "nelf/gfx/gfxTexture.h"
+#include "nelf/gfx/gfxTextureFilterType.h"
+#include "nelf/gfx/gfxTextureWrapMode.h"
+
+//
 #include "nelf/Config.h"
 #include "nelf/Context.h"
 #include "nelf/Font.h"
@@ -21,12 +30,6 @@
 #include "nelf/Version.h"
 #include "nelf/audio/AudioDevice.h"
 #include "nelf/errorCode.h"
-#include "nelf/gfx/gfxDriver.h"
-#include "nelf/gfx/gfxObject.h"
-#include "nelf/gfx/gfxRenderTarget.h"
-#include "nelf/gfx/gfxTexture.h"
-#include "nelf/gfx/gfxTextureFilterType.h"
-#include "nelf/gfx/gfxTextureWrapMode.h"
 #include "nelf/gui/Gui.h"
 #include "nelf/keyCode.h"
 #include "nelf/objectType.h"
@@ -92,7 +95,7 @@ void elfDestroyEngine(void* data)
 
 bool elfInitEngine()
 {
-    FILE* file;
+    FILE* file = nullptr;
 
     if (eng)
     {
@@ -135,7 +138,7 @@ void elfDeinitEngine()
         return;
 
     elfDecRef((elfObject*)eng);
-    eng = NULL;
+    eng = nullptr;
 }
 
 bool elfInit(elfConfig* config)
@@ -520,7 +523,7 @@ void elfDisableBloom()
             !elfIsPostProcessDof(eng->postProcess) && !elfIsPostProcessLightShafts(eng->postProcess))
         {
             elfDestroyPostProcess(eng->postProcess);
-            eng->postProcess = NULL;
+            eng->postProcess = nullptr;
         }
     }
 }
@@ -551,7 +554,7 @@ void elfDisableDof()
             !elfIsPostProcessDof(eng->postProcess) && !elfIsPostProcessLightShafts(eng->postProcess))
         {
             elfDestroyPostProcess(eng->postProcess);
-            eng->postProcess = NULL;
+            eng->postProcess = nullptr;
         }
     }
 }
@@ -589,7 +592,7 @@ void elfDisableSsao()
             !elfIsPostProcessDof(eng->postProcess) && !elfIsPostProcessLightShafts(eng->postProcess))
         {
             elfDestroyPostProcess(eng->postProcess);
-            eng->postProcess = NULL;
+            eng->postProcess = nullptr;
         }
     }
 }
@@ -620,7 +623,7 @@ void elfDisableLightShafts()
             !elfIsPostProcessDof(eng->postProcess) && !elfIsPostProcessLightShafts(eng->postProcess))
         {
             elfDestroyPostProcess(eng->postProcess);
-            eng->postProcess = NULL;
+            eng->postProcess = nullptr;
         }
     }
 }

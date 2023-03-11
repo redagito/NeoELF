@@ -141,7 +141,7 @@ void elfDrawSlider(elfSlider* slider, gfxShaderParams* shaderParams)
             gfxSetShaderParams(shaderParams);
             elfDrawTextured2dQuad((float)slider->pos.x, (float)slider->pos.y, (float)slider->width,
                                   (float)slider->height);
-            shaderParams->textureParams[0].texture = NULL;
+            shaderParams->textureParams[0].texture = nullptr;
         }
 
         if (slider->slider)
@@ -161,7 +161,7 @@ void elfDrawSlider(elfSlider* slider, gfxShaderParams* shaderParams)
                 elfDrawTextured2dQuadRegion((float)slider->pos.x, (float)slider->pos.y, (float)slider->width,
                                             (float)slider->height * slider->value, 0.0f, 0.0f, 1.0f, slider->value);
             }
-            shaderParams->textureParams[0].texture = NULL;
+            shaderParams->textureParams[0].texture = nullptr;
         }
     }
 }

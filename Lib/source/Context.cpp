@@ -195,7 +195,7 @@ bool elfInitContext(int width, int height, const char* title, int multisamples, 
     glfwSetCharCallback(ctx->window, charCallback);
 
     // TODO Video mode retrieval should be cleaned up
-    int videoModeCount;
+    int videoModeCount = 0;
     const GLFWvidmode* vidmodes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &videoModeCount);
 
     for (int i = 0; i < videoModeCount; i++)
@@ -234,7 +234,7 @@ void elfDeinitContext()
     glfwTerminate();
 
     elfDecRef((elfObject*)ctx);
-    ctx = NULL;
+    ctx = nullptr;
 }
 
 unsigned char elfResizeContext(int width, int height)

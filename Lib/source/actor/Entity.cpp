@@ -387,8 +387,8 @@ void elfSetEntityModel(elfEntity* entity, elfModel* model)
         gfxDecRef((gfxObject*)entity->normals);
 
     entity->model = model;
-    entity->vertices = NULL;
-    entity->normals = NULL;
+    entity->vertices = nullptr;
+    entity->normals = nullptr;
 
     if (!entity->model)
     {
@@ -424,12 +424,12 @@ void elfClearEntityModel(elfEntity* entity)
 {
     if (entity->model)
         elfDecRef((elfObject*)entity->model);
-    entity->model = NULL;
+    entity->model = nullptr;
 
     if (entity->object)
     {
         elfDecRef((elfObject*)entity->object);
-        entity->object = NULL;
+        entity->object = nullptr;
     }
 
     elfSetEntityScale(entity, 1.0f, 1.0f, 1.0f);

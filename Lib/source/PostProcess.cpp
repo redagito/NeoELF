@@ -508,8 +508,8 @@ static void runPostProcessSSAO(elfPostProcess* postProcess, elfScene* scene, boo
 
     elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
 
-    postProcess->shaderParams.textureParams[0].texture = NULL;
-    postProcess->shaderParams.textureParams[1].texture = NULL;
+    postProcess->shaderParams.textureParams[0].texture = nullptr;
+    postProcess->shaderParams.textureParams[1].texture = nullptr;
 }
 
 static void runPostProcessDOF(elfPostProcess* postProcess, elfScene* scene, bool sourceRt)
@@ -568,9 +568,9 @@ static void runPostProcessDOF(elfPostProcess* postProcess, elfScene* scene, bool
 
     elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
 
-    postProcess->shaderParams.textureParams[0].texture = NULL;
-    postProcess->shaderParams.textureParams[1].texture = NULL;
-    postProcess->shaderParams.textureParams[2].texture = NULL;
+    postProcess->shaderParams.textureParams[0].texture = nullptr;
+    postProcess->shaderParams.textureParams[1].texture = nullptr;
+    postProcess->shaderParams.textureParams[2].texture = nullptr;
 }
 
 static void runPostProcessBloom(elfPostProcess* postProcess, elfScene* scene, bool sourceRt)
@@ -658,10 +658,10 @@ static void runPostProcessBloom(elfPostProcess* postProcess, elfScene* scene, bo
 
     elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
 
-    postProcess->shaderParams.textureParams[0].texture = NULL;
-    postProcess->shaderParams.textureParams[1].texture = NULL;
-    postProcess->shaderParams.textureParams[2].texture = NULL;
-    postProcess->shaderParams.textureParams[3].texture = NULL;
+    postProcess->shaderParams.textureParams[0].texture = nullptr;
+    postProcess->shaderParams.textureParams[1].texture = nullptr;
+    postProcess->shaderParams.textureParams[2].texture = nullptr;
+    postProcess->shaderParams.textureParams[3].texture = nullptr;
 }
 
 static void runPostProcessDefault(elfPostProcess* postProcess, bool sourceRt)
@@ -675,7 +675,7 @@ static void runPostProcessDefault(elfPostProcess* postProcess, bool sourceRt)
 
     elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
 
-    postProcess->shaderParams.textureParams[0].texture = NULL;
+    postProcess->shaderParams.textureParams[0].texture = nullptr;
 }
 
 static void runPostProcessLightShafts(elfPostProcess* postProcess, elfScene* scene)
@@ -704,7 +704,7 @@ static void runPostProcessLightShafts(elfPostProcess* postProcess, elfScene* sce
                 elfEntity* ent;
                 int i;
                 for (i = 0, ent = (elfEntity*)elfBeginList(scene->entityQueue);
-                     i < scene->entityQueueCount && ent != NULL;
+                     i < scene->entityQueueCount && ent != nullptr;
                      i++, ent = (elfEntity*)elfGetListNext(scene->entityQueue))
                 {
                     elfDrawEntity(ent, ELF_DRAW_DEPTH, &scene->shaderParams);
@@ -712,7 +712,7 @@ static void runPostProcessLightShafts(elfPostProcess* postProcess, elfScene* sce
 
                 elfSprite* spr;
                 for (i = 0, spr = (elfSprite*)elfBeginList(scene->spriteQueue);
-                     i < scene->spriteQueueCount && spr != NULL;
+                     i < scene->spriteQueueCount && spr != nullptr;
                      i++, spr = (elfSprite*)elfGetListNext(scene->spriteQueue))
                 {
                     elfDrawSprite(spr, ELF_DRAW_DEPTH, &scene->shaderParams);
@@ -801,7 +801,7 @@ static void runPostProcessLightShafts(elfPostProcess* postProcess, elfScene* sce
 
             elfDrawTextured2dQuad(0.0f, 0.0f, (float)elfGetWindowWidth(), (float)elfGetWindowHeight());
 
-            scene->shaderParams.textureParams[0].texture = NULL;
+            scene->shaderParams.textureParams[0].texture = nullptr;
         }
     }
 }

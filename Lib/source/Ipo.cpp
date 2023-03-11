@@ -122,8 +122,8 @@ elfBezierPoint* elfGetPointFromBezierCurve(elfBezierCurve* curve, int idx)
 float elfGetBezierCurveValue(elfBezierCurve* curve, float x)
 {
     elfBezierPoint* pnt;
-    elfBezierPoint* point1 = NULL;
-    elfBezierPoint* point2 = NULL;
+    elfBezierPoint* point1 = nullptr;
+    elfBezierPoint* point2 = nullptr;
     float t;
 
     for (pnt = (elfBezierPoint*)elfBeginList(curve->points); pnt; pnt = (elfBezierPoint*)elfGetListNext(curve->points))

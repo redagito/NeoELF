@@ -45,6 +45,7 @@ int main(int argc, char** argv)
     {
         // Engine execution
         bool run = true;
+        // TODO Loop should be inside engine
         while (run) run = elfRun();
     }
 

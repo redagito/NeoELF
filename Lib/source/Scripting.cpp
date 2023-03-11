@@ -18,7 +18,7 @@ struct elfScripting
     lua_State* L = nullptr;
 };
 
-static elfScripting* scr = NULL;
+static elfScripting* scr = nullptr;
 
 static void elfDestroyScripting(void* data)
 {

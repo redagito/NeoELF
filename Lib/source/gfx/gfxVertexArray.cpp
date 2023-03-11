@@ -15,7 +15,7 @@
 
 gfxVertexArray* gfxCreateVertexArray(bool gpuData)
 {
-    gfxVertexArray* vertexArray = NULL;
+    gfxVertexArray* vertexArray = nullptr;
 
     vertexArray = (gfxVertexArray*)malloc(sizeof(gfxVertexArray));
     memset(vertexArray, 0x0, sizeof(gfxVertexArray));
@@ -119,7 +119,7 @@ void gfxSetVertexArrayData(gfxVertexArray* vertexArray, int target, gfxVertexDat
         varr->vertexSizeBytes = 0;
         if (varr->data)
             gfxDecRef((gfxObject*)varr->data);
-        varr->data = NULL;
+        varr->data = nullptr;
     }
 }
 

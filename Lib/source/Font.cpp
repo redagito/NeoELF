@@ -125,11 +125,12 @@ elfFont* elfCreateFontFromFile(const char* filePath, int size)
             font->offsetY = -font->chars[i].offsetY;
 
         free(data);
-        data = NULL;
+        data = nullptr;
     }
 
     error = FT_Done_Face(face);
     error = FT_Done_FreeType(library);
+    // TODO Check error
 
     return font;
 }

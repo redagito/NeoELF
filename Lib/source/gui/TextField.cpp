@@ -134,7 +134,7 @@ void elfDrawTextField(elfTextField* textField, elfArea* area, gfxShaderParams* s
             gfxSetShaderParams(shaderParams);
             elfDrawTextured2dQuad((float)textField->pos.x, (float)textField->pos.y, (float)textField->width,
                                   (float)textField->height);
-            shaderParams->textureParams[0].texture = NULL;
+            shaderParams->textureParams[0].texture = nullptr;
         }
     }
 
@@ -150,7 +150,7 @@ void elfDrawTextField(elfTextField* textField, elfArea* area, gfxShaderParams* s
                       textField->pos.y + textField->offsetY - textField->font->offsetY / 2, shaderParams);
         elfDestroyString(str);
 
-        shaderParams->textureParams[0].texture = NULL;
+        shaderParams->textureParams[0].texture = nullptr;
     }
 
     if (textField->text && textField->root && textField->root->activeTextField == textField)

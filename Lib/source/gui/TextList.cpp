@@ -116,7 +116,7 @@ void elfDrawTextList(elfTextList* textList, elfArea* area, gfxShaderParams* shad
 
         if (i == textList->selection)
         {
-            shaderParams->textureParams[0].texture = NULL;
+            shaderParams->textureParams[0].texture = nullptr;
             shaderParams->renderParams.vertexColor = true;
             gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 1.0f, 1.0f, 1.0f);
             gfxSetShaderParams(shaderParams);
@@ -129,7 +129,7 @@ void elfDrawTextList(elfTextList* textList, elfArea* area, gfxShaderParams* shad
         }
         else
         {
-            shaderParams->textureParams[0].texture = NULL;
+            shaderParams->textureParams[0].texture = nullptr;
             shaderParams->renderParams.vertexColor = true;
             gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 1.0f, 1.0f, 1.0f);
             gfxSetShaderParams(shaderParams);
@@ -151,7 +151,7 @@ void elfDrawTextList(elfTextList* textList, elfArea* area, gfxShaderParams* shad
         offset += textList->font->size + textList->font->offsetY;
     }
 
-    shaderParams->textureParams[0].texture = NULL;
+    shaderParams->textureParams[0].texture = nullptr;
 }
 
 void elfRecalcTextList(elfTextList* textList)

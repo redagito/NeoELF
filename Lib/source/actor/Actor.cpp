@@ -468,7 +468,7 @@ void elfSetActorPhysics(elfActor* actor, bool physics)
         elfSetPhysicsObjectActor(actor->object, NULL);
         elfSetPhysicsObjectWorld(actor->object, NULL);
         elfDecRef((elfObject*)actor->object);
-        actor->object = NULL;
+        actor->object = nullptr;
     }
 
     actor->physics = false;

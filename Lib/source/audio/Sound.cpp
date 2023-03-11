@@ -59,17 +59,17 @@ void elfDestroySound(void* data)
 
 bool elfInitSoundWithOgg(elfSound* snd, const char* filePath)
 {
-    vorbis_info* info = NULL;
+    vorbis_info* info = nullptr;
 
     if (snd->streamed && snd->fileType == ELF_OGG)
     {
         ov_clear(&snd->oggFile);
-        snd->file = NULL;
+        snd->file = nullptr;
     }
     if (snd->streamed && snd->fileType == ELF_WAV)
     {
         fclose(snd->file);
-        snd->file = NULL;
+        snd->file = nullptr;
     }
 
     snd->fileType = ELF_NONE;
@@ -122,12 +122,12 @@ bool elfInitSoundWithWav(elfSound* snd, const char* filePath)
     if (snd->streamed && snd->fileType == ELF_OGG)
     {
         ov_clear(&snd->oggFile);
-        snd->file = NULL;
+        snd->file = nullptr;
     }
     if (snd->streamed && snd->fileType == ELF_WAV)
     {
         fclose(snd->file);
-        snd->file = NULL;
+        snd->file = nullptr;
     }
 
     snd->fileType = ELF_NONE;
@@ -315,9 +315,9 @@ elfSound* elfLoadSound(const char* filePath)
 
 elfSound* elfLoadStreamedSound(const char* filePath)
 {
-    elfSound* snd = NULL;
+    elfSound* snd = nullptr;
 
-    char* type = NULL;
+    char* type = nullptr;
 
     if (!audioDevice)
         return NULL;

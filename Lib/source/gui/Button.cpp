@@ -186,7 +186,7 @@ void elfDrawButton(elfButton* button, gfxShaderParams* shaderParams)
                           button->font->offsetY / 2,
                       shaderParams);
 
-        shaderParams->textureParams[0].texture = NULL;
+        shaderParams->textureParams[0].texture = nullptr;
     }
     else
     {
@@ -210,7 +210,7 @@ void elfDrawButton(elfButton* button, gfxShaderParams* shaderParams)
             gfxSetShaderParams(shaderParams);
             elfDrawTextured2dQuad((float)button->pos.x, (float)button->pos.y, (float)button->width,
                                   (float)button->height);
-            shaderParams->textureParams[0].texture = NULL;
+            shaderParams->textureParams[0].texture = nullptr;
         }
         if (button->text)
         {

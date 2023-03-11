@@ -445,6 +445,6 @@ void elfUnloadTextureData(elfTexture* texture)
 {
     if (texture->data)
         free(texture->data);
-    texture->data = NULL;
+    texture->data = nullptr;
     texture->dataSize = 0;
 }

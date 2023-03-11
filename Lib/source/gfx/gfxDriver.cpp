@@ -196,7 +196,7 @@ bool gfxInit()
     }
 
     // Debug context
-    int flags;
+    int flags = 0;
     glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
     {
@@ -211,13 +211,14 @@ bool gfxInit()
 
     if (driver->version < 110)
     {
-        elfLogWrite("OpenGL version 1.1 not supported\n");
+        elfLogWrite("error: OpenGL version 1.1 not supported\n");
         return false;
     }
 
     if (driver->version < 140)
     {
-        elfLogWrite("warning: OpenGL version 1.4 not supported, npot textures will not display correctly\n");
+        elfLogWrite("error: OpenGL version 1.4 not supported, npot textures will not display correctly\n");
+        return false;
     }
 
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &driver->maxTextureSize);
@@ -321,7 +322,7 @@ void gfxCopyFrameBuffer(gfxTexture* texture, int ox, int oy, int x, int y, int w
     // TODO Check if this is used correctly
     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, ox, oy, x, y, width, height);
     glBindTexture(GL_TEXTURE_2D, 0);
-    driver->shaderParams.textureParams[0].texture = NULL;
+    driver->shaderParams.textureParams[0].texture = nullptr;
 }
 
 void gfxResetVerticesDrawn()

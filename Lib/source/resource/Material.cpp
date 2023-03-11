@@ -193,42 +193,42 @@ void elfClearMaterialDiffuseMap(elfMaterial* material)
 {
     if (material->diffuseMap)
         elfDecRef((elfObject*)material->diffuseMap);
-    material->diffuseMap = NULL;
+    material->diffuseMap = nullptr;
 }
 
 void elfClearMaterialNormalMap(elfMaterial* material)
 {
     if (material->normalMap)
         elfDecRef((elfObject*)material->normalMap);
-    material->normalMap = NULL;
+    material->normalMap = nullptr;
 }
 
 void elfClearMaterialHeightMap(elfMaterial* material)
 {
     if (material->heightMap)
         elfDecRef((elfObject*)material->heightMap);
-    material->heightMap = NULL;
+    material->heightMap = nullptr;
 }
 
 void elfClearMaterialSpecularMap(elfMaterial* material)
 {
     if (material->specularMap)
         elfDecRef((elfObject*)material->specularMap);
-    material->specularMap = NULL;
+    material->specularMap = nullptr;
 }
 
 void elfClearMaterialLightMap(elfMaterial* material)
 {
     if (material->lightMap)
         elfDecRef((elfObject*)material->lightMap);
-    material->lightMap = NULL;
+    material->lightMap = nullptr;
 }
 
 void elfClearMaterialCubeMap(elfMaterial* material)
 {
     if (material->cubeMap)
         elfDecRef((elfObject*)material->cubeMap);
-    material->cubeMap = NULL;
+    material->cubeMap = nullptr;
 }
 
 elfTexture* elfGetMaterialDiffuseMap(elfMaterial* material) { return material->diffuseMap; }
@@ -270,7 +270,7 @@ float elfGetMaterialAlphaThreshold(elfMaterial* material) { return material->alp
 void elfSetTextureParamsDefault(gfxTextureParams* params)
 {
     params->type = ELF_COLOR_MAP;
-    params->texture = NULL;
+    params->texture = nullptr;
     params->projectionMode = GFX_PROJECTION_NONE;
     params->parallaxScale = 0.0f;
 }

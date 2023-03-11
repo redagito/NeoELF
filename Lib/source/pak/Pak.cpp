@@ -561,7 +561,7 @@ void elfReadActorHeader(elfActor* actor, FILE* file, elfScene* scene)
     elfSetActorPosition(actor, position[0], position[1], position[2]);
     elfSetActorRotation(actor, rotation[0], rotation[1], rotation[2]);
 
-    script = NULL;
+    script = nullptr;
 
     if (scene && strlen(scriptName) > 0)
     {
@@ -867,7 +867,7 @@ elfEntity* elfCreateEntityFromPak(FILE* file, const char* name, elfScene* scene)
         memset(material, 0x0, sizeof(char) * ELF_NAME_LENGTH);
         fread(material, sizeof(char), ELF_NAME_LENGTH, file);
 
-        rmaterial = NULL;
+        rmaterial = nullptr;
         if (strlen(material))
             rmaterial = elfGetOrLoadMaterialByName(scene, material);
         if (rmaterial)
@@ -975,7 +975,7 @@ elfMaterial* elfCreateMaterialFromPak(FILE* file, const char* name, elfScene* sc
     if (strlen(texture) > 0)
         rtexture = elfGetOrLoadTextureByName(scene, texture);
     else
-        rtexture = NULL;
+        rtexture = nullptr;
     if (rtexture)
         elfSetMaterialDiffuseMap(material, rtexture);
 
@@ -983,7 +983,7 @@ elfMaterial* elfCreateMaterialFromPak(FILE* file, const char* name, elfScene* sc
     if (strlen(texture) > 0)
         rtexture = elfGetOrLoadTextureByName(scene, texture);
     else
-        rtexture = NULL;
+        rtexture = nullptr;
     if (rtexture)
         elfSetMaterialNormalMap(material, rtexture);
 
@@ -991,7 +991,7 @@ elfMaterial* elfCreateMaterialFromPak(FILE* file, const char* name, elfScene* sc
     if (strlen(texture) > 0)
         rtexture = elfGetOrLoadTextureByName(scene, texture);
     else
-        rtexture = NULL;
+        rtexture = nullptr;
     if (rtexture)
         elfSetMaterialHeightMap(material, rtexture);
 
@@ -999,7 +999,7 @@ elfMaterial* elfCreateMaterialFromPak(FILE* file, const char* name, elfScene* sc
     if (strlen(texture) > 0)
         rtexture = elfGetOrLoadTextureByName(scene, texture);
     else
-        rtexture = NULL;
+        rtexture = nullptr;
     if (rtexture)
         elfSetMaterialSpecularMap(material, rtexture);
 
@@ -1007,7 +1007,7 @@ elfMaterial* elfCreateMaterialFromPak(FILE* file, const char* name, elfScene* sc
     if (strlen(texture) > 0)
         rtexture = elfGetOrLoadTextureByName(scene, texture);
     else
-        rtexture = NULL;
+        rtexture = nullptr;
     if (rtexture)
         elfSetMaterialLightMap(material, rtexture);
 

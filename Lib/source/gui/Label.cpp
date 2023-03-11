@@ -69,7 +69,7 @@ void elfDrawLabel(elfLabel* label, gfxShaderParams* shaderParams)
     gfxSetColor(&shaderParams->materialParams.diffuseColor, label->color.r, label->color.g, label->color.b,
                 label->color.a);
     elfDrawString(label->font, label->text, label->pos.x, label->pos.y, shaderParams);
-    shaderParams->textureParams[0].texture = NULL;
+    shaderParams->textureParams[0].texture = nullptr;
 }
 
 void elfRecalcLabel(elfLabel* label)

@@ -117,7 +117,7 @@ void gfxSetRenderTargetColorTexture(gfxRenderTarget* renderTarget, unsigned int 
     else if (driver->renderTarget != renderTarget)
     {
         rt = driver->renderTarget;
-        driver->renderTarget = NULL;
+        driver->renderTarget = nullptr;
         gfxSetRenderTarget(rt);
     }
 }
@@ -147,7 +147,7 @@ void gfxSetRenderTargetDepthTexture(gfxRenderTarget* renderTarget, gfxTexture* d
     else if (driver->renderTarget != renderTarget)
     {
         gfxRenderTarget* rt = driver->renderTarget;
-        driver->renderTarget = NULL;
+        driver->renderTarget = nullptr;
         gfxSetRenderTarget(rt);
     }
 }
@@ -210,7 +210,7 @@ void gfxDisableRenderTarget()
     glDrawBuffer(GL_BACK);
     glReadBuffer(GL_BACK);
 
-    driver->renderTarget = NULL;
+    driver->renderTarget = nullptr;
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

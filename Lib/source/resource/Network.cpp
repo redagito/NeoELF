@@ -233,7 +233,7 @@ static apr_status_t setup_request(serf_request_t *request, void *setup_baton, se
     }
     else
     {
-        body_bkt = NULL;
+        body_bkt = nullptr;
     }
 
     *req_bkt =
@@ -274,12 +274,12 @@ static void *APR_THREAD_FUNC making_the_request(apr_thread_t *thd, void *data)
     app_baton_t app_ctx;
     handler_baton_t handler_ctx;
     apr_uri_t url;
-    const char *proxy = NULL;
-    const char *raw_url, *method, *req_body_path = NULL;
+    const char *proxy = nullptr;
+    const char *raw_url, *method, *req_body_path = nullptr;
     int count;
     int i;
     int print_headers;
-    char *authn = NULL;
+    char *authn = nullptr;
     FILE *file;
 
     /* Default to one round of fetching. */
@@ -322,7 +322,7 @@ static void *APR_THREAD_FUNC making_the_request(apr_thread_t *thd, void *data)
 
     if (proxy)
     {
-        apr_sockaddr_t *proxy_address = NULL;
+        apr_sockaddr_t *proxy_address = nullptr;
         apr_port_t proxy_port;
         char *proxy_host;
         char *proxy_scope;
@@ -359,7 +359,7 @@ static void *APR_THREAD_FUNC making_the_request(apr_thread_t *thd, void *data)
 
     /* ### Connection or Context should have an allocator? */
     app_ctx.bkt_alloc = serf_bucket_allocator_create(pool, NULL, NULL);
-    app_ctx.ssl_ctx = NULL;
+    app_ctx.ssl_ctx = nullptr;
 
     status =
         serf_connection_create2(&connection, context, url, conn_setup, &app_ctx, closed_connection, &app_ctx, pool);
@@ -428,8 +428,8 @@ elfRequest *elfCreateRequest(const char *name)
     if (name)
         request->name = elfCreateString(name);
 
-    request->url = NULL;
-    request->method = NULL;
+    request->url = nullptr;
+    request->method = nullptr;
 
     elfIncObj(ELF_REQUEST);
 

@@ -28,7 +28,7 @@
 
 #define GFX_MAX_CIRCLE_VERTICES 255
 
-elfRenderStation* rnd = nullptr;
+elfRenderStation* renderStation = nullptr;
 
 elfRenderStation* elfCreateRenderStation()
 {
@@ -319,25 +319,25 @@ void elfDestroyRenderStation(void* data)
 
 bool elfInitRenderStation()
 {
-    if (rnd)
+    if (renderStation)
     {
         elfSetError(ELF_CANT_INITIALIZE, "error: can't initialize the render station twice!\n");
         return false;
     }
 
-    rnd = elfCreateRenderStation();
-    elfIncRef((elfObject*)rnd);
+    renderStation = elfCreateRenderStation();
+    elfIncRef((elfObject*)renderStation);
 
     return true;
 }
 
 void elfDeinitRenderStation()
 {
-    if (!rnd)
+    if (!renderStation)
         return;
 
-    elfDecRef((elfObject*)rnd);
-    rnd = NULL;
+    elfDecRef((elfObject*)renderStation);
+    renderStation = nullptr;
 }
 
 void elfDraw2dQuad(float x, float y, float width, float height)
