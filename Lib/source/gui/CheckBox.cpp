@@ -100,7 +100,7 @@ void elfDrawCheckBox(elfCheckBox* checkBox, gfxShaderParams* shaderParams)
             gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 1.0f, 1.0f, 0.6f);
             gfxSetShaderParams(shaderParams);
 
-            vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->lines);
+            vertexBuffer = (float*)gfxGetVertexDataBuffer(renderStation->lines);
 
             vertexBuffer[0] = checkBox->pos.x + 4;
             vertexBuffer[1] = checkBox->pos.y + 2;
@@ -116,7 +116,7 @@ void elfDrawCheckBox(elfCheckBox* checkBox, gfxShaderParams* shaderParams)
             vertexBuffer[10] = checkBox->pos.y + 9;
             vertexBuffer[11] = 0.0;
 
-            elfDrawLines(4, rnd->lines);
+            elfDrawLines(4, renderStation->lines);
 
             shaderParams->renderParams.lineWidth = 1.0;
         }

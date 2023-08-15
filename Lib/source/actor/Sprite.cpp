@@ -235,9 +235,9 @@ void elfDrawSprite(elfSprite* sprite, int mode, gfxShaderParams* shaderParams)
     gfxMulMatrix3Matrix4(gfxGetTransformNormalMatrix(sprite->transform), shaderParams->cameraMatrix,
                          shaderParams->normalMatrix);
 
-    vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->quadVertexData);
-    texCoordBuffer = (float*)gfxGetVertexDataBuffer(rnd->quadTexCoordData);
-    normalBuffer = (float*)gfxGetVertexDataBuffer(rnd->quadNormalData);
+    vertexBuffer = (float*)gfxGetVertexDataBuffer(renderStation->quadVertexData);
+    texCoordBuffer = (float*)gfxGetVertexDataBuffer(renderStation->quadTexCoordData);
+    normalBuffer = (float*)gfxGetVertexDataBuffer(renderStation->quadNormalData);
 
     sizex = sprite->size.x / 2.0f;
     sizey = sprite->size.y / 2.0f;
@@ -277,14 +277,14 @@ void elfDrawSprite(elfSprite* sprite, int mode, gfxShaderParams* shaderParams)
     normalBuffer[10] = 0.0f;
     normalBuffer[11] = 1.0f;
 
-    gfxUpdateVertexData(rnd->quadVertexData);
-    gfxUpdateVertexData(rnd->quadTexCoordData);
-    gfxUpdateVertexData(rnd->quadNormalData);
+    gfxUpdateVertexData(renderStation->quadVertexData);
+    gfxUpdateVertexData(renderStation->quadTexCoordData);
+    gfxUpdateVertexData(renderStation->quadNormalData);
 
     elfSetMaterial(sprite->material, mode, shaderParams);
     gfxSetShaderParams(shaderParams);
 
-    gfxDrawVertexArray(rnd->quadVertexArray, 4, GFX_TRIANGLE_STRIP);
+    gfxDrawVertexArray(renderStation->quadVertexArray, 4, GFX_TRIANGLE_STRIP);
 }
 
 void elfDrawSpriteDebug(elfSprite* sprite, gfxShaderParams* shaderParams)
@@ -298,7 +298,7 @@ void elfDrawSpriteDebug(elfSprite* sprite, gfxShaderParams* shaderParams)
     sizex = sprite->size.x / 2.0f;
     sizey = sprite->size.y / 2.0f;
 
-    vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->lines);
+    vertexBuffer = (float*)gfxGetVertexDataBuffer(renderStation->lines);
 
     vertexBuffer[0] = -sizex;
     vertexBuffer[1] = sizey;
@@ -325,7 +325,7 @@ void elfDrawSpriteDebug(elfSprite* sprite, gfxShaderParams* shaderParams)
     else
         gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 0.0f, 0.0f, 1.0f);
     gfxSetShaderParams(shaderParams);
-    elfDrawLineLoop(5, rnd->lines);
+    elfDrawLineLoop(5, renderStation->lines);
 
     elfDrawActorDebug((elfActor*)sprite, shaderParams);
 }

@@ -328,7 +328,7 @@ void elfDrawCameraDebug(elfCamera* camera, gfxShaderParams* shaderParams)
         gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 0.0f, 0.0f, 1.0f);
     gfxSetShaderParams(shaderParams);
 
-    vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->lines);
+    vertexBuffer = (float*)gfxGetVertexDataBuffer(renderStation->lines);
 
     step = (360.0f / 32.0) * GFX_PI_DIV_180;
 
@@ -339,7 +339,7 @@ void elfDrawCameraDebug(elfCamera* camera, gfxShaderParams* shaderParams)
         vertexBuffer[i * 3 + 2] = 0.0f;
     }
 
-    elfDrawLineLoop(32, rnd->lines);
+    elfDrawLineLoop(32, renderStation->lines);
 
     for (i = 0; i < 32; i++)
     {
@@ -348,7 +348,7 @@ void elfDrawCameraDebug(elfCamera* camera, gfxShaderParams* shaderParams)
         vertexBuffer[i * 3 + 2] = ((float)cos(step * i)) * 0.5f;
     }
 
-    elfDrawLineLoop(32, rnd->lines);
+    elfDrawLineLoop(32, renderStation->lines);
 
     vertexBuffer[0] = -1.5f;
     vertexBuffer[1] = 0.0f;
@@ -369,7 +369,7 @@ void elfDrawCameraDebug(elfCamera* camera, gfxShaderParams* shaderParams)
     vertexBuffer[16] = 0.0f;
     vertexBuffer[17] = -3.0f;
 
-    elfDrawLines(6, rnd->lines);
+    elfDrawLines(6, renderStation->lines);
 
     elfDrawActorDebug((elfActor*)camera, shaderParams);
 }

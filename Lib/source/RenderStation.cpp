@@ -344,7 +344,7 @@ void elfDraw2dQuad(float x, float y, float width, float height)
 {
     float* vertexBuffer;
 
-    vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->quadVertexData);
+    vertexBuffer = (float*)gfxGetVertexDataBuffer(renderStation->quadVertexData);
 
     vertexBuffer[0] = x;
     vertexBuffer[1] = y + height;
@@ -359,8 +359,8 @@ void elfDraw2dQuad(float x, float y, float width, float height)
     vertexBuffer[10] = y;
     vertexBuffer[11] = 0.0f;
 
-    gfxUpdateVertexData(rnd->quadVertexData);
-    gfxDrawVertexArray(rnd->quadVertexArray, 4, GFX_TRIANGLE_STRIP);
+    gfxUpdateVertexData(renderStation->quadVertexData);
+    gfxDrawVertexArray(renderStation->quadVertexArray, 4, GFX_TRIANGLE_STRIP);
 }
 
 void elfDrawTextured2dQuad(float x, float y, float width, float height)
@@ -368,8 +368,8 @@ void elfDrawTextured2dQuad(float x, float y, float width, float height)
     float* vertexBuffer;
     float* texCoordBuffer;
 
-    vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->quadVertexData);
-    texCoordBuffer = (float*)gfxGetVertexDataBuffer(rnd->quadTexCoordData);
+    vertexBuffer = (float*)gfxGetVertexDataBuffer(renderStation->quadVertexData);
+    texCoordBuffer = (float*)gfxGetVertexDataBuffer(renderStation->quadTexCoordData);
 
     vertexBuffer[0] = x;
     vertexBuffer[1] = y + height;
@@ -393,9 +393,9 @@ void elfDrawTextured2dQuad(float x, float y, float width, float height)
     texCoordBuffer[6] = 1.0f;
     texCoordBuffer[7] = 0.0f;
 
-    gfxUpdateVertexData(rnd->quadVertexData);
-    gfxUpdateVertexData(rnd->quadTexCoordData);
-    gfxDrawVertexArray(rnd->quadVertexArray, 4, GFX_TRIANGLE_STRIP);
+    gfxUpdateVertexData(renderStation->quadVertexData);
+    gfxUpdateVertexData(renderStation->quadTexCoordData);
+    gfxDrawVertexArray(renderStation->quadVertexArray, 4, GFX_TRIANGLE_STRIP);
 }
 
 void elfDrawTextured2dQuadRegion(float x, float y, float width, float height, float tx, float ty, float twidth,
@@ -404,8 +404,8 @@ void elfDrawTextured2dQuadRegion(float x, float y, float width, float height, fl
     float* vertexBuffer;
     float* texCoordBuffer;
 
-    vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->quadVertexData);
-    texCoordBuffer = (float*)gfxGetVertexDataBuffer(rnd->quadTexCoordData);
+    vertexBuffer = (float*)gfxGetVertexDataBuffer(renderStation->quadVertexData);
+    texCoordBuffer = (float*)gfxGetVertexDataBuffer(renderStation->quadTexCoordData);
 
     vertexBuffer[0] = x;
     vertexBuffer[1] = y + height;
@@ -429,9 +429,9 @@ void elfDrawTextured2dQuadRegion(float x, float y, float width, float height, fl
     texCoordBuffer[6] = tx + twidth;
     texCoordBuffer[7] = ty;
 
-    gfxUpdateVertexData(rnd->quadVertexData);
-    gfxUpdateVertexData(rnd->quadTexCoordData);
-    gfxDrawVertexArray(rnd->quadVertexArray, 4, GFX_TRIANGLE_STRIP);
+    gfxUpdateVertexData(renderStation->quadVertexData);
+    gfxUpdateVertexData(renderStation->quadTexCoordData);
+    gfxDrawVertexArray(renderStation->quadVertexArray, 4, GFX_TRIANGLE_STRIP);
 }
 
 void elfDrawCircle(float x, float y, int vertices, float size)
@@ -445,11 +445,11 @@ void elfDrawCircle(float x, float y, int vertices, float size)
     if (vertices > GFX_MAX_CIRCLE_VERTICES)
         vertices = GFX_MAX_CIRCLE_VERTICES;
 
-    if (vertices != rnd->prevCircleVerticeCount || !elfAboutSame(size, rnd->prevCircleSize))
+    if (vertices != renderStation->prevCircleVerticeCount || !elfAboutSame(size, renderStation->prevCircleSize))
     {
         step = (360.0f / ((float)vertices)) * GFX_PI_DIV_180;
 
-        vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->circleVertexData);
+        vertexBuffer = (float*)gfxGetVertexDataBuffer(renderStation->circleVertexData);
 
         vertexBuffer[0] = x;
         vertexBuffer[1] = y;
@@ -463,15 +463,15 @@ void elfDrawCircle(float x, float y, int vertices, float size)
         }
     }
 
-    gfxUpdateVertexData(rnd->circleVertexData);
-    gfxDrawVertexArray(rnd->circleVertexArray, vertices + 2, GFX_TRIANGLE_FAN);
+    gfxUpdateVertexData(renderStation->circleVertexData);
+    gfxDrawVertexArray(renderStation->circleVertexArray, vertices + 2, GFX_TRIANGLE_FAN);
 
-    rnd->prevCircleVerticeCount = vertices;
+    renderStation->prevCircleVerticeCount = vertices;
 }
 
 void elfDrawBoundingBox(float min[3], float max[3])
 {
-    float* vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->bbVertexData);
+    float* vertexBuffer = (float*)gfxGetVertexDataBuffer(renderStation->bbVertexData);
 
     vertexBuffer[0] = min[0];
     vertexBuffer[1] = max[1];
@@ -498,9 +498,9 @@ void elfDrawBoundingBox(float min[3], float max[3])
     vertexBuffer[22] = max[1];
     vertexBuffer[23] = min[2];
 
-    gfxUpdateVertexData(rnd->bbVertexData);
-    gfxSetVertexArray(rnd->bbVertexArray);
-    gfxDrawVertexIndex(rnd->bbVertexIndex, GFX_TRIANGLES);
+    gfxUpdateVertexData(renderStation->bbVertexData);
+    gfxSetVertexArray(renderStation->bbVertexArray);
+    gfxDrawVertexIndex(renderStation->bbVertexIndex, GFX_TRIANGLES);
 }
 
 void elfDrawLines(int count, gfxVertexData* vertices)
@@ -510,8 +510,8 @@ void elfDrawLines(int count, gfxVertexData* vertices)
     if (count > gfxGetVertexDataCount(vertices) / 3)
         count -= count - (gfxGetVertexDataCount(vertices) / 3);
 
-    gfxSetVertexArrayData(rnd->linesVertexArray, GFX_VERTEX, vertices);
-    gfxDrawVertexArray(rnd->linesVertexArray, count, GFX_LINES);
+    gfxSetVertexArrayData(renderStation->linesVertexArray, GFX_VERTEX, vertices);
+    gfxDrawVertexArray(renderStation->linesVertexArray, count, GFX_LINES);
 }
 
 void elfDrawLineLoop(int count, gfxVertexData* vertices)
@@ -521,8 +521,8 @@ void elfDrawLineLoop(int count, gfxVertexData* vertices)
     if (count > gfxGetVertexDataCount(vertices) / 3)
         count -= count - (gfxGetVertexDataCount(vertices) / 3);
 
-    gfxSetVertexArrayData(rnd->linesVertexArray, GFX_VERTEX, vertices);
-    gfxDrawVertexArray(rnd->linesVertexArray, count, GFX_LINE_LOOP);
+    gfxSetVertexArrayData(renderStation->linesVertexArray, GFX_VERTEX, vertices);
+    gfxDrawVertexArray(renderStation->linesVertexArray, count, GFX_LINE_LOOP);
 }
 
 void elfDrawHorGradient(int x, int y, int width, int height, elfColor col1, elfColor col2)
@@ -530,7 +530,7 @@ void elfDrawHorGradient(int x, int y, int width, int height, elfColor col1, elfC
     int* vertexBuffer;
     float* colorBuffer;
 
-    vertexBuffer = (int*)gfxGetVertexDataBuffer(rnd->gradientVertexData);
+    vertexBuffer = (int*)gfxGetVertexDataBuffer(renderStation->gradientVertexData);
 
     vertexBuffer[0] = x;
     vertexBuffer[1] = y + height;
@@ -545,7 +545,7 @@ void elfDrawHorGradient(int x, int y, int width, int height, elfColor col1, elfC
     vertexBuffer[10] = y;
     vertexBuffer[11] = 0;
 
-    colorBuffer = (float*)gfxGetVertexDataBuffer(rnd->gradientColorData);
+    colorBuffer = (float*)gfxGetVertexDataBuffer(renderStation->gradientColorData);
 
     colorBuffer[0] = col1.r;
     colorBuffer[1] = col1.g;
@@ -564,7 +564,7 @@ void elfDrawHorGradient(int x, int y, int width, int height, elfColor col1, elfC
     colorBuffer[14] = col2.b;
     colorBuffer[15] = col2.a;
 
-    gfxDrawVertexArray(rnd->gradientVertexArray, 4, GFX_TRIANGLE_STRIP);
+    gfxDrawVertexArray(renderStation->gradientVertexArray, 4, GFX_TRIANGLE_STRIP);
 }
 
 void elfDrawHorGradientBorder(int x, int y, int width, int height, elfColor col1, elfColor col2)
@@ -572,7 +572,7 @@ void elfDrawHorGradientBorder(int x, int y, int width, int height, elfColor col1
     int* vertexBuffer;
     float* colorBuffer;
 
-    vertexBuffer = (int*)gfxGetVertexDataBuffer(rnd->gradientVertexData);
+    vertexBuffer = (int*)gfxGetVertexDataBuffer(renderStation->gradientVertexData);
 
     vertexBuffer[0] = x;
     vertexBuffer[1] = y + height;
@@ -587,7 +587,7 @@ void elfDrawHorGradientBorder(int x, int y, int width, int height, elfColor col1
     vertexBuffer[10] = y + height;
     vertexBuffer[11] = 0;
 
-    colorBuffer = (float*)gfxGetVertexDataBuffer(rnd->gradientColorData);
+    colorBuffer = (float*)gfxGetVertexDataBuffer(renderStation->gradientColorData);
 
     colorBuffer[0] = col1.r;
     colorBuffer[1] = col1.g;
@@ -606,5 +606,5 @@ void elfDrawHorGradientBorder(int x, int y, int width, int height, elfColor col1
     colorBuffer[14] = col1.b;
     colorBuffer[15] = col1.a;
 
-    gfxDrawVertexArray(rnd->gradientVertexArray, 4, GFX_LINE_LOOP);
+    gfxDrawVertexArray(renderStation->gradientVertexArray, 4, GFX_LINE_LOOP);
 }

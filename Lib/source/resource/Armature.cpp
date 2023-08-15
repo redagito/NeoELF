@@ -371,7 +371,7 @@ void elfDrawBoneHierarchy(elfBone* bone, gfxShaderParams* shaderParams)
     pos = bone->curPos;
     orient = bone->curQua;
 
-    vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->lines);
+    vertexBuffer = (float*)gfxGetVertexDataBuffer(renderStation->lines);
 
     vertexBuffer[0] = pos.x;
     vertexBuffer[1] = pos.y;
@@ -388,7 +388,7 @@ void elfDrawBoneHierarchy(elfBone* bone, gfxShaderParams* shaderParams)
     gfxSetColor(&shaderParams->materialParams.diffuseColor, 0.0f, 0.0f, 1.0f, 1.0f);
     gfxSetShaderParams(shaderParams);
 
-    elfDrawLines(2, rnd->lines);
+    elfDrawLines(2, renderStation->lines);
 
     axis.x = 0.0f;
     axis.y = 0.2f;
@@ -401,7 +401,7 @@ void elfDrawBoneHierarchy(elfBone* bone, gfxShaderParams* shaderParams)
     gfxSetColor(&shaderParams->materialParams.diffuseColor, 0.0f, 1.0f, 0.0f, 1.0f);
     gfxSetShaderParams(shaderParams);
 
-    elfDrawLines(2, rnd->lines);
+    elfDrawLines(2, renderStation->lines);
 
     axis.x = 0.0f;
     axis.y = 0.0f;
@@ -414,7 +414,7 @@ void elfDrawBoneHierarchy(elfBone* bone, gfxShaderParams* shaderParams)
     gfxSetColor(&shaderParams->materialParams.diffuseColor, 1.0f, 0.0f, 0.0f, 1.0f);
     gfxSetShaderParams(shaderParams);
 
-    elfDrawLines(2, rnd->lines);
+    elfDrawLines(2, renderStation->lines);
 
     for (cbone = (elfBone*)elfBeginList(bone->children); cbone; cbone = (elfBone*)elfGetListNext(bone->children))
     {
@@ -425,7 +425,7 @@ void elfDrawBoneHierarchy(elfBone* bone, gfxShaderParams* shaderParams)
         vertexBuffer[4] = cbone->curPos.y;
         vertexBuffer[5] = cbone->curPos.z;
 
-        elfDrawLines(2, rnd->lines);
+        elfDrawLines(2, renderStation->lines);
 
         elfDrawBoneHierarchy(cbone, shaderParams);
     }

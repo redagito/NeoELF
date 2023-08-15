@@ -2002,7 +2002,7 @@ static void drawLighting(elfScene* scene, gfxRenderTarget* renderTarget)
             elfSetCamera(light->shadowCamera, &scene->shaderParams);
             gfxSetShaderParams(&scene->shaderParams);
 
-            gfxSetRenderTarget(rnd->shadowTarget);
+            gfxSetRenderTarget(renderStation->shadowTarget);
             gfxClearDepthBuffer(1.0f);
 
             elfEntity* ent = nullptr;
@@ -2055,7 +2055,7 @@ static void drawLighting(elfScene* scene, gfxRenderTarget* renderTarget)
         if (light->lightType == ELF_SPOT_LIGHT && light->shadows)
         {
             scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].type = GFX_SHADOW_MAP;
-            scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].texture = rnd->shadowMap;
+            scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].texture = renderStation->shadowMap;
             scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].projectionMode = GFX_SHADOW_PROJECTION;
             memcpy(scene->shaderParams.textureParams[GFX_MAX_TEXTURES - 1].matrix, light->projectionMatrix,
                    sizeof(float) * 16);

@@ -1,7 +1,5 @@
 #include "nelf/Image.h"
 
-#include <SOIL2/SOIL2.h>
-
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
@@ -11,6 +9,11 @@
 #include "nelf/Log.h"
 #include "nelf/errorCode.h"
 #include "nelf/objectType.h"
+
+#include <stb_image.h>
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
 
 elfImage* elfCreateImage()
 {
@@ -55,7 +58,8 @@ elfImage* elfCreateImageFromFile(const char* filePath)
     int width = 0;
     int height = 0;
     int channels = 0;
-    unsigned char* data = SOIL_load_image(filePath, &width, &height, &channels, SOIL_LOAD_AUTO);
+    stbi_set_flip_vertically_on_load(true);
+    uint8_t* data = stbi_load(filePath, &width, &height, &channels, 3);
     if (data == nullptr)
     {
         elfSetError(ELF_UNKNOWN_FORMAT, "error: can't load image \"%s\"", filePath);
@@ -71,7 +75,7 @@ elfImage* elfCreateImageFromFile(const char* filePath)
     if (image->width == 0 || image->height == 0)
     {
         elfSetError(ELF_INVALID_SIZE, "error: \"%s\" has invalid size\n", filePath);
-        SOIL_free_image_data(data);
+        stbi_image_free(data);
         elfDestroyImage(image);
         return 0;
     }
@@ -80,7 +84,7 @@ elfImage* elfCreateImageFromFile(const char* filePath)
     int sizeBytes = image->width * image->height * (image->bpp / 8);
     image->data = (unsigned char*)malloc(sizeBytes);
     memcpy(image->data, data, sizeBytes);
-    SOIL_free_image_data(data);
+    stbi_image_free(data);
 
     return image;
 }
@@ -151,30 +155,25 @@ bool elfSaveImageData(const char* filePath, int width, int height, unsigned char
     if (width < 1 || height < 1 || bpp % 8 != 0 || bpp > 32 || data == nullptr)
         return false;
 
-    // Default
-    int imageType = SOIL_SAVE_TYPE_JPG;
-
-    // Supported types
-    // TODO PCX no longer supported
+    // Supported types to write
+    int result = 0;
     const char* type = strrchr(filePath, '.');
     if (strcmp(type, ".bmp") == 0)
-        imageType = SOIL_SAVE_TYPE_BMP;
+        result = stbi_write_bmp(filePath, width, height, bpp / 8, data);
     else if (strcmp(type, ".tga") == 0)
-        imageType = SOIL_SAVE_TYPE_TGA;
+        result = stbi_write_tga(filePath, width, height, bpp / 8, data);
     else if (strcmp(type, ".jpg") == 0)
-        imageType = SOIL_SAVE_TYPE_JPG;
+        result = stbi_write_jpg(filePath, width, height, bpp / 8, data, 85);
     else if (strcmp(type, ".png") == 0)
-        imageType = SOIL_SAVE_TYPE_PNG;
-    else if (strcmp(type, ".dds") == 0)
-        imageType = SOIL_SAVE_TYPE_DDS;
+        result = stbi_write_png(filePath, width, height, bpp / 8, data, width * (bpp % 8));
     else
     {
         elfSetError(ELF_UNKNOWN_FORMAT, "error: can't save image \"%s\", unknown format\n", filePath);
         return false;
     }
 
-    // Save to disk
-    if (SOIL_save_image(filePath, imageType, width, height, bpp / 8, (const unsigned char*)data) == 0)
+    // Check result
+    if (result != 1)
     {
         elfSetError(ELF_CANT_OPEN_FILE, "error: can't save image \"%s\"\n", filePath);
         return false;

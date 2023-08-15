@@ -1,6 +1,6 @@
 #include "nelf/pak/Pak.h"
 
-#include <SOIL2/SOIL2.h>
+#include <stb_image.h>
 
 #include <cstdio>
 #include <cstdlib>
@@ -1386,22 +1386,21 @@ elfSprite* elfCreateSpriteFromPak(FILE* file, const char* name, elfScene* scene)
 
 elfTexture* elfCreateTextureFromPak(FILE* file, const char* name, elfScene* scene)
 {
-    elfTexture* texture;
-    unsigned char* mem;
-    int magic;
+    elfTexture* texture = nullptr;
+    unsigned char* mem = nullptr;
+    int magic = 0;
     char rname[ELF_NAME_LENGTH];
-    unsigned char type;
-    int width;
-    int height;
-    unsigned char bpp;
-    unsigned int length;
-    int format;
-    int internalFormat;
-    int dataFormat;
+    unsigned char type = 0;
+    int width = 0;
+    int height = 0;
+    unsigned char bpp = 0;
+    unsigned int length = 0;
+    int format = 0;
+    int internalFormat = 0;
+    int dataFormat = 0;
     unsigned char* data = nullptr;
 
     fread((char*)&magic, sizeof(int), 1, file);
-
     if (magic != ELF_TEXTURE_MAGIC)
     {
         elfSetError(ELF_INVALID_FILE, "error: invalid texture \"%s//%s\", wrong magic number\n",
@@ -1417,11 +1416,15 @@ elfTexture* elfCreateTextureFromPak(FILE* file, const char* name, elfScene* scen
         fread((char*)&length, sizeof(int), 1, file);
 
         mem = (unsigned char*)malloc(length);
+        if (mem == nullptr)
+        {
+            elfSetError(ELF_CANT_CREATE, "error: failed to allocate memory");
+            return nullptr;
+        }
         fread(mem, sizeof(unsigned char), length, file);
 
         int channels = 0;
-        data = SOIL_load_image_from_memory(mem, length, &width, &height, &channels, SOIL_LOAD_AUTO);
-
+        data = stbi_load_from_memory(mem, length, &width, &height, &channels, STBI_default);
         bpp = channels * 8;
 
         free(mem);
@@ -1463,7 +1466,7 @@ elfTexture* elfCreateTextureFromPak(FILE* file, const char* name, elfScene* scen
     default:
         elfSetError(ELF_INVALID_FILE, "error: unsupported bits per pixel value [%d] in texture \"%s//%s\"\n", (int)bpp,
                     elfGetSceneFilePath(scene), rname);
-        free(data);
+        stbi_image_free(data);
         return NULL;
     }
 
@@ -1474,7 +1477,7 @@ elfTexture* elfCreateTextureFromPak(FILE* file, const char* name, elfScene* scen
     texture->texture = gfxCreate2dTexture(width, height, eng->config->textureAnisotropy, GFX_REPEAT, GFX_LINEAR, format,
                                           internalFormat, dataFormat, data);
 
-    free(data);
+    stbi_image_free(data);
 
     if (!texture->texture)
     {

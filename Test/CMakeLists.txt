@@ -1,35 +1,27 @@
-set (TEST_NAME ${PROJECT_NAME}Test)
+project(NeoElfTest)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS 
 	${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/source/*.cxx
 	${CMAKE_CURRENT_SOURCE_DIR}/source/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/source/*.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/source/*.hxx
 )
+
 # Source group to preserve folder structure in ide
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES})
 
-add_executable (${TEST_NAME} ${SOURCE_FILES})
-add_test (${TEST_NAME} ${TEST_NAME})
+add_executable (${PROJECT_NAME} ${SOURCE_FILES})
+add_test (${PROJECT_NAME} ${PROJECT_NAME})
 
-set_target_properties (${TEST_NAME} PROPERTIES 
+set_target_properties (${PROJECT_NAME} PROPERTIES 
 	CXX_STANDARD 17
 )
 
-conan_cmake_run(REQUIRES 
-	catch2/2.12.1
-
-	BASIC_SETUP CMAKE_TARGETS
-	BUILD missing
+target_link_libraries(${PROJECT_NAME}
+	PRIVATE NeoElfLib
+	PRIVATE Catch2::Catch2WithMain
 )
 
-target_link_libraries(${TEST_NAME}
-	PRIVATE ${PROJECT_NAME}Lib
-	PRIVATE CONAN_PKG::catch2
-)
-
-target_include_directories(${TEST_NAME} 
+target_include_directories(${PROJECT_NAME} 
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source
 )
 

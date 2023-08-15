@@ -62,3 +62,6 @@ x64/
 # Misc
 BlendELF-capi/
 App/nelf.log
+
+build/
+CMakeUserPresets.json

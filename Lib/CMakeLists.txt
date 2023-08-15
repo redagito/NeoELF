@@ -1,77 +1,41 @@
-find_package (OpenGL REQUIRED)
-
-set (LIB_NAME ${PROJECT_NAME}Lib)
+project(NeoElfLib)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS 
 	${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/source/*.cxx
 	${CMAKE_CURRENT_SOURCE_DIR}/source/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/source/*.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/source/*.hxx
 	${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/include/*.hxx
 )
 # Source group to preserve folder structure in ide
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES})
 
-add_library (${LIB_NAME} ${SOURCE_FILES})
+add_library (${PROJECT_NAME} ${SOURCE_FILES})
 
-set_target_properties (${LIB_NAME} PROPERTIES 
+set_target_properties (${PROJECT_NAME} PROPERTIES 
+	CXX_STANDARD_REQUIRED YES
 	CXX_STANDARD 17
 )
 
-conan_cmake_run(REQUIRES 
-	glm/0.9.9.8
-	glfw/3.3.2@bincrafters/stable 
-	glad/0.1.33
-	
-	openal/1.19.1
-	vorbis/1.3.6
-	
-	lua/5.3.5
-	sol2/2.20.6
-	bullet3/2.89
-	freetype/2.10.1
-	assimp/5.0.1
-	nlohmann_json/3.7.0
-	soil2/1.20@bincrafters/stable 
-	
-	OPTIONS glad:gl_profile=core
-	OPTIONS glad:gl_version=4.6
-	OPTIONS glad:spec=gl
-	OPTIONS glad:no_loader=False
-	
-	BASIC_SETUP CMAKE_TARGETS
-	BUILD missing
-)
-
-target_link_libraries(${LIB_NAME}
-	PUBLIC CONAN_PKG::glm
-	
-	PRIVATE ${OPENGL_gl_LIBRARY}
-	PRIVATE CONAN_PKG::glfw
-	PRIVATE CONAN_PKG::glad
+target_link_libraries(${PROJECT_NAME}
+	PUBLIC glm::glm
+	PRIVATE OpenGL::GL
+	PRIVATE glfw
+	PRIVATE glad::glad
 	# Should be private, refactor audio to fix
-	PUBLIC CONAN_PKG::openal
-	PUBLIC CONAN_PKG::vorbis
+	PUBLIC OpenAL::OpenAL
+	PUBLIC vorbis::vorbis
 	
-	PRIVATE CONAN_PKG::lua
-	PRIVATE CONAN_PKG::sol2
-	PRIVATE CONAN_PKG::bullet3
-	PRIVATE CONAN_PKG::freetype
-	PRIVATE CONAN_PKG::assimp
-	PRIVATE CONAN_PKG::nlohmann_json
-	PRIVATE CONAN_PKG::soil2
+	PRIVATE lua::lua
+	PRIVATE sol2::sol2
+	PRIVATE Bullet::Bullet
+	PRIVATE Freetype::Freetype
+	PRIVATE assimp::assimp
+	PRIVATE nlohmann_json::nlohmann_json
+	PRIVATE stb::stb
 )
 
-target_include_directories(${LIB_NAME} 
+target_include_directories(${PROJECT_NAME} 
 	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source
-	PRIVATE ${OPENGL_INCLUDE_DIR}
-)
-
-# Required for glm extensions
-target_compile_definitions(${LIB_NAME}
-	PUBLIC GLM_EXT_INCLUDED
 )

@@ -483,18 +483,18 @@ void elfSetShadowMapSize(int size)
     if (gfxGetVersion() < 200 || size < 1 || size == eng->config->shadowMapSize)
         return;
 
-    gfxDecRef((gfxObject*)rnd->shadowMap);
-    gfxDecRef((gfxObject*)rnd->shadowTarget);
+    gfxDecRef((gfxObject*)renderStation->shadowMap);
+    gfxDecRef((gfxObject*)renderStation->shadowTarget);
 
     eng->config->shadowMapSize = size;
-    rnd->shadowMap = gfxCreate2dTexture(size, size, 0.0f, GFX_CLAMP, GFX_LINEAR, GFX_DEPTH_COMPONENT,
+    renderStation->shadowMap = gfxCreate2dTexture(size, size, 0.0f, GFX_CLAMP, GFX_LINEAR, GFX_DEPTH_COMPONENT,
                                         GFX_DEPTH_COMPONENT, GFX_UBYTE, NULL);
-    rnd->shadowTarget = gfxCreateRenderTarget(size, size);
+    renderStation->shadowTarget = gfxCreateRenderTarget(size, size);
 
-    gfxIncRef((gfxObject*)rnd->shadowMap);
-    gfxIncRef((gfxObject*)rnd->shadowTarget);
+    gfxIncRef((gfxObject*)renderStation->shadowMap);
+    gfxIncRef((gfxObject*)renderStation->shadowTarget);
 
-    gfxSetRenderTargetDepthTexture(rnd->shadowTarget, rnd->shadowMap);
+    gfxSetRenderTargetDepthTexture(renderStation->shadowTarget, renderStation->shadowMap);
 }
 
 int elfGetShadowMapSize() { return eng->config->shadowMapSize; }

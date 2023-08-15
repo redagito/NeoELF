@@ -672,7 +672,7 @@ void elfDrawEntityDebug(elfEntity* entity, gfxShaderParams* shaderParams)
         max[0] = max[1] = max[2] = 0.2f;
     }
 
-    vertexBuffer = (float*)gfxGetVertexDataBuffer(rnd->lines);
+    vertexBuffer = (float*)gfxGetVertexDataBuffer(renderStation->lines);
 
     vertexBuffer[0] = min[0];
     vertexBuffer[1] = max[1];
@@ -769,7 +769,7 @@ void elfDrawEntityDebug(elfEntity* entity, gfxShaderParams* shaderParams)
         shaderParams->renderParams.blendMode = GFX_BLEND_NONE;
     }
     gfxSetShaderParams(shaderParams);
-    elfDrawLines(24, rnd->lines);
+    elfDrawLines(24, renderStation->lines);
 
     if (entity->armature)
     {

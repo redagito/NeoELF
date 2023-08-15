@@ -41,16 +41,21 @@ Add the pre-commit hook in Util/ to the git repository for automatic code format
 
 ## Building
 
-Building the project should just require running CMake and the respective build command.
-
+Conan install for debug and release build types
 ```
-$ git clone ... NeoELF
-$ cd NeoELF
-$ cmake . ...
-$ <platform-specific-build-command>
+conan install . --output-folder=build --build=missing --settings=build_type=Debug && conan install . --output-folder=build --build=missing --settings=build_type=Release
 ```
 
-Current development is done with in-source build for convenience but out-of-source builds should work.
+CMake project generation
+```
+cmake --preset conan-default
+```
+
+Build in release mode
+```
+cd build
+cmake --build . --config Release
+```
 
 ## Project Status
 

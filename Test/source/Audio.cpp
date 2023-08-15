@@ -3,7 +3,7 @@
 #include <nelf/audio/AudioSource.h>
 #include <nelf/audio/Sound.h>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <thread>
 
 TEST_CASE("Play sound", "[audio]")
