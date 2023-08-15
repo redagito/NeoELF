@@ -1,0 +1,39 @@
+[requires]
+
+# Graphics
+glfw/3.3.8
+glm/cci.20230113
+glad/0.1.36
+
+# Data loading
+assimp/5.2.2
+nlohmann_json/3.11.2
+stb/cci.20220909
+freetype/2.13.0
+vorbis/1.3.7
+
+# Sound
+openal/1.22.2
+
+# Scripting
+lua/5.4.6
+sol2/3.3.1
+
+# Physics
+bullet3/3.25
+
+# Logging
+fmtlog/2.2.1
+
+# Testing
+catch2/3.4.0
+
+[options]
+glad/*:gl_profile=core
+glad/*:gl_version=4.6
+glad/*:spec=gl
+glad/*:no_loader=False
+
+[generators]
+CMakeDeps
+CMakeToolchain
